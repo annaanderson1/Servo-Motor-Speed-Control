@@ -23,18 +23,43 @@ int writeToFd(char *s, int fd){
 
 }
 
-int readFromFd(char *s, int fd){
+void readFromFd(char *s, int fd){
 
-    char buf[SIZE+1];
-    ssize_t bytes_read;
+    int run = 1;
+    //ssize_t bytes_read;
+    while(run){
+        char buf[SIZE + 1];
+        ssize_t bytes_read = read(fd, buf, SIZE);
 
-    bytes_read = read(fd, buf, SIZE);
-    
-    if(bytes_read > 0){
-        strncpy(s, buf, bytes_read);
-        strcpy(s + bytes_read,"\0");
-        //printf("Read: %s", s);
+        if (bytes_read > 0) {
+            strncpy(s, buf, bytes_read);
+            strcpy(s + bytes_read, "\0");
+            //printf("Read: %s", s);
+        }
+        else{
+            run = 0;
+        }
     }
-    return bytes_read;
 
+    //return bytes_read;
+
+}
+
+void readFromFdMod(char *s, int fd){
+    int run = 1;
+    char buf[SIZE + 1];
+    size_t pos = 0;
+
+    while(run && pos < SIZE){
+        ssize_t bytes_read = read(fd, buf+pos, SIZE-pos);
+        if(res > 0){
+            pos += res;
+        }
+        else{
+            run = 0;
+        }
+    }
+    buf[pos] = '\0';
+    //printf("Buffer after read: %s\n", c);
+    strpcy(s, buf);
 }
