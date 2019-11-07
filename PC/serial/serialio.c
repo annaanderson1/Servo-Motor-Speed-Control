@@ -63,3 +63,26 @@ void readFromFdMod(char *s, int fd){
     //printf("Buffer after read: %s\n", c);
     strpcy(s, buf);
 }
+
+void extractSpeed(char *s, char *speed){
+    int front = 0;
+    int rear = 0;
+    bool extracted = false;
+    char buf[SIZE];
+    int pos = 0;
+
+    while(s[pos] != '\0' && !extracted){
+
+        if(s[pos] == '{'){
+            front = pos;
+        }
+        else if(s[pos] == '}'){
+            rear = pos;
+        }
+        if(s[front] == '{' && s[rear] == '}'){
+            extracted = true;
+            strncpy(buf, s[front], rear - front);
+        }
+    }
+    strcpy(speed, buf);
+}
