@@ -23,28 +23,20 @@ int writeToFd(char *s, int fd){
 
 }
 
-void readFromFd(char *s, int fd){
+int readFromFd(char *s, int fd){
 
-    int run = 1;
-    //ssize_t bytes_read;
-    while(run){
-        char buf[SIZE + 1];
-        ssize_t bytes_read = read(fd, buf, SIZE);
+    char buf[SIZE + 1];
+    ssize_t bytes_read = read(fd, buf, SIZE);
 
-        if (bytes_read > 0) {
-            strncpy(s, buf, bytes_read);
-            strcpy(s + bytes_read, "\0");
-            //printf("Read: %s", s);
-        }
-        else{
-            run = 0;
-        }
+    if (bytes_read > 0) {
+        strncpy(s, buf, bytes_read);
+        strcpy(s + bytes_read, "\0");
+
     }
-
-    //return bytes_read;
+    return bytes_read;
 
 }
-
+/*
 void readFromFdMod(char *s, int fd){
     int run = 1;
     char buf[SIZE + 1];
@@ -85,4 +77,4 @@ void extractSpeed(char *s, char *speed){
         }
     }
     strcpy(speed, buf);
-}
+} */

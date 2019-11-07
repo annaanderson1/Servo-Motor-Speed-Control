@@ -24,18 +24,18 @@ int main(void){
 	Registers registers;
 	Registers *reg = &registers;
 	AB = 0;
-	pwm = 0;
+	pwm = 50;
 
 	setup_registers();
 	//sei();
-	
+	unsigned char serial_flag = 'a';
 	while(1){
-	
+		
 		reg = set_trigger(reg, pwm);
-		//unsigned char data = 'a';
-		unsigned char data = USART_recieve();
-		USART_transmit(data);
-		_delay_ms(500);
-    }
+		//unsigned char data = USART_recieve();
+		_delay_ms(50);
+		unsigned char a = 'a';
+		USART_transmit(a);
+	}
 	return 0;
 }

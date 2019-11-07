@@ -14,7 +14,6 @@
 int main(){
 
     char s[SIZE];
-    char speed[SIZE];
     int fd;
 
     fd = serial_init("/dev/ttyS0", 0);
@@ -27,8 +26,8 @@ int main(){
         writeToFd(s, fd);
         usleep((1000) * 1000);
         readFromFd(s, fd);
-        extractSpeed(s, speed);
-        printf("Read: %s", speed);
+       
+        printf("Read: %s", s);
     }
 
     serial_cleanup(fd);

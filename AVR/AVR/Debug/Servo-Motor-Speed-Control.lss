@@ -3,33 +3,29 @@ Servo-Motor-Speed-Control.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  0000025e  000002f2  2**0
+  0 .data         00000000  00800100  0000024a  000002de  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000025e  00000000  00000000  00000094  2**1
+  1 .text         0000024a  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000004  00800100  00800100  000002f2  2**0
+  2 .bss          00000004  00800100  00800100  000002de  2**0
                   ALLOC
-  3 .stab         000006cc  00000000  00000000  000002f4  2**2
-                  CONTENTS, READONLY, DEBUGGING
-  4 .stabstr      00000097  00000000  00000000  000009c0  2**0
-                  CONTENTS, READONLY, DEBUGGING
-  5 .comment      0000002f  00000000  00000000  00000a57  2**0
+  3 .comment      00000030  00000000  00000000  000002de  2**0
                   CONTENTS, READONLY
-  6 .debug_aranges 000000a8  00000000  00000000  00000a86  2**0
+  4 .debug_aranges 000000a8  00000000  00000000  0000030e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_info   00000575  00000000  00000000  00000b2e  2**0
+  5 .debug_info   00000569  00000000  00000000  000003b6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 00000345  00000000  00000000  000010a3  2**0
+  6 .debug_abbrev 00000345  00000000  00000000  0000091f  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   0000038b  00000000  00000000  000013e8  2**0
+  7 .debug_line   0000027e  00000000  00000000  00000c64  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_frame  00000178  00000000  00000000  00001774  2**2
+  8 .debug_frame  00000178  00000000  00000000  00000ee4  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    00000200  00000000  00000000  000018ec  2**0
+  9 .debug_str    0000028d  00000000  00000000  0000105c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00000246  00000000  00000000  00001aec  2**0
+ 10 .debug_loc    00000233  00000000  00000000  000012e9  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 00000088  00000000  00000000  00001d32  2**0
+ 11 .debug_ranges 00000088  00000000  00000000  0000151c  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -39,7 +35,7 @@ Disassembly of section .text:
    2:	28 c0       	rjmp	.+80     	; 0x54 <__bad_interrupt>
    4:	27 c0       	rjmp	.+78     	; 0x54 <__bad_interrupt>
    6:	26 c0       	rjmp	.+76     	; 0x54 <__bad_interrupt>
-   8:	b1 c0       	rjmp	.+354    	; 0x16c <__vector_4>
+   8:	a8 c0       	rjmp	.+336    	; 0x15a <__vector_4>
    a:	24 c0       	rjmp	.+72     	; 0x54 <__bad_interrupt>
    c:	23 c0       	rjmp	.+70     	; 0x54 <__bad_interrupt>
    e:	22 c0       	rjmp	.+68     	; 0x54 <__bad_interrupt>
@@ -83,8 +79,8 @@ Disassembly of section .text:
   4a:	a4 30       	cpi	r26, 0x04	; 4
   4c:	b2 07       	cpc	r27, r18
   4e:	e1 f7       	brne	.-8      	; 0x48 <.do_clear_bss_loop>
-  50:	e0 d0       	rcall	.+448    	; 0x212 <main>
-  52:	03 c1       	rjmp	.+518    	; 0x25a <_exit>
+  50:	d7 d0       	rcall	.+430    	; 0x200 <main>
+  52:	f9 c0       	rjmp	.+498    	; 0x246 <_exit>
 
 00000054 <__bad_interrupt>:
   54:	d5 cf       	rjmp	.-86     	; 0x0 <__vectors>
@@ -299,14 +295,13 @@ void setup_registers(){
  13c:	08 95       	ret
 
 0000013e <set_trigger>:
-		
 }
 
 /* Sets the PWM trigger value*/ 
 Registers* set_trigger(Registers* reg, int setValue){
- 13e:	fc 01       	movw	r30, r24
 	
 	reg->setValue = setValue;
+ 13e:	fc 01       	movw	r30, r24
  140:	60 83       	st	Z, r22
  142:	71 83       	std	Z+1, r23	; 0x01
 	OCR0A = setValue;
@@ -316,242 +311,222 @@ Registers* set_trigger(Registers* reg, int setValue){
 	
 	return reg;
 }
- 148:	9f 2f       	mov	r25, r31
- 14a:	08 95       	ret
+ 148:	08 95       	ret
 
-0000014c <USART_transmit>:
+0000014a <USART_transmit>:
 
 // See pg. 190
 void USART_transmit(uint8_t data){
 	
 	// Wait for empty transmit buffer
 	while( !(UCSR0A & (1 << UDRE0)) );
- 14c:	e0 ec       	ldi	r30, 0xC0	; 192
- 14e:	f0 e0       	ldi	r31, 0x00	; 0
- 150:	90 81       	ld	r25, Z
- 152:	95 ff       	sbrs	r25, 5
- 154:	fd cf       	rjmp	.-6      	; 0x150 <USART_transmit+0x4>
+ 14a:	e0 ec       	ldi	r30, 0xC0	; 192
+ 14c:	f0 e0       	ldi	r31, 0x00	; 0
+ 14e:	90 81       	ld	r25, Z
+ 150:	95 ff       	sbrs	r25, 5
+ 152:	fd cf       	rjmp	.-6      	; 0x14e <USART_transmit+0x4>
 	
 	// Puts data into buffer, sends the data.
 	UDR0 = data;
- 156:	80 93 c6 00 	sts	0x00C6, r24
- 15a:	08 95       	ret
+ 154:	80 93 c6 00 	sts	0x00C6, r24
+ 158:	08 95       	ret
 
-0000015c <USART_recieve>:
-}
-
-uint8_t USART_recieve(void){
-	
-	// Wait for data to be recieved
-	while( !(UCSR0A & (1 << RXC0)) );
- 15c:	e0 ec       	ldi	r30, 0xC0	; 192
- 15e:	f0 e0       	ldi	r31, 0x00	; 0
- 160:	80 81       	ld	r24, Z
- 162:	88 23       	and	r24, r24
- 164:	ec f7       	brge	.-6      	; 0x160 <USART_recieve+0x4>
-	// Get and return recieved data from the buffer
-	return UDR0;
- 166:	80 91 c6 00 	lds	r24, 0x00C6
-	
-}
- 16a:	08 95       	ret
-
-0000016c <__vector_4>:
+0000015a <__vector_4>:
 /************************************************************************/
 /* INTERRUPT SERVICE ROUTINES											*/
 /************************************************************************/
 
 /* ISR for PCINT14-8 */
 ISR(PCINT1_vect){
- 16c:	1f 92       	push	r1
- 16e:	0f 92       	push	r0
- 170:	0f b6       	in	r0, 0x3f	; 63
- 172:	0f 92       	push	r0
- 174:	11 24       	eor	r1, r1
- 176:	2f 93       	push	r18
- 178:	3f 93       	push	r19
- 17a:	4f 93       	push	r20
- 17c:	5f 93       	push	r21
- 17e:	6f 93       	push	r22
- 180:	7f 93       	push	r23
- 182:	8f 93       	push	r24
- 184:	9f 93       	push	r25
- 186:	af 93       	push	r26
- 188:	bf 93       	push	r27
- 18a:	cf 93       	push	r28
- 18c:	df 93       	push	r29
- 18e:	ef 93       	push	r30
- 190:	ff 93       	push	r31
+ 15a:	1f 92       	push	r1
+ 15c:	0f 92       	push	r0
+ 15e:	0f b6       	in	r0, 0x3f	; 63
+ 160:	0f 92       	push	r0
+ 162:	11 24       	eor	r1, r1
+ 164:	2f 93       	push	r18
+ 166:	3f 93       	push	r19
+ 168:	4f 93       	push	r20
+ 16a:	5f 93       	push	r21
+ 16c:	6f 93       	push	r22
+ 16e:	7f 93       	push	r23
+ 170:	8f 93       	push	r24
+ 172:	9f 93       	push	r25
+ 174:	af 93       	push	r26
+ 176:	bf 93       	push	r27
+ 178:	cf 93       	push	r28
+ 17a:	df 93       	push	r29
+ 17c:	ef 93       	push	r30
+ 17e:	ff 93       	push	r31
 	
 	unsigned int ABnew = 0x00;
 	unsigned int A = 0x00;
 	unsigned int B = 0x00;
 	
 	A = (PINC & (1 << PC5));
- 192:	c6 b1       	in	r28, 0x06	; 6
- 194:	c0 72       	andi	r28, 0x20	; 32
- 196:	d0 e0       	ldi	r29, 0x00	; 0
+ 180:	c6 b1       	in	r28, 0x06	; 6
+ 182:	c0 72       	andi	r28, 0x20	; 32
+ 184:	d0 e0       	ldi	r29, 0x00	; 0
 	A = (A >> (PC5 - 1));	// Sets A in pos 1
 	
 	B = (PINC & (1 << PC4));
- 198:	26 b1       	in	r18, 0x06	; 6
+ 186:	26 b1       	in	r18, 0x06	; 6
 	B = (B >> PC4);			// Sets B in pos 0
- 19a:	24 fb       	bst	r18, 4
- 19c:	88 27       	eor	r24, r24
- 19e:	80 f9       	bld	r24, 0
- 1a0:	90 e0       	ldi	r25, 0x00	; 0
+ 188:	24 fb       	bst	r18, 4
+ 18a:	88 27       	eor	r24, r24
+ 18c:	80 f9       	bld	r24, 0
+ 18e:	90 e0       	ldi	r25, 0x00	; 0
 	unsigned int ABnew = 0x00;
 	unsigned int A = 0x00;
 	unsigned int B = 0x00;
 	
 	A = (PINC & (1 << PC5));
 	A = (A >> (PC5 - 1));	// Sets A in pos 1
- 1a2:	d2 95       	swap	r29
- 1a4:	c2 95       	swap	r28
- 1a6:	cf 70       	andi	r28, 0x0F	; 15
- 1a8:	cd 27       	eor	r28, r29
- 1aa:	df 70       	andi	r29, 0x0F	; 15
- 1ac:	cd 27       	eor	r28, r29
+ 190:	d2 95       	swap	r29
+ 192:	c2 95       	swap	r28
+ 194:	cf 70       	andi	r28, 0x0F	; 15
+ 196:	cd 27       	eor	r28, r29
+ 198:	df 70       	andi	r29, 0x0F	; 15
+ 19a:	cd 27       	eor	r28, r29
 	
 	B = (PINC & (1 << PC4));
 	B = (B >> PC4);			// Sets B in pos 0
 	
 	ABnew = A | B;
- 1ae:	c8 2b       	or	r28, r24
- 1b0:	d9 2b       	or	r29, r25
+ 19c:	c8 2b       	or	r28, r24
+ 19e:	d9 2b       	or	r29, r25
 	
 	switch(ABnew){
- 1b2:	20 97       	sbiw	r28, 0x00	; 0
- 1b4:	21 f0       	breq	.+8      	; 0x1be <__vector_4+0x52>
- 1b6:	c1 30       	cpi	r28, 0x01	; 1
- 1b8:	d1 05       	cpc	r29, r1
- 1ba:	a1 f4       	brne	.+40     	; 0x1e4 <__vector_4+0x78>
- 1bc:	0a c0       	rjmp	.+20     	; 0x1d2 <__vector_4+0x66>
+ 1a0:	20 97       	sbiw	r28, 0x00	; 0
+ 1a2:	21 f0       	breq	.+8      	; 0x1ac <__vector_4+0x52>
+ 1a4:	c1 30       	cpi	r28, 0x01	; 1
+ 1a6:	d1 05       	cpc	r29, r1
+ 1a8:	59 f0       	breq	.+22     	; 0x1c0 <__vector_4+0x66>
+ 1aa:	13 c0       	rjmp	.+38     	; 0x1d2 <__vector_4+0x78>
 		case 0:	
 			if(AB == 2){
- 1be:	80 91 00 01 	lds	r24, 0x0100
- 1c2:	90 91 01 01 	lds	r25, 0x0101
- 1c6:	02 97       	sbiw	r24, 0x02	; 2
- 1c8:	11 f4       	brne	.+4      	; 0x1ce <__vector_4+0x62>
+ 1ac:	80 91 00 01 	lds	r24, 0x0100
+ 1b0:	90 91 01 01 	lds	r25, 0x0101
+ 1b4:	02 97       	sbiw	r24, 0x02	; 2
+ 1b6:	11 f4       	brne	.+4      	; 0x1bc <__vector_4+0x62>
 				clockwise();
- 1ca:	81 df       	rcall	.-254    	; 0xce <clockwise>
- 1cc:	0b c0       	rjmp	.+22     	; 0x1e4 <__vector_4+0x78>
+ 1b8:	8a df       	rcall	.-236    	; 0xce <clockwise>
+ 1ba:	0b c0       	rjmp	.+22     	; 0x1d2 <__vector_4+0x78>
 			}
 			else{
 				counterclockwise();
- 1ce:	99 df       	rcall	.-206    	; 0x102 <counterclockwise>
- 1d0:	09 c0       	rjmp	.+18     	; 0x1e4 <__vector_4+0x78>
+ 1bc:	a2 df       	rcall	.-188    	; 0x102 <counterclockwise>
+ 1be:	09 c0       	rjmp	.+18     	; 0x1d2 <__vector_4+0x78>
 			}
 			break;
 		
 		case 1:
 			if(AB == 0){
- 1d2:	80 91 00 01 	lds	r24, 0x0100
- 1d6:	90 91 01 01 	lds	r25, 0x0101
- 1da:	89 2b       	or	r24, r25
- 1dc:	11 f4       	brne	.+4      	; 0x1e2 <__vector_4+0x76>
+ 1c0:	80 91 00 01 	lds	r24, 0x0100
+ 1c4:	90 91 01 01 	lds	r25, 0x0101
+ 1c8:	89 2b       	or	r24, r25
+ 1ca:	11 f4       	brne	.+4      	; 0x1d0 <__vector_4+0x76>
 				clockwise();
- 1de:	77 df       	rcall	.-274    	; 0xce <clockwise>
- 1e0:	01 c0       	rjmp	.+2      	; 0x1e4 <__vector_4+0x78>
+ 1cc:	80 df       	rcall	.-256    	; 0xce <clockwise>
+ 1ce:	01 c0       	rjmp	.+2      	; 0x1d2 <__vector_4+0x78>
 			}
 			else{
 				counterclockwise();
- 1e2:	8f df       	rcall	.-226    	; 0x102 <counterclockwise>
+ 1d0:	98 df       	rcall	.-208    	; 0x102 <counterclockwise>
 			}
 			break;
 	}
 	AB = ABnew;
- 1e4:	d0 93 01 01 	sts	0x0101, r29
- 1e8:	c0 93 00 01 	sts	0x0100, r28
+ 1d2:	d0 93 01 01 	sts	0x0101, r29
+ 1d6:	c0 93 00 01 	sts	0x0100, r28
 
 }
- 1ec:	ff 91       	pop	r31
- 1ee:	ef 91       	pop	r30
- 1f0:	df 91       	pop	r29
- 1f2:	cf 91       	pop	r28
- 1f4:	bf 91       	pop	r27
- 1f6:	af 91       	pop	r26
- 1f8:	9f 91       	pop	r25
- 1fa:	8f 91       	pop	r24
- 1fc:	7f 91       	pop	r23
- 1fe:	6f 91       	pop	r22
- 200:	5f 91       	pop	r21
- 202:	4f 91       	pop	r20
- 204:	3f 91       	pop	r19
- 206:	2f 91       	pop	r18
- 208:	0f 90       	pop	r0
- 20a:	0f be       	out	0x3f, r0	; 63
- 20c:	0f 90       	pop	r0
- 20e:	1f 90       	pop	r1
- 210:	18 95       	reti
+ 1da:	ff 91       	pop	r31
+ 1dc:	ef 91       	pop	r30
+ 1de:	df 91       	pop	r29
+ 1e0:	cf 91       	pop	r28
+ 1e2:	bf 91       	pop	r27
+ 1e4:	af 91       	pop	r26
+ 1e6:	9f 91       	pop	r25
+ 1e8:	8f 91       	pop	r24
+ 1ea:	7f 91       	pop	r23
+ 1ec:	6f 91       	pop	r22
+ 1ee:	5f 91       	pop	r21
+ 1f0:	4f 91       	pop	r20
+ 1f2:	3f 91       	pop	r19
+ 1f4:	2f 91       	pop	r18
+ 1f6:	0f 90       	pop	r0
+ 1f8:	0f be       	out	0x3f, r0	; 63
+ 1fa:	0f 90       	pop	r0
+ 1fc:	1f 90       	pop	r1
+ 1fe:	18 95       	reti
 
-00000212 <main>:
+00000200 <main>:
 /* Global variables */
 unsigned int AB;
 unsigned int pwm;
 
 
 int main(void){
- 212:	cf 93       	push	r28
- 214:	df 93       	push	r29
- 216:	00 d0       	rcall	.+0      	; 0x218 <main+0x6>
- 218:	cd b7       	in	r28, 0x3d	; 61
- 21a:	de b7       	in	r29, 0x3e	; 62
+ 200:	cf 93       	push	r28
+ 202:	df 93       	push	r29
+ 204:	00 d0       	rcall	.+0      	; 0x206 <main+0x6>
+ 206:	cd b7       	in	r28, 0x3d	; 61
+ 208:	de b7       	in	r29, 0x3e	; 62
 	Registers registers;
 	Registers *reg = &registers;
 	AB = 0;
- 21c:	10 92 01 01 	sts	0x0101, r1
- 220:	10 92 00 01 	sts	0x0100, r1
-	pwm = 0;
- 224:	10 92 03 01 	sts	0x0103, r1
- 228:	10 92 02 01 	sts	0x0102, r1
+ 20a:	10 92 01 01 	sts	0x0101, r1
+ 20e:	10 92 00 01 	sts	0x0100, r1
+	pwm = 50;
+ 212:	82 e3       	ldi	r24, 0x32	; 50
+ 214:	90 e0       	ldi	r25, 0x00	; 0
+ 216:	90 93 03 01 	sts	0x0103, r25
+ 21a:	80 93 02 01 	sts	0x0102, r24
 
 	setup_registers();
- 22c:	82 df       	rcall	.-252    	; 0x132 <setup_registers>
+ 21e:	89 df       	rcall	.-238    	; 0x132 <setup_registers>
 unsigned int pwm;
 
 
 int main(void){
 	Registers registers;
 	Registers *reg = &registers;
- 22e:	8e 01       	movw	r16, r28
- 230:	0f 5f       	subi	r16, 0xFF	; 255
- 232:	1f 4f       	sbci	r17, 0xFF	; 255
+ 220:	8e 01       	movw	r16, r28
+ 222:	0f 5f       	subi	r16, 0xFF	; 255
+ 224:	1f 4f       	sbci	r17, 0xFF	; 255
 	setup_registers();
 	//sei();
-	
+	unsigned char serial_flag = 'a';
 	while(1){
-	
+		
 		reg = set_trigger(reg, pwm);
- 234:	60 91 02 01 	lds	r22, 0x0102
- 238:	70 91 03 01 	lds	r23, 0x0103
- 23c:	c8 01       	movw	r24, r16
- 23e:	7f df       	rcall	.-258    	; 0x13e <set_trigger>
- 240:	8c 01       	movw	r16, r24
-		//unsigned char data = 'a';
-		unsigned char data = USART_recieve();
- 242:	8c df       	rcall	.-232    	; 0x15c <USART_recieve>
-		USART_transmit(data);
- 244:	83 df       	rcall	.-250    	; 0x14c <USART_transmit>
+ 226:	60 91 02 01 	lds	r22, 0x0102
+ 22a:	70 91 03 01 	lds	r23, 0x0103
+ 22e:	c8 01       	movw	r24, r16
+ 230:	86 df       	rcall	.-244    	; 0x13e <set_trigger>
+ 232:	8c 01       	movw	r16, r24
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 246:	2f e9       	ldi	r18, 0x9F	; 159
- 248:	86 e8       	ldi	r24, 0x86	; 134
- 24a:	91 e0       	ldi	r25, 0x01	; 1
- 24c:	21 50       	subi	r18, 0x01	; 1
- 24e:	80 40       	sbci	r24, 0x00	; 0
- 250:	90 40       	sbci	r25, 0x00	; 0
- 252:	e1 f7       	brne	.-8      	; 0x24c <main+0x3a>
- 254:	00 c0       	rjmp	.+0      	; 0x256 <main+0x44>
- 256:	00 00       	nop
- 258:	ed cf       	rjmp	.-38     	; 0x234 <main+0x22>
+ 234:	83 ed       	ldi	r24, 0xD3	; 211
+ 236:	90 e3       	ldi	r25, 0x30	; 48
+ 238:	01 97       	sbiw	r24, 0x01	; 1
+ 23a:	f1 f7       	brne	.-4      	; 0x238 <main+0x38>
+ 23c:	00 c0       	rjmp	.+0      	; 0x23e <main+0x3e>
+ 23e:	00 00       	nop
+		//unsigned char data = USART_recieve();
+		_delay_ms(50);
+		unsigned char a = 'a';
+		USART_transmit(a);
+ 240:	81 e6       	ldi	r24, 0x61	; 97
+ 242:	83 df       	rcall	.-250    	; 0x14a <USART_transmit>
+ 244:	f0 cf       	rjmp	.-32     	; 0x226 <main+0x26>
 
-0000025a <_exit>:
- 25a:	f8 94       	cli
+00000246 <_exit>:
+ 246:	f8 94       	cli
 
-0000025c <__stop_program>:
- 25c:	ff cf       	rjmp	.-2      	; 0x25c <__stop_program>
+00000248 <__stop_program>:
+ 248:	ff cf       	rjmp	.-2      	; 0x248 <__stop_program>
