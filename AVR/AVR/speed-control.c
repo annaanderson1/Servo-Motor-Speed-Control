@@ -27,15 +27,15 @@ int main(void){
 	pwm = 50;
 
 	setup_registers();
-	//sei();
+	sei();
 	unsigned char serial_flag = 'a';
 	while(1){
 		
 		reg = set_trigger(reg, pwm);
 		//unsigned char data = USART_recieve();
-		_delay_ms(50);
-		unsigned char a = 'a';
-		USART_transmit(a);
+		//_delay_ms(50);
+		//unsigned char a = 'a';
+		//USART_transmit(a);
 	}
 	return 0;
 }

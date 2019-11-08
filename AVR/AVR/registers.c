@@ -58,9 +58,9 @@ void setup_USART(){
 	// Set baud rate
 	UBRR0H = (unsigned char)(ubrr >> 8);
 	UBRR0L = (unsigned char)ubrr;
-	
-	// Enable reciever and transmitter (pg. 202)
-	UCSR0B = (1 << RXEN0) | (1 << TXEN0);
+		
+	// Enable reciever for interrupt and transmitter (pg. 202)
+	UCSR0B = (1 << RXEN0) | (1 << RXCIE0) | (1 << TXEN0);
 	
 	// Set frame format: 8 data, 2 stop, 0 parity (pg. 204)
 	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
@@ -198,7 +198,16 @@ ISR(PCINT1_vect){
 
 }
 
-
+/* ISR for serial receiver */
+ISR(USART_RX_vect){
+	cli();
+	
+	unsigned char recieved_byte;
+	recieved_byte = UDR0;
+	UDR0 = recieved_byte;
+	
+	sei();
+}
 
 
 
