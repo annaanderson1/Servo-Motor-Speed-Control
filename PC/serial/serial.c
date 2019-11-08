@@ -9,7 +9,7 @@
 
 #define STDOUT_FD 1
 #define STDIN_FD 0
-#define SIZE 100
+#define SIZE 10
 
 int main(){
 
@@ -18,16 +18,15 @@ int main(){
 
     fd = serial_init("/dev/ttyS0", 0);
 
-    /*  Takes input from terminal, sends over serialport and recieves
-        from serialport after 1 s*/
+    /*  Takes input from terminal, sends over serialport, recieves
+        from serialport and prints to terminal*/
     while(1){
 
-        readFromFd(s, 1);
+        readFromFd(s, STDOUT_FD);
         writeCharToFdWithDelay(s, fd);
-        usleep((1000) * 1000);
-        readFromFd(s, fd);
-        
-        printf("Read: %s", s);
+        readCharsFromFd(s, fd);
+        writeToFd(s, STDOUT_FD);
+        writeToFd("\n", STDOUT_FD);
     }
 
     serial_cleanup(fd);

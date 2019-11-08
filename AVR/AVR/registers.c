@@ -11,6 +11,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 
 /* Global variables */
 extern unsigned int AB;
@@ -72,7 +73,7 @@ void setup_USART(){
 void setup_interrupts(){
 	
 	PCICR = (1 << PCIE1);						// Enables possibility of interrupts on pins 14-8
-	PCMSK1 = (1 << PCINT13) | (1 << PCINT12);	// Enables interrupts on pin PC5 & PC4
+	//PCMSK1 = (1 << PCINT13) | (1 << PCINT12);	// Enables interrupts on pin PC5 & PC4
 	
 }
 
@@ -202,16 +203,22 @@ ISR(PCINT1_vect){
 /* ISR for serial receiver */
 ISR(USART_RX_vect){
 	cli();
+	PORTC &= ~(1 << PC2);
+	PORTC |= (1 << PC1);
 	for(int i = 0; i < 5; i++){
 		while( !(UCSR0A & (1 << RXC0)) );
 		recieved_bytes[i] = UDR0;
 	}
-	
+	PORTC &= ~(1 << PC1);
+	PORTC |= (1 << PC0);
 	for(int i = 4; i > -1; i--){
 		while( !(UCSR0A & (1 << UDRE0)) );
 		UDR0 = recieved_bytes[i];
+		_delay_ms(100);
 	}
+	PORTC &= ~(1 << PC0);
 	
+	PORTC |= (1 << PC2);
 	sei();
 }
 

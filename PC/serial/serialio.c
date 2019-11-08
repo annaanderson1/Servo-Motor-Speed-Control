@@ -25,6 +25,7 @@ int writeToFd(char *s, int fd){
 
 /* Writes 5 bytes to fd with 100 ms delay */
 int writeCharToFdWithDelay(char *s, int fd){
+    
     int i = 0;
     int j = 0;
     char buf[5];
@@ -33,21 +34,22 @@ int writeCharToFdWithDelay(char *s, int fd){
     strncpy(buf, s, s_len);
 
     // Pads input with trailing #
-    while( (s_len + j) <= 5){
-        int pos = s_len + j - 1;
+    while( (s_len + i) <= 5){
+        int pos = s_len + i - 1;
         strcpy(buf + pos, "#");
-        j++;
+        i++;
     }
     
-    for(i = 0; i < 5; i++){
-        
-        write(fd, &buf[i], 1);
+    for(j = 0; j < 5; j++){
+        write(fd, &buf[j], 1);
         usleep((1000) * 100);
     }
+    strcpy(s, buf);
 
     return 1;
 }
 
+/* Reads available string from fd and copies to s*/ 
 int readFromFd(char *s, int fd){
 
     char buf[SIZE + 1];
@@ -58,48 +60,26 @@ int readFromFd(char *s, int fd){
         strcpy(s + bytes_read, "\0");
 
     }
+
     return bytes_read;
-
-}
-/*
-void readFromFdMod(char *s, int fd){
-    int run = 1;
-    char buf[SIZE + 1];
-    size_t pos = 0;
-
-    while(run && pos < SIZE){
-        ssize_t bytes_read = read(fd, buf+pos, SIZE-pos);
-        if(res > 0){
-            pos += res;
-        }
-        else{
-            run = 0;
-        }
-    }
-    buf[pos] = '\0';
-    //printf("Buffer after read: %s\n", c);
-    strpcy(s, buf);
 }
 
-void extractSpeed(char *s, char *speed){
-    int front = 0;
-    int rear = 0;
-    bool extracted = false;
-    char buf[SIZE];
-    int pos = 0;
+/* Reads five chars from fd and copies to s */ 
+int readCharsFromFd(char *s, int fd){
 
-    while(s[pos] != '\0' && !extracted){
+    int bytes_read = 0;
+    int res;
+    char buf[5];
 
-        if(s[pos] == '{'){
-            front = pos;
-        }
-        else if(s[pos] == '}'){
-            rear = pos;
-        }
-        if(s[front] == '{' && s[rear] == '}'){
-            extracted = true;
-            strncpy(buf, s[front], rear - front);
+    while(bytes_read < 5){
+        char char_read;
+        res = read(fd, &char_read, 1);
+        if (res > 0){
+            strncpy(buf+bytes_read, &char_read, 1);
+            bytes_read++;
         }
     }
-    strcpy(speed, buf);
-} */
+    
+    strcpy(s, buf);
+    return bytes_read;
+}

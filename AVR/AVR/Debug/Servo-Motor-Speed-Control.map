@@ -17,6 +17,8 @@ Discarded input sections
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr4/crtm88.o
  .text          0x00000000        0x0 registers.o
  .bss           0x00000000        0x0 registers.o
+ .text.setup_interrupts
+                0x00000000        0x8 registers.o
  .text.USART_transmit
                 0x00000000       0x10 registers.o
  .text.USART_recieve
@@ -171,7 +173,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x2a8
+.text           0x00000000      0x2bc
  *(.vectors)
  .vectors       0x00000000       0x34 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr4/crtm88.o
                 0x00000000                __vector_default
@@ -264,40 +266,37 @@ END GROUP
  .text.setup_USART
                 0x00000074       0x1a registers.o
                 0x00000074                setup_USART
- .text.setup_interrupts
-                0x0000008e        0xe registers.o
-                0x0000008e                setup_interrupts
  .text.turnOff_C
-                0x0000009c       0x18 registers.o
-                0x0000009c                turnOff_C
+                0x0000008e       0x18 registers.o
+                0x0000008e                turnOff_C
  .text.turnOn_C
-                0x000000b4       0x1a registers.o
-                0x000000b4                turnOn_C
+                0x000000a6       0x1a registers.o
+                0x000000a6                turnOn_C
  .text.clockwise
-                0x000000ce       0x34 registers.o
-                0x000000ce                clockwise
+                0x000000c0       0x34 registers.o
+                0x000000c0                clockwise
  .text.counterclockwise
-                0x00000102       0x30 registers.o
-                0x00000102                counterclockwise
+                0x000000f4       0x30 registers.o
+                0x000000f4                counterclockwise
  .text.setup_registers
-                0x00000132        0xc registers.o
-                0x00000132                setup_registers
+                0x00000124       0x10 registers.o
+                0x00000124                setup_registers
  .text.set_trigger
-                0x0000013e        0xc registers.o
-                0x0000013e                set_trigger
+                0x00000134        0xc registers.o
+                0x00000134                set_trigger
  .text.__vector_4
-                0x0000014a       0xa6 registers.o
-                0x0000014a                __vector_4
+                0x00000140       0xa6 registers.o
+                0x00000140                __vector_4
  .text.__vector_18
-                0x000001f0       0x82 registers.o
-                0x000001f0                __vector_18
- .text.main     0x00000272       0x32 speed-control.o
-                0x00000272                main
-                0x000002a4                . = ALIGN (0x2)
+                0x000001e6       0xa0 registers.o
+                0x000001e6                __vector_18
+ .text.main     0x00000286       0x32 speed-control.o
+                0x00000286                main
+                0x000002b8                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000002a4        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr4\libgcc.a(_exit.o)
-                0x000002a4                _exit
-                0x000002a4                exit
+ .fini9         0x000002b8        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr4\libgcc.a(_exit.o)
+                0x000002b8                _exit
+                0x000002b8                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -316,11 +315,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000002a4        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr4\libgcc.a(_exit.o)
+ .fini0         0x000002b8        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr4\libgcc.a(_exit.o)
  *(.fini0)
-                0x000002a8                _etext = .
+                0x000002bc                _etext = .
 
-.data           0x00800100        0x0 load address 0x000002a8
+.data           0x00800100        0x0 load address 0x000002bc
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr4/crtm88.o
@@ -346,8 +345,8 @@ END GROUP
                 0x00800105                AB
                 0x00800107                pwm
                 0x00800109                PROVIDE (__bss_end, .)
-                0x000002a8                __data_load_start = LOADADDR (.data)
-                0x000002a8                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x000002bc                __data_load_start = LOADADDR (.data)
+                0x000002bc                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800109        0x0
                 0x00800109                PROVIDE (__noinit_start, .)
@@ -424,37 +423,37 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x52e
+.debug_info     0x00000000      0x5e0
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x00000000      0x3ac registers.o
- .debug_info    0x000003ac      0x182 speed-control.o
+ .debug_info    0x00000000      0x45e registers.o
+ .debug_info    0x0000045e      0x182 speed-control.o
 
-.debug_abbrev   0x00000000      0x2ea
+.debug_abbrev   0x00000000      0x371
  *(.debug_abbrev)
- .debug_abbrev  0x00000000      0x1d4 registers.o
- .debug_abbrev  0x000001d4      0x116 speed-control.o
+ .debug_abbrev  0x00000000      0x25b registers.o
+ .debug_abbrev  0x0000025b      0x116 speed-control.o
 
-.debug_line     0x00000000      0x1f6
+.debug_line     0x00000000      0x27c
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x19a registers.o
- .debug_line    0x0000019a       0x5c speed-control.o
+ .debug_line    0x00000000      0x220 registers.o
+ .debug_line    0x00000220       0x5c speed-control.o
 
-.debug_frame    0x00000000      0x1cc
+.debug_frame    0x00000000      0x1d4
  *(.debug_frame)
- .debug_frame   0x00000000      0x198 registers.o
- .debug_frame   0x00000198       0x34 speed-control.o
+ .debug_frame   0x00000000      0x1a0 registers.o
+ .debug_frame   0x000001a0       0x34 speed-control.o
 
-.debug_str      0x00000000      0x264
+.debug_str      0x00000000      0x2a8
  *(.debug_str)
- .debug_str     0x00000000      0x22c registers.o
-                                0x24f (size before relaxing)
- .debug_str     0x0000022c       0x38 speed-control.o
+ .debug_str     0x00000000      0x282 registers.o
+                                0x2cc (size before relaxing)
+ .debug_str     0x00000282       0x26 speed-control.o
                                 0x1f1 (size before relaxing)
 
-.debug_loc      0x00000000      0x315
+.debug_loc      0x00000000      0x343
  *(.debug_loc)
- .debug_loc     0x00000000      0x298 registers.o
- .debug_loc     0x00000298       0x7d speed-control.o
+ .debug_loc     0x00000000      0x2c6 registers.o
+ .debug_loc     0x000002c6       0x7d speed-control.o
 
 .debug_macinfo
  *(.debug_macinfo)
