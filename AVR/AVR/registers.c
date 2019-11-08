@@ -15,6 +15,7 @@
 /* Global variables */
 extern unsigned int AB;
 extern unsigned int pwm;
+extern unsigned char recieved_bytes[5];
 
 typedef struct {
 	
@@ -201,10 +202,15 @@ ISR(PCINT1_vect){
 /* ISR for serial receiver */
 ISR(USART_RX_vect){
 	cli();
+	for(int i = 0; i < 5; i++){
+		while( !(UCSR0A & (1 << RXC0)) );
+		recieved_bytes[i] = UDR0;
+	}
 	
-	unsigned char recieved_byte;
-	recieved_byte = UDR0;
-	UDR0 = recieved_byte;
+	for(int i = 4; i > -1; i--){
+		while( !(UCSR0A & (1 << UDRE0)) );
+		UDR0 = recieved_bytes[i];
+	}
 	
 	sei();
 }

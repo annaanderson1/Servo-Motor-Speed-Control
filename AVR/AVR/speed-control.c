@@ -18,6 +18,7 @@
 /* Global variables */
 unsigned int AB;
 unsigned int pwm;
+unsigned char recieved_bytes[5];
 
 
 int main(void){
