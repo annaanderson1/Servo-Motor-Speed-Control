@@ -2,11 +2,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
-
+#include <stdlib.h>
 #include "serialport.h"
 
 #define SIZE 100
-
+#define F_CPU 1000000UL
 
 int writeToFd(char *s, int fd){
 
@@ -21,6 +21,31 @@ int writeToFd(char *s, int fd){
 
     return bytes_written;
 
+}
+
+/* Writes 5 bytes to fd with 100 ms delay */
+int writeCharToFdWithDelay(char *s, int fd){
+    int i = 0;
+    int j = 0;
+    char buf[5];
+    int s_len = strlen(s);
+
+    strncpy(buf, s, s_len);
+
+    // Pads input with trailing #
+    while( (s_len + j) <= 5){
+        int pos = s_len + j - 1;
+        strcpy(buf + pos, "#");
+        j++;
+    }
+    
+    for(i = 0; i < 5; i++){
+        
+        write(fd, &buf[i], 1);
+        usleep((1000) * 100);
+    }
+
+    return 1;
 }
 
 int readFromFd(char *s, int fd){

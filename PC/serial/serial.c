@@ -23,10 +23,10 @@ int main(){
     while(1){
 
         readFromFd(s, 1);
-        writeToFd(s, fd);
+        writeCharToFdWithDelay(s, fd);
         usleep((1000) * 1000);
         readFromFd(s, fd);
-       
+        
         printf("Read: %s", s);
     }
 
