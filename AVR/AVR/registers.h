@@ -26,7 +26,7 @@ Registers* set_trigger(Registers* reg, int setValue);
 /*
 	Transmits data over the serial port
 */
-void USART_transmit(unsigned char data);
+void USART_transmit(char *data);
 
 /*
 	Recieves data over the serial port

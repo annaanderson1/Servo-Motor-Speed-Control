@@ -139,14 +139,18 @@ Registers* set_trigger(Registers* reg, int setValue){
 }
 
 // See pg. 190
-void USART_transmit(uint8_t data){
+/* Transmits the data-string over the USART. Ends transmission with a ; */ 
+void USART_transmit(char *data){
+	int pos = 0;
 	
-	// Wait for empty transmit buffer
-	while( !(UCSR0A & (1 << UDRE0)) );
-	
-	// Puts data into buffer, sends the data.
-	UDR0 = data;
-
+	while(*(data + pos) != '\0' ){
+		// Wait for empty transmit buffer
+		while( !(UCSR0A & (1 << UDRE0)) );
+		UDR0 = *(data + pos);
+		_delay_ms(100);
+		pos++;
+	}
+	UDR0 = ';';
 }
 
 uint8_t USART_recieve(void){

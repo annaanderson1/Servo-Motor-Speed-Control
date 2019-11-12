@@ -13,6 +13,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <string.h>
 #include "registers.h"
 
 /* Global variables */
@@ -29,7 +30,7 @@ int main(void){
 
 	setup_registers();
 	sei();
-	unsigned char serial_flag = 'a';
+	//unsigned char serial_flag = 'a';
 	while(1){
 		
 		reg = set_trigger(reg, pwm);
@@ -37,6 +38,10 @@ int main(void){
 		//_delay_ms(50);
 		//unsigned char a = 'a';
 		//USART_transmit(a);
+		char a[100];
+		strcpy(a, "abc");
+		USART_transmit(a);
+		
 	}
 	return 0;
 }

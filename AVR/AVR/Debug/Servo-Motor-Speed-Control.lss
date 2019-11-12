@@ -3,29 +3,29 @@ Servo-Motor-Speed-Control.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  000002bc  00000350  2**0
+  0 .data         00000000  00800100  0000032a  000003be  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000002bc  00000000  00000000  00000094  2**1
+  1 .text         0000032a  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000009  00800100  00800100  00000350  2**0
+  2 .bss          00000009  00800100  00800100  000003be  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000350  2**0
+  3 .comment      00000030  00000000  00000000  000003be  2**0
                   CONTENTS, READONLY
-  4 .debug_aranges 000000b0  00000000  00000000  00000380  2**0
+  4 .debug_aranges 000000b0  00000000  00000000  000003ee  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000005e0  00000000  00000000  00000430  2**0
+  5 .debug_info   0000068a  00000000  00000000  0000049e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000371  00000000  00000000  00000a10  2**0
+  6 .debug_abbrev 000003d4  00000000  00000000  00000b28  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000027c  00000000  00000000  00000d81  2**0
+  7 .debug_line   00000295  00000000  00000000  00000efc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000001d4  00000000  00000000  00001000  2**2
+  8 .debug_frame  000001e0  00000000  00000000  00001194  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000002a8  00000000  00000000  000011d4  2**0
+  9 .debug_str    0000029c  00000000  00000000  00001374  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000343  00000000  00000000  0000147c  2**0
+ 10 .debug_loc    00000405  00000000  00000000  00001610  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000090  00000000  00000000  000017bf  2**0
+ 11 .debug_ranges 00000090  00000000  00000000  00001a15  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -35,7 +35,7 @@ Disassembly of section .text:
    2:	28 c0       	rjmp	.+80     	; 0x54 <__bad_interrupt>
    4:	27 c0       	rjmp	.+78     	; 0x54 <__bad_interrupt>
    6:	26 c0       	rjmp	.+76     	; 0x54 <__bad_interrupt>
-   8:	9b c0       	rjmp	.+310    	; 0x140 <__vector_4>
+   8:	b9 c0       	rjmp	.+370    	; 0x17c <__vector_4>
    a:	24 c0       	rjmp	.+72     	; 0x54 <__bad_interrupt>
    c:	23 c0       	rjmp	.+70     	; 0x54 <__bad_interrupt>
    e:	22 c0       	rjmp	.+68     	; 0x54 <__bad_interrupt>
@@ -49,7 +49,7 @@ Disassembly of section .text:
   1e:	1a c0       	rjmp	.+52     	; 0x54 <__bad_interrupt>
   20:	19 c0       	rjmp	.+50     	; 0x54 <__bad_interrupt>
   22:	18 c0       	rjmp	.+48     	; 0x54 <__bad_interrupt>
-  24:	e0 c0       	rjmp	.+448    	; 0x1e6 <__vector_18>
+  24:	fe c0       	rjmp	.+508    	; 0x222 <__vector_18>
   26:	16 c0       	rjmp	.+44     	; 0x54 <__bad_interrupt>
   28:	15 c0       	rjmp	.+42     	; 0x54 <__bad_interrupt>
   2a:	14 c0       	rjmp	.+40     	; 0x54 <__bad_interrupt>
@@ -79,8 +79,8 @@ Disassembly of section .text:
   4a:	a9 30       	cpi	r26, 0x09	; 9
   4c:	b2 07       	cpc	r27, r18
   4e:	e1 f7       	brne	.-8      	; 0x48 <.do_clear_bss_loop>
-  50:	1a d1       	rcall	.+564    	; 0x286 <main>
-  52:	32 c1       	rjmp	.+612    	; 0x2b8 <_exit>
+  50:	38 d1       	rcall	.+624    	; 0x2c2 <main>
+  52:	69 c1       	rjmp	.+722    	; 0x326 <_exit>
 
 00000054 <__bad_interrupt>:
   54:	d5 cf       	rjmp	.-86     	; 0x0 <__vectors>
@@ -305,323 +305,422 @@ Registers* set_trigger(Registers* reg, int setValue){
 }
  13e:	08 95       	ret
 
-00000140 <__vector_4>:
-/************************************************************************/
-/* INTERRUPT SERVICE ROUTINES											*/
-/************************************************************************/
+00000140 <USART_transmit>:
 
-/* ISR for PCINT14-8 */
-ISR(PCINT1_vect){
- 140:	1f 92       	push	r1
- 142:	0f 92       	push	r0
- 144:	0f b6       	in	r0, 0x3f	; 63
- 146:	0f 92       	push	r0
- 148:	11 24       	eor	r1, r1
- 14a:	2f 93       	push	r18
- 14c:	3f 93       	push	r19
- 14e:	4f 93       	push	r20
- 150:	5f 93       	push	r21
- 152:	6f 93       	push	r22
- 154:	7f 93       	push	r23
- 156:	8f 93       	push	r24
- 158:	9f 93       	push	r25
- 15a:	af 93       	push	r26
- 15c:	bf 93       	push	r27
- 15e:	cf 93       	push	r28
- 160:	df 93       	push	r29
- 162:	ef 93       	push	r30
- 164:	ff 93       	push	r31
+// See pg. 190
+/* Transmits the data-string over the USART. Ends with a ;*/ 
+void USART_transmit(char *data){
+ 140:	cf 93       	push	r28
+ 142:	df 93       	push	r29
+	int pos = 0;
 	
-	unsigned int ABnew = 0x00;
-	unsigned int A = 0x00;
-	unsigned int B = 0x00;
-	
-	A = (PINC & (1 << PC5));
- 166:	c6 b1       	in	r28, 0x06	; 6
- 168:	c0 72       	andi	r28, 0x20	; 32
- 16a:	d0 e0       	ldi	r29, 0x00	; 0
-	A = (A >> (PC5 - 1));	// Sets A in pos 1
-	
-	B = (PINC & (1 << PC4));
- 16c:	26 b1       	in	r18, 0x06	; 6
-	B = (B >> PC4);			// Sets B in pos 0
- 16e:	24 fb       	bst	r18, 4
- 170:	88 27       	eor	r24, r24
- 172:	80 f9       	bld	r24, 0
- 174:	90 e0       	ldi	r25, 0x00	; 0
-	unsigned int ABnew = 0x00;
-	unsigned int A = 0x00;
-	unsigned int B = 0x00;
-	
-	A = (PINC & (1 << PC5));
-	A = (A >> (PC5 - 1));	// Sets A in pos 1
- 176:	d2 95       	swap	r29
- 178:	c2 95       	swap	r28
- 17a:	cf 70       	andi	r28, 0x0F	; 15
- 17c:	cd 27       	eor	r28, r29
- 17e:	df 70       	andi	r29, 0x0F	; 15
- 180:	cd 27       	eor	r28, r29
-	
-	B = (PINC & (1 << PC4));
-	B = (B >> PC4);			// Sets B in pos 0
-	
-	ABnew = A | B;
- 182:	c8 2b       	or	r28, r24
- 184:	d9 2b       	or	r29, r25
-	
-	switch(ABnew){
- 186:	20 97       	sbiw	r28, 0x00	; 0
- 188:	21 f0       	breq	.+8      	; 0x192 <__vector_4+0x52>
- 18a:	c1 30       	cpi	r28, 0x01	; 1
- 18c:	d1 05       	cpc	r29, r1
- 18e:	59 f0       	breq	.+22     	; 0x1a6 <__vector_4+0x66>
- 190:	13 c0       	rjmp	.+38     	; 0x1b8 <__vector_4+0x78>
-		case 0:	
-			if(AB == 2){
- 192:	80 91 05 01 	lds	r24, 0x0105
- 196:	90 91 06 01 	lds	r25, 0x0106
- 19a:	02 97       	sbiw	r24, 0x02	; 2
- 19c:	11 f4       	brne	.+4      	; 0x1a2 <__vector_4+0x62>
-				clockwise();
- 19e:	90 df       	rcall	.-224    	; 0xc0 <clockwise>
- 1a0:	0b c0       	rjmp	.+22     	; 0x1b8 <__vector_4+0x78>
-			}
-			else{
-				counterclockwise();
- 1a2:	a8 df       	rcall	.-176    	; 0xf4 <counterclockwise>
- 1a4:	09 c0       	rjmp	.+18     	; 0x1b8 <__vector_4+0x78>
-			}
-			break;
-		
-		case 1:
-			if(AB == 0){
- 1a6:	80 91 05 01 	lds	r24, 0x0105
- 1aa:	90 91 06 01 	lds	r25, 0x0106
- 1ae:	89 2b       	or	r24, r25
- 1b0:	11 f4       	brne	.+4      	; 0x1b6 <__vector_4+0x76>
-				clockwise();
- 1b2:	86 df       	rcall	.-244    	; 0xc0 <clockwise>
- 1b4:	01 c0       	rjmp	.+2      	; 0x1b8 <__vector_4+0x78>
-			}
-			else{
-				counterclockwise();
- 1b6:	9e df       	rcall	.-196    	; 0xf4 <counterclockwise>
-			}
-			break;
-	}
-	AB = ABnew;
- 1b8:	d0 93 06 01 	sts	0x0106, r29
- 1bc:	c0 93 05 01 	sts	0x0105, r28
-
-}
- 1c0:	ff 91       	pop	r31
- 1c2:	ef 91       	pop	r30
- 1c4:	df 91       	pop	r29
- 1c6:	cf 91       	pop	r28
- 1c8:	bf 91       	pop	r27
- 1ca:	af 91       	pop	r26
- 1cc:	9f 91       	pop	r25
- 1ce:	8f 91       	pop	r24
- 1d0:	7f 91       	pop	r23
- 1d2:	6f 91       	pop	r22
- 1d4:	5f 91       	pop	r21
- 1d6:	4f 91       	pop	r20
- 1d8:	3f 91       	pop	r19
- 1da:	2f 91       	pop	r18
- 1dc:	0f 90       	pop	r0
- 1de:	0f be       	out	0x3f, r0	; 63
- 1e0:	0f 90       	pop	r0
- 1e2:	1f 90       	pop	r1
- 1e4:	18 95       	reti
-
-000001e6 <__vector_18>:
-
-/* ISR for serial receiver */
-ISR(USART_RX_vect){
- 1e6:	1f 92       	push	r1
- 1e8:	0f 92       	push	r0
- 1ea:	0f b6       	in	r0, 0x3f	; 63
- 1ec:	0f 92       	push	r0
- 1ee:	11 24       	eor	r1, r1
- 1f0:	2f 93       	push	r18
- 1f2:	3f 93       	push	r19
- 1f4:	4f 93       	push	r20
- 1f6:	6f 93       	push	r22
- 1f8:	7f 93       	push	r23
- 1fa:	8f 93       	push	r24
- 1fc:	9f 93       	push	r25
- 1fe:	af 93       	push	r26
- 200:	bf 93       	push	r27
- 202:	cf 93       	push	r28
- 204:	df 93       	push	r29
- 206:	ef 93       	push	r30
- 208:	ff 93       	push	r31
-	cli();
- 20a:	f8 94       	cli
-	PORTC &= ~(1 << PC2);
- 20c:	42 98       	cbi	0x08, 2	; 8
-	PORTC |= (1 << PC1);
- 20e:	41 9a       	sbi	0x08, 1	; 8
- 210:	a0 e0       	ldi	r26, 0x00	; 0
- 212:	b1 e0       	ldi	r27, 0x01	; 1
- 214:	bd 01       	movw	r22, r26
- 216:	25 e0       	ldi	r18, 0x05	; 5
- 218:	31 e0       	ldi	r19, 0x01	; 1
-	for(int i = 0; i < 5; i++){
-		while( !(UCSR0A & (1 << RXC0)) );
- 21a:	e0 ec       	ldi	r30, 0xC0	; 192
- 21c:	f0 e0       	ldi	r31, 0x00	; 0
-		recieved_bytes[i] = UDR0;
- 21e:	c6 ec       	ldi	r28, 0xC6	; 198
- 220:	d0 e0       	ldi	r29, 0x00	; 0
-ISR(USART_RX_vect){
-	cli();
-	PORTC &= ~(1 << PC2);
-	PORTC |= (1 << PC1);
-	for(int i = 0; i < 5; i++){
-		while( !(UCSR0A & (1 << RXC0)) );
- 222:	40 81       	ld	r20, Z
- 224:	44 23       	and	r20, r20
- 226:	ec f7       	brge	.-6      	; 0x222 <__vector_18+0x3c>
-		recieved_bytes[i] = UDR0;
- 228:	48 81       	ld	r20, Y
- 22a:	4d 93       	st	X+, r20
-/* ISR for serial receiver */
-ISR(USART_RX_vect){
-	cli();
-	PORTC &= ~(1 << PC2);
-	PORTC |= (1 << PC1);
-	for(int i = 0; i < 5; i++){
- 22c:	a2 17       	cp	r26, r18
- 22e:	b3 07       	cpc	r27, r19
- 230:	c1 f7       	brne	.-16     	; 0x222 <__vector_18+0x3c>
-		while( !(UCSR0A & (1 << RXC0)) );
-		recieved_bytes[i] = UDR0;
-	}
-	PORTC &= ~(1 << PC1);
- 232:	41 98       	cbi	0x08, 1	; 8
-	PORTC |= (1 << PC0);
- 234:	40 9a       	sbi	0x08, 0	; 8
- 236:	a5 e0       	ldi	r26, 0x05	; 5
- 238:	b1 e0       	ldi	r27, 0x01	; 1
-	for(int i = 4; i > -1; i--){
+	while(*(data + pos) != '\0' ){
+ 144:	fc 01       	movw	r30, r24
+ 146:	20 81       	ld	r18, Z
+ 148:	22 23       	and	r18, r18
+ 14a:	91 f0       	breq	.+36     	; 0x170 <USART_transmit+0x30>
+ 14c:	dc 01       	movw	r26, r24
+ 14e:	11 96       	adiw	r26, 0x01	; 1
+		// Wait for empty transmit buffer
 		while( !(UCSR0A & (1 << UDRE0)) );
- 23a:	e0 ec       	ldi	r30, 0xC0	; 192
- 23c:	f0 e0       	ldi	r31, 0x00	; 0
-		UDR0 = recieved_bytes[i];
- 23e:	c6 ec       	ldi	r28, 0xC6	; 198
- 240:	d0 e0       	ldi	r29, 0x00	; 0
-		recieved_bytes[i] = UDR0;
-	}
-	PORTC &= ~(1 << PC1);
-	PORTC |= (1 << PC0);
-	for(int i = 4; i > -1; i--){
+ 150:	e0 ec       	ldi	r30, 0xC0	; 192
+ 152:	f0 e0       	ldi	r31, 0x00	; 0
+		UDR0 = *(data + pos);
+ 154:	c6 ec       	ldi	r28, 0xC6	; 198
+ 156:	d0 e0       	ldi	r29, 0x00	; 0
+void USART_transmit(char *data){
+	int pos = 0;
+	
+	while(*(data + pos) != '\0' ){
+		// Wait for empty transmit buffer
 		while( !(UCSR0A & (1 << UDRE0)) );
- 242:	20 81       	ld	r18, Z
- 244:	25 ff       	sbrs	r18, 5
- 246:	fd cf       	rjmp	.-6      	; 0x242 <__vector_18+0x5c>
-		UDR0 = recieved_bytes[i];
- 248:	2e 91       	ld	r18, -X
- 24a:	28 83       	st	Y, r18
+ 158:	80 81       	ld	r24, Z
+ 15a:	85 ff       	sbrs	r24, 5
+ 15c:	fd cf       	rjmp	.-6      	; 0x158 <USART_transmit+0x18>
+		UDR0 = *(data + pos);
+ 15e:	28 83       	st	Y, r18
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 24c:	8f ef       	ldi	r24, 0xFF	; 255
- 24e:	9f e3       	ldi	r25, 0x3F	; 63
- 250:	01 97       	sbiw	r24, 0x01	; 1
- 252:	f1 f7       	brne	.-4      	; 0x250 <__vector_18+0x6a>
- 254:	00 c0       	rjmp	.+0      	; 0x256 <__vector_18+0x70>
+ 160:	8f ef       	ldi	r24, 0xFF	; 255
+ 162:	9f e3       	ldi	r25, 0x3F	; 63
+ 164:	01 97       	sbiw	r24, 0x01	; 1
+ 166:	f1 f7       	brne	.-4      	; 0x164 <USART_transmit+0x24>
+ 168:	00 c0       	rjmp	.+0      	; 0x16a <USART_transmit+0x2a>
+// See pg. 190
+/* Transmits the data-string over the USART. Ends with a ;*/ 
+void USART_transmit(char *data){
+	int pos = 0;
+	
+	while(*(data + pos) != '\0' ){
+ 16a:	2d 91       	ld	r18, X+
+ 16c:	21 11       	cpse	r18, r1
+ 16e:	f4 cf       	rjmp	.-24     	; 0x158 <USART_transmit+0x18>
+		while( !(UCSR0A & (1 << UDRE0)) );
+		UDR0 = *(data + pos);
+		_delay_ms(100);
+		pos++;
+	}
+	UDR0 = ';';
+ 170:	8b e3       	ldi	r24, 0x3B	; 59
+ 172:	80 93 c6 00 	sts	0x00C6, r24
+}
+ 176:	df 91       	pop	r29
+ 178:	cf 91       	pop	r28
+ 17a:	08 95       	ret
+
+0000017c <__vector_4>:
+/************************************************************************/
+/* INTERRUPT SERVICE ROUTINES											*/
+/************************************************************************/
+
+/* ISR for PCINT14-8 */
+ISR(PCINT1_vect){
+ 17c:	1f 92       	push	r1
+ 17e:	0f 92       	push	r0
+ 180:	0f b6       	in	r0, 0x3f	; 63
+ 182:	0f 92       	push	r0
+ 184:	11 24       	eor	r1, r1
+ 186:	2f 93       	push	r18
+ 188:	3f 93       	push	r19
+ 18a:	4f 93       	push	r20
+ 18c:	5f 93       	push	r21
+ 18e:	6f 93       	push	r22
+ 190:	7f 93       	push	r23
+ 192:	8f 93       	push	r24
+ 194:	9f 93       	push	r25
+ 196:	af 93       	push	r26
+ 198:	bf 93       	push	r27
+ 19a:	cf 93       	push	r28
+ 19c:	df 93       	push	r29
+ 19e:	ef 93       	push	r30
+ 1a0:	ff 93       	push	r31
+	
+	unsigned int ABnew = 0x00;
+	unsigned int A = 0x00;
+	unsigned int B = 0x00;
+	
+	A = (PINC & (1 << PC5));
+ 1a2:	c6 b1       	in	r28, 0x06	; 6
+ 1a4:	c0 72       	andi	r28, 0x20	; 32
+ 1a6:	d0 e0       	ldi	r29, 0x00	; 0
+	A = (A >> (PC5 - 1));	// Sets A in pos 1
+	
+	B = (PINC & (1 << PC4));
+ 1a8:	26 b1       	in	r18, 0x06	; 6
+	B = (B >> PC4);			// Sets B in pos 0
+ 1aa:	24 fb       	bst	r18, 4
+ 1ac:	88 27       	eor	r24, r24
+ 1ae:	80 f9       	bld	r24, 0
+ 1b0:	90 e0       	ldi	r25, 0x00	; 0
+	unsigned int ABnew = 0x00;
+	unsigned int A = 0x00;
+	unsigned int B = 0x00;
+	
+	A = (PINC & (1 << PC5));
+	A = (A >> (PC5 - 1));	// Sets A in pos 1
+ 1b2:	d2 95       	swap	r29
+ 1b4:	c2 95       	swap	r28
+ 1b6:	cf 70       	andi	r28, 0x0F	; 15
+ 1b8:	cd 27       	eor	r28, r29
+ 1ba:	df 70       	andi	r29, 0x0F	; 15
+ 1bc:	cd 27       	eor	r28, r29
+	
+	B = (PINC & (1 << PC4));
+	B = (B >> PC4);			// Sets B in pos 0
+	
+	ABnew = A | B;
+ 1be:	c8 2b       	or	r28, r24
+ 1c0:	d9 2b       	or	r29, r25
+	
+	switch(ABnew){
+ 1c2:	20 97       	sbiw	r28, 0x00	; 0
+ 1c4:	21 f0       	breq	.+8      	; 0x1ce <__vector_4+0x52>
+ 1c6:	c1 30       	cpi	r28, 0x01	; 1
+ 1c8:	d1 05       	cpc	r29, r1
+ 1ca:	59 f0       	breq	.+22     	; 0x1e2 <__vector_4+0x66>
+ 1cc:	13 c0       	rjmp	.+38     	; 0x1f4 <__vector_4+0x78>
+		case 0:	
+			if(AB == 2){
+ 1ce:	80 91 05 01 	lds	r24, 0x0105
+ 1d2:	90 91 06 01 	lds	r25, 0x0106
+ 1d6:	02 97       	sbiw	r24, 0x02	; 2
+ 1d8:	11 f4       	brne	.+4      	; 0x1de <__vector_4+0x62>
+				clockwise();
+ 1da:	72 df       	rcall	.-284    	; 0xc0 <clockwise>
+ 1dc:	0b c0       	rjmp	.+22     	; 0x1f4 <__vector_4+0x78>
+			}
+			else{
+				counterclockwise();
+ 1de:	8a df       	rcall	.-236    	; 0xf4 <counterclockwise>
+ 1e0:	09 c0       	rjmp	.+18     	; 0x1f4 <__vector_4+0x78>
+			}
+			break;
+		
+		case 1:
+			if(AB == 0){
+ 1e2:	80 91 05 01 	lds	r24, 0x0105
+ 1e6:	90 91 06 01 	lds	r25, 0x0106
+ 1ea:	89 2b       	or	r24, r25
+ 1ec:	11 f4       	brne	.+4      	; 0x1f2 <__vector_4+0x76>
+				clockwise();
+ 1ee:	68 df       	rcall	.-304    	; 0xc0 <clockwise>
+ 1f0:	01 c0       	rjmp	.+2      	; 0x1f4 <__vector_4+0x78>
+			}
+			else{
+				counterclockwise();
+ 1f2:	80 df       	rcall	.-256    	; 0xf4 <counterclockwise>
+			}
+			break;
+	}
+	AB = ABnew;
+ 1f4:	d0 93 06 01 	sts	0x0106, r29
+ 1f8:	c0 93 05 01 	sts	0x0105, r28
+
+}
+ 1fc:	ff 91       	pop	r31
+ 1fe:	ef 91       	pop	r30
+ 200:	df 91       	pop	r29
+ 202:	cf 91       	pop	r28
+ 204:	bf 91       	pop	r27
+ 206:	af 91       	pop	r26
+ 208:	9f 91       	pop	r25
+ 20a:	8f 91       	pop	r24
+ 20c:	7f 91       	pop	r23
+ 20e:	6f 91       	pop	r22
+ 210:	5f 91       	pop	r21
+ 212:	4f 91       	pop	r20
+ 214:	3f 91       	pop	r19
+ 216:	2f 91       	pop	r18
+ 218:	0f 90       	pop	r0
+ 21a:	0f be       	out	0x3f, r0	; 63
+ 21c:	0f 90       	pop	r0
+ 21e:	1f 90       	pop	r1
+ 220:	18 95       	reti
+
+00000222 <__vector_18>:
+
+/* ISR for serial receiver */
+ISR(USART_RX_vect){
+ 222:	1f 92       	push	r1
+ 224:	0f 92       	push	r0
+ 226:	0f b6       	in	r0, 0x3f	; 63
+ 228:	0f 92       	push	r0
+ 22a:	11 24       	eor	r1, r1
+ 22c:	2f 93       	push	r18
+ 22e:	3f 93       	push	r19
+ 230:	4f 93       	push	r20
+ 232:	6f 93       	push	r22
+ 234:	7f 93       	push	r23
+ 236:	8f 93       	push	r24
+ 238:	9f 93       	push	r25
+ 23a:	af 93       	push	r26
+ 23c:	bf 93       	push	r27
+ 23e:	cf 93       	push	r28
+ 240:	df 93       	push	r29
+ 242:	ef 93       	push	r30
+ 244:	ff 93       	push	r31
+	cli();
+ 246:	f8 94       	cli
+	PORTC &= ~(1 << PC2);
+ 248:	42 98       	cbi	0x08, 2	; 8
+	PORTC |= (1 << PC1);
+ 24a:	41 9a       	sbi	0x08, 1	; 8
+ 24c:	a0 e0       	ldi	r26, 0x00	; 0
+ 24e:	b1 e0       	ldi	r27, 0x01	; 1
+ 250:	bd 01       	movw	r22, r26
+ 252:	25 e0       	ldi	r18, 0x05	; 5
+ 254:	31 e0       	ldi	r19, 0x01	; 1
+	for(int i = 0; i < 5; i++){
+		while( !(UCSR0A & (1 << RXC0)) );
+ 256:	e0 ec       	ldi	r30, 0xC0	; 192
+ 258:	f0 e0       	ldi	r31, 0x00	; 0
+		recieved_bytes[i] = UDR0;
+ 25a:	c6 ec       	ldi	r28, 0xC6	; 198
+ 25c:	d0 e0       	ldi	r29, 0x00	; 0
+ISR(USART_RX_vect){
+	cli();
+	PORTC &= ~(1 << PC2);
+	PORTC |= (1 << PC1);
+	for(int i = 0; i < 5; i++){
+		while( !(UCSR0A & (1 << RXC0)) );
+ 25e:	40 81       	ld	r20, Z
+ 260:	44 23       	and	r20, r20
+ 262:	ec f7       	brge	.-6      	; 0x25e <__vector_18+0x3c>
+		recieved_bytes[i] = UDR0;
+ 264:	48 81       	ld	r20, Y
+ 266:	4d 93       	st	X+, r20
+/* ISR for serial receiver */
+ISR(USART_RX_vect){
+	cli();
+	PORTC &= ~(1 << PC2);
+	PORTC |= (1 << PC1);
+	for(int i = 0; i < 5; i++){
+ 268:	a2 17       	cp	r26, r18
+ 26a:	b3 07       	cpc	r27, r19
+ 26c:	c1 f7       	brne	.-16     	; 0x25e <__vector_18+0x3c>
+		while( !(UCSR0A & (1 << RXC0)) );
+		recieved_bytes[i] = UDR0;
+	}
+	PORTC &= ~(1 << PC1);
+ 26e:	41 98       	cbi	0x08, 1	; 8
+	PORTC |= (1 << PC0);
+ 270:	40 9a       	sbi	0x08, 0	; 8
+ 272:	a5 e0       	ldi	r26, 0x05	; 5
+ 274:	b1 e0       	ldi	r27, 0x01	; 1
+	for(int i = 4; i > -1; i--){
+		while( !(UCSR0A & (1 << UDRE0)) );
+ 276:	e0 ec       	ldi	r30, 0xC0	; 192
+ 278:	f0 e0       	ldi	r31, 0x00	; 0
+		UDR0 = recieved_bytes[i];
+ 27a:	c6 ec       	ldi	r28, 0xC6	; 198
+ 27c:	d0 e0       	ldi	r29, 0x00	; 0
+		recieved_bytes[i] = UDR0;
+	}
+	PORTC &= ~(1 << PC1);
+	PORTC |= (1 << PC0);
+	for(int i = 4; i > -1; i--){
+		while( !(UCSR0A & (1 << UDRE0)) );
+ 27e:	20 81       	ld	r18, Z
+ 280:	25 ff       	sbrs	r18, 5
+ 282:	fd cf       	rjmp	.-6      	; 0x27e <__vector_18+0x5c>
+		UDR0 = recieved_bytes[i];
+ 284:	2e 91       	ld	r18, -X
+ 286:	28 83       	st	Y, r18
+ 288:	8f ef       	ldi	r24, 0xFF	; 255
+ 28a:	9f e3       	ldi	r25, 0x3F	; 63
+ 28c:	01 97       	sbiw	r24, 0x01	; 1
+ 28e:	f1 f7       	brne	.-4      	; 0x28c <__vector_18+0x6a>
+ 290:	00 c0       	rjmp	.+0      	; 0x292 <__vector_18+0x70>
 		while( !(UCSR0A & (1 << RXC0)) );
 		recieved_bytes[i] = UDR0;
 	}
 	PORTC &= ~(1 << PC1);
 	PORTC |= (1 << PC0);
 	for(int i = 4; i > -1; i--){
- 256:	a6 17       	cp	r26, r22
- 258:	b7 07       	cpc	r27, r23
- 25a:	99 f7       	brne	.-26     	; 0x242 <__vector_18+0x5c>
+ 292:	a6 17       	cp	r26, r22
+ 294:	b7 07       	cpc	r27, r23
+ 296:	99 f7       	brne	.-26     	; 0x27e <__vector_18+0x5c>
 		while( !(UCSR0A & (1 << UDRE0)) );
 		UDR0 = recieved_bytes[i];
 		_delay_ms(100);
 	}
 	PORTC &= ~(1 << PC0);
- 25c:	40 98       	cbi	0x08, 0	; 8
+ 298:	40 98       	cbi	0x08, 0	; 8
 	
 	PORTC |= (1 << PC2);
- 25e:	42 9a       	sbi	0x08, 2	; 8
+ 29a:	42 9a       	sbi	0x08, 2	; 8
 	sei();
- 260:	78 94       	sei
+ 29c:	78 94       	sei
 }
- 262:	ff 91       	pop	r31
- 264:	ef 91       	pop	r30
- 266:	df 91       	pop	r29
- 268:	cf 91       	pop	r28
- 26a:	bf 91       	pop	r27
- 26c:	af 91       	pop	r26
- 26e:	9f 91       	pop	r25
- 270:	8f 91       	pop	r24
- 272:	7f 91       	pop	r23
- 274:	6f 91       	pop	r22
- 276:	4f 91       	pop	r20
- 278:	3f 91       	pop	r19
- 27a:	2f 91       	pop	r18
- 27c:	0f 90       	pop	r0
- 27e:	0f be       	out	0x3f, r0	; 63
- 280:	0f 90       	pop	r0
- 282:	1f 90       	pop	r1
- 284:	18 95       	reti
+ 29e:	ff 91       	pop	r31
+ 2a0:	ef 91       	pop	r30
+ 2a2:	df 91       	pop	r29
+ 2a4:	cf 91       	pop	r28
+ 2a6:	bf 91       	pop	r27
+ 2a8:	af 91       	pop	r26
+ 2aa:	9f 91       	pop	r25
+ 2ac:	8f 91       	pop	r24
+ 2ae:	7f 91       	pop	r23
+ 2b0:	6f 91       	pop	r22
+ 2b2:	4f 91       	pop	r20
+ 2b4:	3f 91       	pop	r19
+ 2b6:	2f 91       	pop	r18
+ 2b8:	0f 90       	pop	r0
+ 2ba:	0f be       	out	0x3f, r0	; 63
+ 2bc:	0f 90       	pop	r0
+ 2be:	1f 90       	pop	r1
+ 2c0:	18 95       	reti
 
-00000286 <main>:
+000002c2 <main>:
 unsigned int AB;
 unsigned int pwm;
 unsigned char recieved_bytes[5];
 
 
 int main(void){
- 286:	cf 93       	push	r28
- 288:	df 93       	push	r29
- 28a:	00 d0       	rcall	.+0      	; 0x28c <main+0x6>
- 28c:	cd b7       	in	r28, 0x3d	; 61
- 28e:	de b7       	in	r29, 0x3e	; 62
+ 2c2:	cf 93       	push	r28
+ 2c4:	df 93       	push	r29
+ 2c6:	cd b7       	in	r28, 0x3d	; 61
+ 2c8:	de b7       	in	r29, 0x3e	; 62
+ 2ca:	c6 56       	subi	r28, 0x66	; 102
+ 2cc:	d1 09       	sbc	r29, r1
+ 2ce:	0f b6       	in	r0, 0x3f	; 63
+ 2d0:	f8 94       	cli
+ 2d2:	de bf       	out	0x3e, r29	; 62
+ 2d4:	0f be       	out	0x3f, r0	; 63
+ 2d6:	cd bf       	out	0x3d, r28	; 61
 	Registers registers;
 	Registers *reg = &registers;
 	AB = 0;
- 290:	10 92 06 01 	sts	0x0106, r1
- 294:	10 92 05 01 	sts	0x0105, r1
+ 2d8:	10 92 06 01 	sts	0x0106, r1
+ 2dc:	10 92 05 01 	sts	0x0105, r1
 	pwm = 50;
- 298:	82 e3       	ldi	r24, 0x32	; 50
- 29a:	90 e0       	ldi	r25, 0x00	; 0
- 29c:	90 93 08 01 	sts	0x0108, r25
- 2a0:	80 93 07 01 	sts	0x0107, r24
+ 2e0:	82 e3       	ldi	r24, 0x32	; 50
+ 2e2:	90 e0       	ldi	r25, 0x00	; 0
+ 2e4:	90 93 08 01 	sts	0x0108, r25
+ 2e8:	80 93 07 01 	sts	0x0107, r24
 
 	setup_registers();
- 2a4:	3f df       	rcall	.-386    	; 0x124 <setup_registers>
+ 2ec:	1b df       	rcall	.-458    	; 0x124 <setup_registers>
 	sei();
- 2a6:	78 94       	sei
+ 2ee:	78 94       	sei
 unsigned char recieved_bytes[5];
 
 
 int main(void){
 	Registers registers;
 	Registers *reg = &registers;
- 2a8:	ce 01       	movw	r24, r28
- 2aa:	01 96       	adiw	r24, 0x01	; 1
+ 2f0:	8e 01       	movw	r16, r28
+ 2f2:	0f 5f       	subi	r16, 0xFF	; 255
+ 2f4:	1f 4f       	sbci	r17, 0xFF	; 255
+		//unsigned char data = USART_recieve();
+		//_delay_ms(50);
+		//unsigned char a = 'a';
+		//USART_transmit(a);
+		char a[100];
+		strcpy(a, "abc");
+ 2f6:	0f 2e       	mov	r0, r31
+ 2f8:	f1 e6       	ldi	r31, 0x61	; 97
+ 2fa:	cf 2e       	mov	r12, r31
+ 2fc:	f2 e6       	ldi	r31, 0x62	; 98
+ 2fe:	df 2e       	mov	r13, r31
+ 300:	f3 e6       	ldi	r31, 0x63	; 99
+ 302:	ef 2e       	mov	r14, r31
+ 304:	f1 2c       	mov	r15, r1
+ 306:	f0 2d       	mov	r31, r0
 	setup_registers();
 	sei();
-	unsigned char serial_flag = 'a';
+	//unsigned char serial_flag = 'a';
 	while(1){
 		
 		reg = set_trigger(reg, pwm);
- 2ac:	60 91 07 01 	lds	r22, 0x0107
- 2b0:	70 91 08 01 	lds	r23, 0x0108
- 2b4:	3f df       	rcall	.-386    	; 0x134 <set_trigger>
- 2b6:	fa cf       	rjmp	.-12     	; 0x2ac <main+0x26>
+ 308:	60 91 07 01 	lds	r22, 0x0107
+ 30c:	70 91 08 01 	lds	r23, 0x0108
+ 310:	c8 01       	movw	r24, r16
+ 312:	10 df       	rcall	.-480    	; 0x134 <set_trigger>
+ 314:	8c 01       	movw	r16, r24
+		//unsigned char data = USART_recieve();
+		//_delay_ms(50);
+		//unsigned char a = 'a';
+		//USART_transmit(a);
+		char a[100];
+		strcpy(a, "abc");
+ 316:	cb 82       	std	Y+3, r12	; 0x03
+ 318:	dc 82       	std	Y+4, r13	; 0x04
+ 31a:	ed 82       	std	Y+5, r14	; 0x05
+ 31c:	fe 82       	std	Y+6, r15	; 0x06
+		USART_transmit(a);
+ 31e:	ce 01       	movw	r24, r28
+ 320:	03 96       	adiw	r24, 0x03	; 3
+ 322:	0e df       	rcall	.-484    	; 0x140 <USART_transmit>
+ 324:	f1 cf       	rjmp	.-30     	; 0x308 <main+0x46>
 
-000002b8 <_exit>:
- 2b8:	f8 94       	cli
+00000326 <_exit>:
+ 326:	f8 94       	cli
 
-000002ba <__stop_program>:
- 2ba:	ff cf       	rjmp	.-2      	; 0x2ba <__stop_program>
+00000328 <__stop_program>:
+ 328:	ff cf       	rjmp	.-2      	; 0x328 <__stop_program>
