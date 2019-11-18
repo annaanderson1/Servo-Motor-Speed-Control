@@ -24,7 +24,15 @@ speed-control.d speed-control.o: .././speed-control.c \
  C:\wp\cygwin\usr\include/machine/_default_types.h \
  C:\wp\cygwin\usr\include/sys/lock.h C:\wp\cygwin\usr\include/_ansi.h \
  C:\wp\cygwin\usr\include/string.h C:\wp\cygwin\usr\include/sys/cdefs.h \
- C:\wp\cygwin\usr\include/sys/string.h .././registers.h
+ C:\wp\cygwin\usr\include/sys/string.h C:\wp\cygwin\usr\include/stdio.h \
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdarg.h \
+ C:\wp\cygwin\usr\include/sys/types.h \
+ C:\wp\cygwin\usr\include/machine/types.h \
+ C:\wp\cygwin\usr\include/sys/stdio.h \
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h \
+ C:\wp\cygwin\usr\include/stdlib.h \
+ C:\wp\cygwin\usr\include/machine/stdlib.h \
+ C:\wp\cygwin\usr\include/alloca.h .././registers.h
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -87,5 +95,23 @@ C:\wp\cygwin\usr\include/string.h:
 C:\wp\cygwin\usr\include/sys/cdefs.h:
 
 C:\wp\cygwin\usr\include/sys/string.h:
+
+C:\wp\cygwin\usr\include/stdio.h:
+
+c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdarg.h:
+
+C:\wp\cygwin\usr\include/sys/types.h:
+
+C:\wp\cygwin\usr\include/machine/types.h:
+
+C:\wp\cygwin\usr\include/sys/stdio.h:
+
+c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h:
+
+C:\wp\cygwin\usr\include/stdlib.h:
+
+C:\wp\cygwin\usr\include/machine/stdlib.h:
+
+C:\wp\cygwin\usr\include/alloca.h:
 
 .././registers.h:

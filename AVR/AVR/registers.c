@@ -7,16 +7,21 @@
 
 #define F_CPU 1000000UL
 #define BAUD 2400
-//#define UBBR (FOSC/(16UL * BAUD))-1
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /* Global variables */
 extern unsigned int AB;
 extern unsigned int pwm;
-extern unsigned char recieved_bytes[5];
+extern char recieved_bytes[5];
+extern bool newCommand;
+extern int speed;
 
 typedef struct {
 	
@@ -73,7 +78,7 @@ void setup_USART(){
 void setup_interrupts(){
 	
 	PCICR = (1 << PCIE1);						// Enables possibility of interrupts on pins 14-8
-	//PCMSK1 = (1 << PCINT13) | (1 << PCINT12);	// Enables interrupts on pin PC5 & PC4
+	PCMSK1 = (1 << PCINT13) | (1 << PCINT12);	// Enables interrupts on pin PC5 & PC4
 	
 }
 
@@ -131,26 +136,35 @@ void setup_registers(){
 /* Sets the PWM trigger value*/ 
 Registers* set_trigger(Registers* reg, int setValue){
 	
-	reg->setValue = setValue;
 	OCR0A = setValue;
 	OCR0B = setValue;
-	
 	return reg;
+
 }
 
 // See pg. 190
-/* Transmits the data-string over the USART. Ends transmission with a ; */ 
+/* Transmits the data-string over the USART */ 
 void USART_transmit(char *data){
-	int pos = 0;
+	int i = 0;
+	int j = 0;
+	char buf[6];
+	int data_len = strlen(data);
 	
-	while(*(data + pos) != '\0' ){
+	strncpy(buf, data, data_len);
+	
+	// Pads data with trailing # 
+	while( (data_len + i) <= 5){
+		int pos = (data_len + i);
+		strcpy(buf + pos, " ");
+		i++;
+	}
+	
+	for(j = 0; j < 5; j++){
 		// Wait for empty transmit buffer
 		while( !(UCSR0A & (1 << UDRE0)) );
-		UDR0 = *(data + pos);
-		_delay_ms(100);
-		pos++;
+		UDR0 = buf[j];
+		_delay_ms(5);
 	}
-	UDR0 = ';';
 }
 
 uint8_t USART_recieve(void){
@@ -168,7 +182,7 @@ uint8_t USART_recieve(void){
 
 /* ISR for PCINT14-8 */
 ISR(PCINT1_vect){
-	
+	cli();
 	unsigned int ABnew = 0x00;
 	unsigned int A = 0x00;
 	unsigned int B = 0x00;
@@ -201,7 +215,7 @@ ISR(PCINT1_vect){
 			break;
 	}
 	AB = ABnew;
-
+	sei();
 }
 
 /* ISR for serial receiver */
@@ -214,15 +228,8 @@ ISR(USART_RX_vect){
 		recieved_bytes[i] = UDR0;
 	}
 	PORTC &= ~(1 << PC1);
-	PORTC |= (1 << PC0);
-	for(int i = 4; i > -1; i--){
-		while( !(UCSR0A & (1 << UDRE0)) );
-		UDR0 = recieved_bytes[i];
-		_delay_ms(100);
-	}
-	PORTC &= ~(1 << PC0);
-	
 	PORTC |= (1 << PC2);
+	newCommand = true;
 	sei();
 }
 

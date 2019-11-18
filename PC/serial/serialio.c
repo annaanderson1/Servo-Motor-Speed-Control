@@ -42,7 +42,7 @@ int writeCharToFdWithDelay(char *s, int fd){
     
     for(j = 0; j < 5; j++){
         write(fd, &buf[j], 1);
-        usleep((1000) * 100);
+        usleep((1000) * 5);
     }
     strcpy(s, buf);
 
