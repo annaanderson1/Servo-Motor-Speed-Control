@@ -128,13 +128,25 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="speed-control.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="speed-control.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="registers.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="registers.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="speed-control.c">
+    <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

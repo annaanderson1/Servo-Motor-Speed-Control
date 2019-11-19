@@ -1,4 +1,4 @@
-speed-control.d speed-control.o: .././speed-control.c \
+serial.d serial.o: .././serial.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  C:\wp\cygwin\usr\include/inttypes.h C:\wp\cygwin\usr\include/stdint.h \
