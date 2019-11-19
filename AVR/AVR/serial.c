@@ -21,7 +21,8 @@ extern unsigned int AB;
 extern unsigned int pwm;
 extern char recieved_bytes[5];
 extern bool newCommand;
-extern int speed;
+extern int speed_set;
+extern int speed_actual;
 
 // See pg. 190
 /* Transmits the data-string over the USART */

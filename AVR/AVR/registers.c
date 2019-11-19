@@ -21,7 +21,8 @@ extern unsigned int AB;
 extern unsigned int pwm;
 extern char recieved_bytes[5];
 extern bool newCommand;
-extern int speed;
+extern int speed_set;
+extern int speed_actual;
 
 typedef struct {
 	
@@ -78,7 +79,7 @@ static void setup_USART(){
 static void setup_interrupts(){
 	
 	PCICR = (1 << PCIE1);						// Enables possibility of interrupts on pins 14-8
-	//PCMSK1 = (1 << PCINT13) | (1 << PCINT12);	// Enables interrupts on pin PC5 & PC4
+	PCMSK1 = (1 << PCINT13) | (1 << PCINT12);	// Enables interrupts on pin PC5 & PC4
 	
 }
 
@@ -98,15 +99,7 @@ void setup_registers(){
 		
 }
 
-/* Turns off output on selected pin on PORTC */
-void turnOff_C(int pin){
-	PORTC &= ~(1 << pin);
-	
-}
-/* Turns on output on selected pin on PORTC */
-void turnOn_C(int pin){
-	PORTC |= (1 << pin);
-}
+
 
 /* Sets the PWM trigger value*/ 
 Registers* set_trigger(Registers* reg, int setValue){

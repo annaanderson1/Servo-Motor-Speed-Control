@@ -10,7 +10,7 @@
 #define SPEED_CONTROL_H_
 
 
-
+void calc_filtered_speed();
 
 
 #endif
