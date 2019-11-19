@@ -1,4 +1,6 @@
 main.d main.o: .././main.c \
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h \
+ .././shared.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  C:\wp\cygwin\usr\include/inttypes.h C:\wp\cygwin\usr\include/stdint.h \
@@ -28,12 +30,14 @@ main.d main.o: .././main.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdarg.h \
  C:\wp\cygwin\usr\include/sys/types.h \
  C:\wp\cygwin\usr\include/machine/types.h \
- C:\wp\cygwin\usr\include/sys/stdio.h \
- c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h \
- C:\wp\cygwin\usr\include/stdlib.h \
+ C:\wp\cygwin\usr\include/sys/stdio.h C:\wp\cygwin\usr\include/stdlib.h \
  C:\wp\cygwin\usr\include/machine/stdlib.h \
  C:\wp\cygwin\usr\include/alloca.h .././registers.h .././serial.h \
  .././speed-control.h
+
+c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h:
+
+.././shared.h:
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -106,8 +110,6 @@ C:\wp\cygwin\usr\include/sys/types.h:
 C:\wp\cygwin\usr\include/machine/types.h:
 
 C:\wp\cygwin\usr\include/sys/stdio.h:
-
-c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h:
 
 C:\wp\cygwin\usr\include/stdlib.h:
 

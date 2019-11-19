@@ -59,7 +59,7 @@ Discarded input sections
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1056/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr4/crtm88.o
  .text          0x00000000        0x0 speed-control.o
  .bss           0x00000000        0x0 speed-control.o
- .text.calc_avg_speed
+ .text.calc_filtered_speed
                 0x00000000        0x2 speed-control.o
  .text          0x00000000        0x0 serial.o
  .bss           0x00000000        0x0 serial.o
@@ -682,12 +682,12 @@ END GROUP
  .debug_abbrev  0x0000027b      0x10b registers.o
  .debug_abbrev  0x00000386      0x166 main.o
 
-.debug_line     0x00000000      0x42b
+.debug_line     0x00000000      0x44e
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000       0xd3 speed-control.o
- .debug_line    0x000000d3      0x199 serial.o
- .debug_line    0x0000026c       0x87 registers.o
- .debug_line    0x000002f3      0x138 main.o
+ .debug_line    0x00000000       0xde speed-control.o
+ .debug_line    0x000000de      0x1a5 serial.o
+ .debug_line    0x00000283       0x87 registers.o
+ .debug_line    0x0000030a      0x144 main.o
 
 .debug_frame    0x00000000      0x1bc
  *(.debug_frame)
@@ -696,15 +696,15 @@ END GROUP
  .debug_frame   0x00000154       0x34 registers.o
  .debug_frame   0x00000188       0x34 main.o
 
-.debug_str      0x00000000      0x31c
+.debug_str      0x00000000      0x321
  *(.debug_str)
- .debug_str     0x00000000      0x1a4 speed-control.o
-                                0x1ee (size before relaxing)
- .debug_str     0x000001a4       0xaa serial.o
+ .debug_str     0x00000000      0x1a9 speed-control.o
+                                0x1f3 (size before relaxing)
+ .debug_str     0x000001a9       0xaa serial.o
                                 0x235 (size before relaxing)
- .debug_str     0x0000024e       0x81 registers.o
+ .debug_str     0x00000253       0x81 registers.o
                                 0x20c (size before relaxing)
- .debug_str     0x000002cf       0x4d main.o
+ .debug_str     0x000002d4       0x4d main.o
                                 0x247 (size before relaxing)
 
 .debug_loc      0x00000000      0x4d5

@@ -17,15 +17,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   6 .debug_abbrev 000004ec  00000000  00000000  00001911  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000042b  00000000  00000000  00001dfd  2**0
+  7 .debug_line   0000044e  00000000  00000000  00001dfd  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000001bc  00000000  00000000  00002228  2**2
+  8 .debug_frame  000001bc  00000000  00000000  0000224c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000031c  00000000  00000000  000023e4  2**0
+  9 .debug_str    00000321  00000000  00000000  00002408  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000004d5  00000000  00000000  00002700  2**0
+ 10 .debug_loc    000004d5  00000000  00000000  00002729  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000078  00000000  00000000  00002bd5  2**0
+ 11 .debug_ranges 00000078  00000000  00000000  00002bfe  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -99,8 +99,8 @@ Disassembly of section .text:
   6a:	ca cf       	rjmp	.-108    	; 0x0 <__vectors>
 
 0000006c <turnOff_C>:
-extern int speed_set;
-extern int speed_actual;
+#include <stdio.h>
+#include <stdlib.h>
 
 /* Turns off output on selected pin on PORTC */
 void turnOff_C(int pin){
@@ -312,7 +312,7 @@ ISR(PCINT1_vect){
  17c:	d0 93 0d 01 	sts	0x010D, r29
  180:	c0 93 0c 01 	sts	0x010C, r28
 	speed_measured_pos++;
-	if(speed_measured_pos == AVG_SIZE){
+	if(speed_measured_pos == SPEED_AVG_SIZE){
 		speed_measured_pos = 0; 
 	}
 	*/
@@ -339,8 +339,8 @@ ISR(PCINT1_vect){
  1aa:	18 95       	reti
 
 000001ac <USART_transmit>:
-extern int speed_set;
-extern int speed_actual;
+#include <stdlib.h>
+
 
 // See pg. 190
 /* Transmits the data-string over the USART */
@@ -650,10 +650,10 @@ Registers* set_trigger(Registers* reg, int setValue){
  308:	08 95       	ret
 
 0000030a <main>:
-int speed_actual;
-char recieved_bytes[5];
-bool newCommand;
 
+#include "registers.h"
+#include "serial.h"
+#include "speed-control.h"
 
 int main(void){
  30a:	cf 93       	push	r28
@@ -689,8 +689,8 @@ int main(void){
  346:	bf df       	rcall	.-130    	; 0x2c6 <setup_registers>
 	sei();
  348:	78 94       	sei
-bool newCommand;
-
+#include "serial.h"
+#include "speed-control.h"
 
 int main(void){
 	Registers registers;

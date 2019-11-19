@@ -5,31 +5,21 @@
  *  Author: tmk19jc
  */ 
 
+#define MAIN_FILE
 
-#define F_CPU 1000000UL
-#define BAUD 2400
-#define FOSC 1000000
+#include <stdbool.h>
+#include "shared.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 
 #include "registers.h"
 #include "serial.h"
 #include "speed-control.h"
-
-/* Global variables */
-unsigned int AB;
-unsigned int pwm;
-int speed_set;
-int speed_actual;
-char recieved_bytes[5];
-bool newCommand;
-
 
 int main(void){
 	Registers registers;
