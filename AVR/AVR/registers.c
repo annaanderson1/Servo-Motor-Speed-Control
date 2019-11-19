@@ -10,13 +10,6 @@
 
 #include <avr/io.h>
 
-
-typedef struct {
-	
-	unsigned int setValue;
-	
-} Registers;
-
 static void setup_DDR(){
 	
 	DDRB = 0x00;										// no output
@@ -75,13 +68,4 @@ void setup_registers(){
 	setup_USART();
 	setup_interrupts();
 		
-}
-
-/* Sets the PWM trigger value*/ 
-Registers* set_trigger(Registers* reg, int setValue){
-	
-	OCR0A = setValue;
-	OCR0B = setValue;
-	return reg;
-
 }

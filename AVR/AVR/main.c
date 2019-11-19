@@ -21,8 +21,6 @@
 #include "speed-control.h"
 
 int main(void){
-	Registers registers;
-	Registers *reg = &registers;
 	AB = 0;
 	pwm = 50;
 	speed_set = 0;
@@ -38,8 +36,6 @@ int main(void){
 		char *endptr;
 		int val;
 		
-		reg = set_trigger(reg, 0);
-
 		if(newCommand){
 			memset(buf,' ', 6*sizeof(char));
 			memset(sub_str,'%', 4*sizeof(char));
