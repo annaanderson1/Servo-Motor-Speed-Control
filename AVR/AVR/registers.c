@@ -4,17 +4,11 @@
  * Created: 2019-10-15 12:44:18
  *  Author: tmk19jc
  */ 
+
 #include <stdbool.h>
 #include "shared.h"
 
 #include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
-#include <string.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-
 
 
 typedef struct {
@@ -22,10 +16,6 @@ typedef struct {
 	unsigned int setValue;
 	
 } Registers;
-
-/************************************************************************/
-/* PRIVATE FUNCTIONS                                                    */
-/************************************************************************/
 
 static void setup_DDR(){
 	
@@ -76,11 +66,6 @@ static void setup_interrupts(){
 	
 }
 
-
-/************************************************************************/
-/* PUBLIC FUNCTIONS														*/
-/************************************************************************/
-
 /* Initial setup of registers */ 
 void setup_registers(){
 	
@@ -92,8 +77,6 @@ void setup_registers(){
 		
 }
 
-
-
 /* Sets the PWM trigger value*/ 
 Registers* set_trigger(Registers* reg, int setValue){
 	
@@ -102,16 +85,3 @@ Registers* set_trigger(Registers* reg, int setValue){
 	return reg;
 
 }
-
-
-/************************************************************************/
-/* INTERRUPT SERVICE ROUTINES											*/
-/************************************************************************/
-
-
-
-
-
-
-
-

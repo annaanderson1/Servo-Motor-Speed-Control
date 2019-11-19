@@ -4,6 +4,7 @@
  * Created: 2019-11-19 10:27:11
  *  Author: tmk19jc
  */ 
+
 #include <stdbool.h>
 #include "shared.h"
 
@@ -11,9 +12,6 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <string.h>
-
-#include <stdio.h>
-#include <stdlib.h>
 
 
 // See pg. 190

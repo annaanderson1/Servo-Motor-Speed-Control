@@ -4,16 +4,13 @@
  * Created: 2019-11-19 10:30:50
  *  Author: tmk19jc
  */ 
+
 #include <stdbool.h>
 #include "shared.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
-#include <string.h>
 
-#include <stdio.h>
-#include <stdlib.h>
 
 /* Turns off output on selected pin on PORTC */
 void turnOff_C(int pin){
