@@ -13,25 +13,17 @@ typedef struct {
 	unsigned int setValue;	
 } Registers;
 
-/*
-	Initiates the DDRx, PORTx and PINx registers for all the pins.
-*/
+/* Initiates the DDRx, PORTx and PINx registers for all the pins. */
 void setup_registers();
 
-/*
-	Sets the trigger value for the PWM signal. Must be an int in range 0-255
-*/
+/* Turns off output on selected pin on PORTC */
+void turnOff_C(int pin);
+
+/* Turns on output on selected pin on PORTC */
+void turnOn_C(int pin);
+
+/* Sets the trigger value for the PWM signal. Must be an int in range 0-255 */
 Registers* set_trigger(Registers* reg, int setValue);
-
-/*
-	Transmits data over the serial port
-*/
-void USART_transmit(char *data);
-
-/*
-	Recieves data over the serial port
-*/
-uint8_t USART_recieve(void);
 
 
 #endif 
