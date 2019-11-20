@@ -128,6 +128,9 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="shared.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="speed-control.c">
       <SubType>compile</SubType>
     </Compile>

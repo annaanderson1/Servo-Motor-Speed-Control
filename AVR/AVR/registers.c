@@ -5,33 +5,10 @@
  *  Author: tmk19jc
  */ 
 
-#define F_CPU 1000000UL
-#define BAUD 2400
+#include <stdbool.h>
+#include "shared.h"
 
 #include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
-#include <string.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-/* Global variables */
-extern unsigned int AB;
-extern unsigned int pwm;
-extern char recieved_bytes[5];
-extern bool newCommand;
-extern int speed;
-
-typedef struct {
-	
-	unsigned int setValue;
-	
-} Registers;
-
-/************************************************************************/
-/* PRIVATE FUNCTIONS                                                    */
-/************************************************************************/
 
 static void setup_DDR(){
 	
@@ -78,14 +55,9 @@ static void setup_USART(){
 static void setup_interrupts(){
 	
 	PCICR = (1 << PCIE1);						// Enables possibility of interrupts on pins 14-8
-	//PCMSK1 = (1 << PCINT13) | (1 << PCINT12);	// Enables interrupts on pin PC5 & PC4
+	PCMSK1 = (1 << PCINT13) | (1 << PCINT12);	// Enables interrupts on pin PC5 & PC4
 	
 }
-
-
-/************************************************************************/
-/* PUBLIC FUNCTIONS														*/
-/************************************************************************/
 
 /* Initial setup of registers */ 
 void setup_registers(){
@@ -97,35 +69,3 @@ void setup_registers(){
 	setup_interrupts();
 		
 }
-
-/* Turns off output on selected pin on PORTC */
-void turnOff_C(int pin){
-	PORTC &= ~(1 << pin);
-	
-}
-/* Turns on output on selected pin on PORTC */
-void turnOn_C(int pin){
-	PORTC |= (1 << pin);
-}
-
-/* Sets the PWM trigger value*/ 
-Registers* set_trigger(Registers* reg, int setValue){
-	
-	OCR0A = setValue;
-	OCR0B = setValue;
-	return reg;
-
-}
-
-
-/************************************************************************/
-/* INTERRUPT SERVICE ROUTINES											*/
-/************************************************************************/
-
-
-
-
-
-
-
-

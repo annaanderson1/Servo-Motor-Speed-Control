@@ -5,23 +5,22 @@
  *  Author: tmk19jc
  */ 
 
-#define F_CPU 1000000UL
-#define BAUD 2400
+#include <stdbool.h>
+#include "shared.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
-#include <string.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 
-/* Global variables */
-extern unsigned int AB;
-extern unsigned int pwm;
-extern char recieved_bytes[5];
-extern bool newCommand;
-extern int speed;
+
+/* Turns off output on selected pin on PORTC */
+void turnOff_C(int pin){
+	PORTC &= ~(1 << pin);
+	
+}
+/* Turns on output on selected pin on PORTC */
+void turnOn_C(int pin){
+	PORTC |= (1 << pin);
+}
 
 /* Routine for clockwise rotation of encoder */
 static void clockwise(){
@@ -45,6 +44,17 @@ static void counterclockwise(){
 	else{
 		pwm = 0;
 	}
+}
+
+/* Calculates the speed for a single encoder-interrupt. */
+static int calc_curr_speed(int time_elapsed){
+	
+	return 0;
+}
+
+/* Calculates the filtered speed and stores the value i global speed_actual */
+void calc_filtered_speed(){
+	
 }
 
 
@@ -83,5 +93,15 @@ ISR(PCINT1_vect){
 		break;
 	}
 	AB = ABnew;
+	/* Pseudo code framework for speed measurement-interrupts
+	
+	time_elapsed = time_now - time_prev;
+	time_now = time_prev;
+	speed_measured[speed_measured_pos] = calc_curr_speed(time_elapsed);
+	speed_measured_pos++;
+	if(speed_measured_pos == SPEED_AVG_SIZE){
+		speed_measured_pos = 0; 
+	}
+	*/
 	sei();
 }

@@ -5,23 +5,14 @@
  *  Author: tmk19jc
  */ 
 
-#define F_CPU 1000000UL
-#define BAUD 2400
+#include <stdbool.h>
+#include "shared.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <string.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 
-/* Global variables */
-extern unsigned int AB;
-extern unsigned int pwm;
-extern char recieved_bytes[5];
-extern bool newCommand;
-extern int speed;
 
 // See pg. 190
 /* Transmits the data-string over the USART */

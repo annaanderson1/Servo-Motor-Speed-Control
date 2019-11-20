@@ -1,4 +1,6 @@
 speed-control.d speed-control.o: .././speed-control.c \
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h \
+ .././shared.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  C:\wp\cygwin\usr\include/inttypes.h C:\wp\cygwin\usr\include/stdint.h \
@@ -15,24 +17,11 @@ speed-control.d speed-control.o: .././speed-control.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\version.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\fuse.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\lock.h \
- c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
- c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\util\delay.h \
- c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
- C:\wp\cygwin\usr\include/math.h C:\wp\cygwin\usr\include/sys/reent.h \
- C:\wp\cygwin\usr\include/sys/_types.h \
- C:\wp\cygwin\usr\include/machine/_types.h \
- C:\wp\cygwin\usr\include/machine/_default_types.h \
- C:\wp\cygwin\usr\include/sys/lock.h C:\wp\cygwin\usr\include/_ansi.h \
- C:\wp\cygwin\usr\include/string.h C:\wp\cygwin\usr\include/sys/cdefs.h \
- C:\wp\cygwin\usr\include/sys/string.h \
- c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h \
- C:\wp\cygwin\usr\include/stdio.h \
- c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdarg.h \
- C:\wp\cygwin\usr\include/sys/types.h \
- C:\wp\cygwin\usr\include/machine/types.h \
- C:\wp\cygwin\usr\include/sys/stdio.h C:\wp\cygwin\usr\include/stdlib.h \
- C:\wp\cygwin\usr\include/machine/stdlib.h \
- C:\wp\cygwin\usr\include/alloca.h
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\interrupt.h
+
+c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h:
+
+.././shared.h:
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -71,45 +60,3 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-g
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\lock.h:
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
-
-c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\util\delay.h:
-
-c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\util\delay_basic.h:
-
-C:\wp\cygwin\usr\include/math.h:
-
-C:\wp\cygwin\usr\include/sys/reent.h:
-
-C:\wp\cygwin\usr\include/sys/_types.h:
-
-C:\wp\cygwin\usr\include/machine/_types.h:
-
-C:\wp\cygwin\usr\include/machine/_default_types.h:
-
-C:\wp\cygwin\usr\include/sys/lock.h:
-
-C:\wp\cygwin\usr\include/_ansi.h:
-
-C:\wp\cygwin\usr\include/string.h:
-
-C:\wp\cygwin\usr\include/sys/cdefs.h:
-
-C:\wp\cygwin\usr\include/sys/string.h:
-
-c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdbool.h:
-
-C:\wp\cygwin\usr\include/stdio.h:
-
-c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdarg.h:
-
-C:\wp\cygwin\usr\include/sys/types.h:
-
-C:\wp\cygwin\usr\include/machine/types.h:
-
-C:\wp\cygwin\usr\include/sys/stdio.h:
-
-C:\wp\cygwin\usr\include/stdlib.h:
-
-C:\wp\cygwin\usr\include/machine/stdlib.h:
-
-C:\wp\cygwin\usr\include/alloca.h:
