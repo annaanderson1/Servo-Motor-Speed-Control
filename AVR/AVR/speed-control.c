@@ -1,9 +1,9 @@
 /*
- * speed-control.c
+ * 	speed-control.c
  *
- * Created: 2019-11-19 10:30:50
- *  Author: tmk19jc
- */ 
+ * 	Created: 2019-11-19 10:30:50
+ *  Author: Joakim Cedergren
+ */
 
 #include <stdbool.h>
 #include "shared.h"
@@ -15,7 +15,7 @@
 /* Turns off output on selected pin on PORTC */
 void turnOff_C(int pin){
 	PORTC &= ~(1 << pin);
-	
+
 }
 /* Turns on output on selected pin on PORTC */
 void turnOn_C(int pin){
@@ -48,13 +48,13 @@ static void counterclockwise(){
 
 /* Calculates the speed for a single encoder-interrupt. */
 static int calc_curr_speed(int time_elapsed){
-	
+
 	return 0;
 }
 
 /* Calculates the filtered speed and stores the value i global speed_actual */
 void calc_filtered_speed(){
-	
+
 }
 
 
@@ -64,15 +64,15 @@ ISR(PCINT1_vect){
 	unsigned int ABnew = 0x00;
 	unsigned int A = 0x00;
 	unsigned int B = 0x00;
-	
+
 	A = (PINC & (1 << PC5));
 	A = (A >> (PC5 - 1));	// Sets A in pos 1
-	
+
 	B = (PINC & (1 << PC4));
 	B = (B >> PC4);			// Sets B in pos 0
-	
+
 	ABnew = A | B;
-	
+
 	switch(ABnew){
 		case 0:
 		if(AB == 2){
@@ -82,7 +82,7 @@ ISR(PCINT1_vect){
 			counterclockwise();
 		}
 		break;
-		
+
 		case 1:
 		if(AB == 0){
 			clockwise();
@@ -94,13 +94,13 @@ ISR(PCINT1_vect){
 	}
 	AB = ABnew;
 	/* Pseudo code framework for speed measurement-interrupts
-	
+
 	time_elapsed = time_now - time_prev;
 	time_now = time_prev;
 	speed_measured[speed_measured_pos] = calc_curr_speed(time_elapsed);
 	speed_measured_pos++;
 	if(speed_measured_pos == SPEED_AVG_SIZE){
-		speed_measured_pos = 0; 
+		speed_measured_pos = 0;
 	}
 	*/
 	sei();

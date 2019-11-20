@@ -1,9 +1,12 @@
 /*
- * shared.h
+ * 	shared.h
  *
- * Created: 2019-11-19 15:23:48
- *  Author: tmk19jc
- */ 
+ * 	Created: 2019-11-19 15:23:48
+ *  Author: Joakim Cedergren
+ *
+ * 	Contains global variables and #define to be included in all .c files.
+ *
+ */
 
 
 #ifndef SHARED_H_
@@ -29,4 +32,4 @@
 	extern int speed_actual;
 
 #endif
-#endif 
+#endif
