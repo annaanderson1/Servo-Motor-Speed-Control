@@ -75,6 +75,14 @@ static void setup_interrupts(){
 
 }
 
+/*	
+ *	Sets up no prescaling on 16-bit timer OC1
+ *	See details in datasheet pg. 141-147
+*/	
+static void setup_speed_clock(){
+	TCCR1B |= (1 << CS10);
+}
+
 /*
  *	Initiates registers for DDR, PWM, USART & Interrupts.
 */
@@ -84,5 +92,6 @@ void setup_registers(){
 	setup_PWM();
 	setup_USART();
 	setup_interrupts();
+	setup_speed_clock();
 
 }

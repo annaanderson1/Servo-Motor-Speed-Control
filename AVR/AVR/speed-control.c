@@ -103,5 +103,6 @@ ISR(PCINT1_vect){
 		speed_measured_pos = 0;
 	}
 	*/
+	speed_actual = TCNT1L;
 	sei();
 }
