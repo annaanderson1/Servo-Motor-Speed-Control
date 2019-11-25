@@ -28,6 +28,8 @@ int main(void){
 	speed_actual = 0;
 	newCommand = false;
 	newMeasurement = false;
+	pos_last_rpm = 0;
+	rpm_avg = 0;
 
 	setup_registers();
 	sei();
@@ -63,7 +65,19 @@ int main(void){
 					sprintf(buf, "%d", speed_actual);
 					break;
 				case '5':
-					sprintf(buf, "%d", clk_elapsed);
+					sprintf(buf, "%u", clk_elapsed);
+					break;
+				case '6':
+					sprintf(buf, "%u", rpm_avg);
+					break;
+				case '7':
+					sprintf(buf, "%u", test_var1);
+					break;
+				case '8':
+					sprintf(buf, "%u", test_var2);
+					break;
+				case '9':
+					sprintf(buf, "%u", curr_rpm);
 					break;
 			}
 			
@@ -71,8 +85,13 @@ int main(void){
 			memset(buf,' ', 6*sizeof(char));
 			newCommand = false;
 		}
-		
 	
+		if(newMeasurement){
+			calc_latest_rpm();
+			calc_avg_rpm();
+			newMeasurement = false;
+		}
+		
 		
 		
 	}

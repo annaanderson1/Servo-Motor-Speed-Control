@@ -14,6 +14,8 @@
 
 #define F_CPU 1000000UL
 #define BAUD 2400
+#define N 5
+#define MEASUREMENTS_SIZE 64
 
 #ifdef MAIN_FILE
 	unsigned int AB;
@@ -25,6 +27,13 @@
 	int speed_set;
 	int speed_actual;
 	bool newMeasurement;
+	uint32_t curr_rpm;
+	uint32_t rpm_measurements[MEASUREMENTS_SIZE];
+	int pos_last_rpm;
+	uint32_t rpm_avg;
+	uint32_t test_var1;
+	uint32_t test_var2;
+	uint64_t test_var3;
 
 #else
 	extern unsigned int AB;
@@ -36,6 +45,13 @@
 	extern int speed_set;
 	extern int speed_actual;
 	bool newMeasurement;
-
+	extern uint32_t curr_rpm;
+	extern uint32_t rpm_measurements[MEASUREMENTS_SIZE];
+	extern int pos_last_rpm;
+	extern uint32_t rpm_avg;
+	extern uint32_t test_var1;
+	extern uint32_t test_var2;
+	extern uint64_t test_var3;
+	
 #endif
 #endif

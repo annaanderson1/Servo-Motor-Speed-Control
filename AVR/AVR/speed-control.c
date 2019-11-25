@@ -48,10 +48,80 @@ static void counterclockwise(){
 	}
 }
 
-/* Calculates the speed for a single encoder-interrupt. */
-static int calc_curr_speed(int time_elapsed){
+/*	Converts the difference in clk increments to milliseconds, using fixed point arithmetics.
+ *	Qm.n values defined in shared.h
+*/ 
+static uint16_t calc_delta_time(){
+	
+	uint16_t delta_clk = clk_elapsed;
+	delta_clk = delta_clk << N;
+	
+	// 1 MHz F_CPU equals to 1 ms per clk increment
+	uint16_t freq = 1000;
+	freq = freq << N;
 
-	return 0;
+	uint32_t temp;
+
+	temp = (uint32_t)delta_clk * freq;
+	temp = temp >> N;
+	return temp;
+}
+
+/* Inserts calculated rpm to first pos in rpm-array, and shifts the rest to the right */ 
+static void insert_rpm(uint32_t rpm){
+	
+	// Case: array is full
+	if(pos_last_rpm == (MEASUREMENTS_SIZE - 1) ){
+		int i;
+		for(i = MEASUREMENTS_SIZE - 1; i >= 0; i--){
+			rpm_measurements[i] = rpm_measurements[i-1];
+		}
+		rpm_measurements[0] = rpm;
+		
+	}
+	// Case: array not yet full
+	else {
+		rpm_measurements[pos_last_rpm + 1] = rpm;
+		pos_last_rpm++;
+	}
+	
+}
+
+/*	Calculates the speed for a single encoder-interrupt, using fixed point arithmetics.
+ *	Qm.n values defined in shared.h
+*/
+void calc_latest_rpm(){
+	uint16_t delta_time = calc_delta_time();
+	uint16_t delta_rev_inverse = 96;
+	uint16_t MS_TO_S = 1000;
+	uint16_t S_TO_MIN = 60;
+	uint32_t numerator;
+	uint32_t denominator;
+	uint64_t rpm;
+		
+	delta_rev_inverse = delta_rev_inverse << N;
+	MS_TO_S = MS_TO_S << N;
+	S_TO_MIN = S_TO_MIN << N;
+
+	numerator = (uint32_t)MS_TO_S * S_TO_MIN;
+	numerator = numerator >> N;
+
+	denominator = (uint32_t)delta_rev_inverse * delta_time;
+	denominator = denominator >> N;
+
+	rpm = numerator << N;
+	rpm = rpm + (denominator >> 1); // For correct rounding
+	rpm = rpm / denominator;
+	
+	
+	test_var1 = denominator;
+	test_var2 = delta_time;
+	curr_rpm = rpm >> N;
+	
+	//test_var3 = rpm >> N;
+	
+	insert_rpm(rpm);
+	
 }
 
 /* Calculates the filtered speed and stores the value i global speed_actual */
@@ -59,6 +129,22 @@ void calc_filtered_speed(){
 
 }
 
+void calc_avg_rpm(){
+	uint64_t temp = 0;
+	int i;
+	
+	for(i = 0; i < MEASUREMENTS_SIZE; i++){
+		temp = temp + rpm_measurements[i];
+	}
+	
+	// Devide by MEASUREMENTS_SIZE (64)
+	temp = temp >> 6;
+	
+	// convert back from Qm.n to normal int
+	temp = temp >> N;
+	rpm_avg = temp;
+	
+}
 
 /* ISR for PCINT14-8 */
 ISR(PCINT1_vect){
