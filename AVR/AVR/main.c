@@ -8,6 +8,7 @@
 #define MAIN_FILE
 
 #include <stdbool.h>
+#include <inttypes.h>
 #include "shared.h"
 
 #include <avr/io.h>
@@ -26,6 +27,7 @@ int main(void){
 	speed_set = 0;
 	speed_actual = 0;
 	newCommand = false;
+	newMeasurement = false;
 
 	setup_registers();
 	sei();
@@ -60,6 +62,9 @@ int main(void){
 				case '4':
 					sprintf(buf, "%d", speed_actual);
 					break;
+				case '5':
+					sprintf(buf, "%d", clk_elapsed);
+					break;
 			}
 			
 			USART_transmit(buf);
@@ -67,7 +72,7 @@ int main(void){
 			newCommand = false;
 		}
 		
-		//calc_speed();
+	
 		
 		
 	}

@@ -6,10 +6,12 @@
  */
 
 #include <stdbool.h>
+#include <inttypes.h>
 #include "shared.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+
 
 
 /* Turns off output on selected pin on PORTC */
@@ -103,6 +105,26 @@ ISR(PCINT1_vect){
 		speed_measured_pos = 0;
 	}
 	*/
+	
+	uint16_t clk_curr = 0x0000;
+	clk_curr |= (TCNT1H << 8) | TCNT1L;
+	
+	// Case: first measurement
+	if(clk_prev == 0){
+		clk_prev = clk_curr;
+		clk_elapsed = clk_curr;
+	}
+	// Case: clock overflow
+	else if(clk_curr <= clk_prev){
+		uint16_t temp = 0xFFFF;
+		temp = temp - clk_prev;
+		clk_elapsed = temp + clk_curr;
+	}
+	else{
+		clk_elapsed = clk_curr - clk_prev;
+	}
+	newMeasurement = true;
+	
 	speed_actual = TCNT1L;
 	sei();
 }

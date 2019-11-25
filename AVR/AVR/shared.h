@@ -18,18 +18,24 @@
 #ifdef MAIN_FILE
 	unsigned int AB;
 	unsigned int pwm;
-	int speed_set;
-	int speed_actual;
 	char recieved_bytes[5];
 	bool newCommand;
+	uint16_t clk_prev;
+	uint16_t clk_elapsed;
+	int speed_set;
+	int speed_actual;
+	bool newMeasurement;
 
 #else
 	extern unsigned int AB;
 	extern unsigned int pwm;
 	extern char recieved_bytes[5];
 	extern bool newCommand;
+	extern uint16_t clk_prev;
+	extern uint16_t clk_elapsed;
 	extern int speed_set;
 	extern int speed_actual;
+	bool newMeasurement;
 
 #endif
 #endif

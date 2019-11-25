@@ -9,6 +9,7 @@
  */
 
 #include <stdbool.h>
+#include <inttypes.h>
 #include "shared.h"
 #include <avr/io.h>
 
