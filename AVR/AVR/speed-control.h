@@ -12,5 +12,5 @@
 void calc_latest_rpm();
 void calc_filtered_speed();
 void calc_avg_rpm();
-
+void calc_time_elapsed();
 #endif

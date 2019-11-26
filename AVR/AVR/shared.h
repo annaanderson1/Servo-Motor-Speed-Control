@@ -23,6 +23,7 @@
 	char recieved_bytes[5];
 	bool newCommand;
 	uint16_t clk_prev;
+	uint16_t clk_curr;
 	uint16_t clk_elapsed;
 	int speed_set;
 	int speed_actual;
@@ -34,6 +35,7 @@
 	uint32_t test_var1;
 	uint32_t test_var2;
 	uint64_t test_var3;
+	uint32_t delta_time;
 
 #else
 	extern unsigned int AB;
@@ -41,6 +43,7 @@
 	extern char recieved_bytes[5];
 	extern bool newCommand;
 	extern uint16_t clk_prev;
+	extern uint16_t clk_curr;
 	extern uint16_t clk_elapsed;
 	extern int speed_set;
 	extern int speed_actual;
@@ -52,6 +55,7 @@
 	extern uint32_t test_var1;
 	extern uint32_t test_var2;
 	extern uint64_t test_var3;
+	extern uint32_t delta_time;
 	
 #endif
 #endif

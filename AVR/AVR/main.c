@@ -30,16 +30,19 @@ int main(void){
 	newMeasurement = false;
 	pos_last_rpm = 0;
 	rpm_avg = 0;
+	clk_curr = 0;
+	clk_prev = 0;
 
 	setup_registers();
 	sei();
-	
+	//OCR0B = 20;
+	//OCR0A = 20;
 	while(1){
 		char buf[6];
 		char sub_str[4];
 		char *endptr;
 		int val;
-		
+
 		if(newCommand){
 			memset(buf,' ', 6*sizeof(char));
 			memset(sub_str,'%', 4*sizeof(char));
@@ -56,7 +59,9 @@ int main(void){
 					val = strtol(sub_str, &endptr, 10);
 					speed_set = val;
 					sprintf(buf, sub_str);
-					memset(buf,' ', 6*sizeof(char));					
+					memset(buf,' ', 6*sizeof(char));
+					OCR0B = speed_set;
+					OCR0A = speed_set;
 					break;
 				case '3':
 					sprintf(buf, "%d", speed_set);
@@ -87,8 +92,9 @@ int main(void){
 		}
 	
 		if(newMeasurement){
+			calc_time_elapsed();
 			calc_latest_rpm();
-			calc_avg_rpm();
+			//calc_avg_rpm();
 			newMeasurement = false;
 		}
 		
