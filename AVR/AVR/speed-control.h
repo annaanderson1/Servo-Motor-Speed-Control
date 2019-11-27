@@ -9,8 +9,9 @@
 #ifndef SPEED_CONTROL_H_
 #define SPEED_CONTROL_H_
 
-void calc_latest_rpm();
-void calc_filtered_speed();
-void calc_avg_rpm();
-void calc_time_elapsed();
+void calc_latest_rpm(Shared_Data* shared_ptr);
+void calc_filtered_speed(Shared_Data* shared_ptr);
+void calc_avg_rpm(Shared_Data* shared_ptr);
+void calc_time_elapsed(Shared_Data* shared_ptr);
+
 #endif

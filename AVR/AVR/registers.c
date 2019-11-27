@@ -13,7 +13,6 @@
 #include "shared.h"
 #include <avr/io.h>
 
-
 /*
  *	Enables output on the following pins:
  *	PC0-PC2

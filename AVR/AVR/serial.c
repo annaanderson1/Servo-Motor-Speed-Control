@@ -16,6 +16,8 @@
 #include <util/delay.h>
 #include <string.h>
 
+extern bool newCommand;
+extern char recieved_bytes[5];
 
 /*
  * 	Transmits 5 characters over the USART.

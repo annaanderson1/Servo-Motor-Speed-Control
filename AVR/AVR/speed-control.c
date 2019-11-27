@@ -12,10 +12,13 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-/*	Converts the difference in clk increments to microseconds */
-static uint32_t calc_delta_time(){
+extern bool newMeasurement;
+extern uint16_t clk_curr;
 
-	uint16_t delta_clk = clk_elapsed;
+/*	Converts the difference in clk increments to microseconds */
+static uint32_t calc_delta_time(Shared_Data* shared_ptr){
+
+	uint16_t delta_clk = shared_ptr->clk_elapsed;
 
 	// scales based on prescaling
 	uint16_t prescale = 8;
@@ -30,7 +33,7 @@ static uint32_t calc_delta_time(){
 /* Inserts calculated rpm to first pos in rpm-array, and shifts the rest to the right.
  * Filters outliers (0 < rpm < 130)
 */
-static void insert_rpm(uint32_t rpm){
+static void insert_rpm(Shared_Data* shared_ptr, uint32_t rpm){
 
     int i;
     /*uint32_t temp;
@@ -42,16 +45,16 @@ static void insert_rpm(uint32_t rpm){
     }
 */
     for(i = MEASUREMENTS_SIZE - 1; i >= 0; i--){
-        rpm_measurements[i] = rpm_measurements[i-1];
+        shared_ptr->rpm_measurements[i] = shared_ptr->rpm_measurements[i-1];
     }
-    rpm_measurements[0] = rpm;
+    shared_ptr->rpm_measurements[0] = rpm;
 
 }
 
 /*	Calculates the speed for a single encoder-interrupt, using fixed point arithmetics.
  *	Qm.n values defined in shared.h
 */
-void calc_latest_rpm(){
+void calc_latest_rpm(Shared_Data* shared_ptr){
 	//uint32_t delta_time;
 	uint16_t delta_rev_inverse = 96;
 	uint32_t MS_TO_S = 1000000;
@@ -60,10 +63,9 @@ void calc_latest_rpm(){
 	uint64_t denominator;
 	uint64_t rpm;
 	
-	delta_time = calc_delta_time();
-	test_var2 = delta_time;
+	shared_ptr->delta_time = calc_delta_time(shared_ptr);
 	
-	delta_time = delta_time << N;
+	shared_ptr->delta_time = shared_ptr->delta_time << N;
 	delta_rev_inverse = delta_rev_inverse << N;
 	MS_TO_S = MS_TO_S << N;
 	S_TO_MIN = S_TO_MIN << N;
@@ -71,27 +73,26 @@ void calc_latest_rpm(){
 	numerator = (uint64_t)MS_TO_S * S_TO_MIN;
 	numerator = numerator >> N;
 
-	denominator = (uint64_t)delta_rev_inverse * delta_time;
+	denominator = (uint64_t)delta_rev_inverse * shared_ptr->delta_time;
 	denominator = denominator >> N;
 
 	rpm = numerator << N;
 	rpm = rpm + (denominator >> 1); // For correct rounding
 	rpm = rpm / denominator;
 	
-	curr_rpm = (uint32_t)rpm >> N;
-	insert_rpm(rpm);
+	shared_ptr->curr_rpm = (uint32_t)rpm >> N;
+	insert_rpm(shared_ptr, rpm);
 	
-	test_var1 = denominator;
 	
 }
 
 
-void calc_avg_rpm(){
+void calc_avg_rpm(Shared_Data* shared_ptr){
 	uint64_t temp = 0;
 	int i;
 	
 	for(i = 0; i < MEASUREMENTS_SIZE; i++){
-		temp = temp + rpm_measurements[i];
+		temp = temp + shared_ptr->rpm_measurements[i];
 	}
 	
 	// Divide by MEASUREMENTS_SIZE (64)
@@ -99,23 +100,23 @@ void calc_avg_rpm(){
 	
 	// convert back from Qm.n to normal int
 	temp = temp >> N;
-	rpm_avg = temp;
+	shared_ptr->rpm_avg = temp;
 	
 }
 
-void calc_time_elapsed(){
+void calc_time_elapsed(Shared_Data* shared_ptr){
 	
-	if(clk_curr < clk_prev){
+	if(clk_curr < shared_ptr->clk_prev){
 		uint16_t temp = 0xFFFF;
-		temp = temp - clk_prev;
+		temp = temp - shared_ptr->clk_prev;
 		temp = temp + clk_curr;
-		clk_elapsed = temp;
+		shared_ptr->clk_elapsed = temp;
 	}
 	else{
-		clk_elapsed = clk_curr - clk_prev;
+		shared_ptr->clk_elapsed = clk_curr - shared_ptr->clk_prev;
 		
 	}
-	clk_prev = clk_curr;
+	shared_ptr->clk_prev = clk_curr;
 }
 
 /* ISR for PCINT14-8 */
