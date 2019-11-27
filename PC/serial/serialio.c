@@ -36,7 +36,7 @@ int writeCharToFdWithDelay(char *s, int fd){
     // Pads input with trailing #
     while( (s_len + i) <= 5){
         int pos = s_len + i - 1;
-        strcpy(buf + pos, "#");
+        strcpy(buf + pos, " ");
         i++;
     }
     

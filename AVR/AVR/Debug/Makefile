@@ -39,7 +39,8 @@ C_SRCS +=  \
 ../speed-control.c \
 ../serial.c \
 ../registers.c \
-../main.c
+../main.c \
+../transmit.c
 
 
 PREPROCESSING_SRCS += 
@@ -52,25 +53,29 @@ OBJS +=  \
 speed-control.o \
 serial.o \
 registers.o \
-main.o
+main.o \
+transmit.o
 
 OBJS_AS_ARGS +=  \
 speed-control.o \
 serial.o \
 registers.o \
-main.o
+main.o \
+transmit.o
 
 C_DEPS +=  \
 speed-control.d \
 serial.d \
 registers.d \
-main.d
+main.d \
+transmit.d
 
 C_DEPS_AS_ARGS +=  \
 speed-control.d \
 serial.d \
 registers.d \
-main.d
+main.d \
+transmit.d
 
 OUTPUT_FILE_PATH +=Servo-Motor-Speed-Control.elf
 
@@ -83,6 +88,8 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 LIB_DEP+= 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

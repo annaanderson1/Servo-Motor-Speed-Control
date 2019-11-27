@@ -52,14 +52,15 @@ static void insert_rpm(uint32_t rpm){
  *	Qm.n values defined in shared.h
 */
 void calc_latest_rpm(){
-	uint32_t delta_time = clk_elapsed*8;
+	//uint32_t delta_time;
 	uint16_t delta_rev_inverse = 96;
-	uint64_t MS_TO_S = 1000000;
+	uint32_t MS_TO_S = 1000000;
 	uint16_t S_TO_MIN = 60;
 	uint64_t numerator;
 	uint64_t denominator;
 	uint64_t rpm;
 	
+	delta_time = calc_delta_time();
 	test_var2 = delta_time;
 	
 	delta_time = delta_time << N;
@@ -77,15 +78,10 @@ void calc_latest_rpm(){
 	rpm = rpm + (denominator >> 1); // For correct rounding
 	rpm = rpm / denominator;
 	
-	uint32_t rpm32 = (uint32_t)rpm;
-	rpm32 = rpm32 >> N;
-	curr_rpm = rpm32;
+	curr_rpm = (uint32_t)rpm >> N;
+	insert_rpm(rpm);
 	
 	test_var1 = denominator;
-	
-	
-	
-	insert_rpm(rpm32);
 	
 }
 

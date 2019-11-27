@@ -25,7 +25,7 @@
 	uint16_t clk_prev;
 	uint16_t clk_curr;
 	uint16_t clk_elapsed;
-	int speed_set;
+	//int speed_set;
 	int speed_actual;
 	bool newMeasurement;
 	uint32_t curr_rpm;
@@ -45,7 +45,7 @@
 	extern uint16_t clk_prev;
 	extern uint16_t clk_curr;
 	extern uint16_t clk_elapsed;
-	extern int speed_set;
+	//extern int speed_set;
 	extern int speed_actual;
 	bool newMeasurement;
 	extern uint32_t curr_rpm;

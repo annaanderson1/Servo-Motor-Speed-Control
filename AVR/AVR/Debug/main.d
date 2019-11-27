@@ -30,7 +30,7 @@ main.d main.o: .././main.c \
  C:\wp\cygwin\usr\include/sys/stdio.h C:\wp\cygwin\usr\include/stdlib.h \
  C:\wp\cygwin\usr\include/machine/stdlib.h \
  C:\wp\cygwin\usr\include/alloca.h .././registers.h .././serial.h \
- .././speed-control.h
+ .././speed-control.h .././transmit.h
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.2.939\avr8-gnu-toolchain\bin\../lib/gcc/avr/4.7.2/include/stdbool.h:
 
@@ -113,3 +113,5 @@ C:\wp\cygwin\usr\include/alloca.h:
 .././serial.h:
 
 .././speed-control.h:
+
+.././transmit.h:
