@@ -13,19 +13,19 @@
 #include <avr/interrupt.h>
 
 extern bool newMeasurement;
-extern uint16_t clk_curr;
+extern unsigned short clk_curr;
 
 /*	Converts the difference in clk increments to microseconds */
-static uint32_t calc_delta_time(Shared_Data* shared_ptr){
+static unsigned long calc_delta_time(Shared_Data* shared_ptr){
 
-	uint16_t delta_clk = shared_ptr->clk_elapsed;
+	unsigned short delta_clk = shared_ptr->clk_elapsed;
 
 	// scales based on prescaling
-	uint16_t prescale = 8;
+	unsigned short prescale = 8;
 
-	uint32_t temp;
+	unsigned long temp;
 
-	temp = (uint32_t)delta_clk * prescale;
+	temp = (unsigned long)delta_clk * prescale;
 
 	return temp;
 }
@@ -33,7 +33,7 @@ static uint32_t calc_delta_time(Shared_Data* shared_ptr){
 /* Inserts calculated rpm to first pos in rpm-array, and shifts the rest to the right.
  * Filters outliers (0 < rpm < 130)
 */
-static void insert_rpm(Shared_Data* shared_ptr, uint32_t rpm){
+static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
     int i;
     /*uint32_t temp;
@@ -55,32 +55,32 @@ static void insert_rpm(Shared_Data* shared_ptr, uint32_t rpm){
  *	Qm.n values defined in shared.h
 */
 void calc_latest_rpm(Shared_Data* shared_ptr){
-	//uint32_t delta_time;
-	uint16_t delta_rev_inverse = 96;
-	uint32_t MS_TO_S = 1000000;
-	uint16_t S_TO_MIN = 60;
-	uint64_t numerator;
-	uint64_t denominator;
-	uint64_t rpm;
+	unsigned long delta_time;
+	unsigned short delta_rev_inverse = 96;
+	unsigned long MS_TO_S = 1000000;
+	unsigned short S_TO_MIN = 60;
+	unsigned long long numerator;
+	unsigned long long denominator;
+	unsigned long long rpm;
 	
-	shared_ptr->delta_time = calc_delta_time(shared_ptr);
-	
-	shared_ptr->delta_time = shared_ptr->delta_time << N;
+	delta_time = calc_delta_time(shared_ptr);
+	shared_ptr->delta_time = delta_time;
+	delta_time = delta_time << N;
 	delta_rev_inverse = delta_rev_inverse << N;
 	MS_TO_S = MS_TO_S << N;
 	S_TO_MIN = S_TO_MIN << N;
 
-	numerator = (uint64_t)MS_TO_S * S_TO_MIN;
+	numerator = (unsigned long long)MS_TO_S * S_TO_MIN;
 	numerator = numerator >> N;
 
-	denominator = (uint64_t)delta_rev_inverse * shared_ptr->delta_time;
+	denominator = (unsigned long long)delta_rev_inverse * shared_ptr->delta_time;
 	denominator = denominator >> N;
 
 	rpm = numerator << N;
 	rpm = rpm + (denominator >> 1); // For correct rounding
 	rpm = rpm / denominator;
 	
-	shared_ptr->curr_rpm = (uint32_t)rpm >> N;
+	shared_ptr->curr_rpm = (unsigned long)rpm >> N;
 	insert_rpm(shared_ptr, rpm);
 	
 	
@@ -88,7 +88,7 @@ void calc_latest_rpm(Shared_Data* shared_ptr){
 
 
 void calc_avg_rpm(Shared_Data* shared_ptr){
-	uint64_t temp = 0;
+	unsigned long long temp = 0;
 	int i;
 	
 	for(i = 0; i < MEASUREMENTS_SIZE; i++){
@@ -107,7 +107,7 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 void calc_time_elapsed(Shared_Data* shared_ptr){
 	
 	if(clk_curr < shared_ptr->clk_prev){
-		uint16_t temp = 0xFFFF;
+		unsigned short temp = 0xFFFF;
 		temp = temp - shared_ptr->clk_prev;
 		temp = temp + clk_curr;
 		shared_ptr->clk_elapsed = temp;

@@ -15,7 +15,7 @@
 
 extern bool newCommand;
 extern bool newMeasurement;
-extern uint16_t clk_curr;
+extern unsigned short clk_curr;
 extern char recieved_bytes[5];
 
 void transmit_0(Shared_Data* shared_ptr){
@@ -45,7 +45,7 @@ void transmit_2(Shared_Data* shared_ptr){
 void transmit_3(Shared_Data* shared_ptr){
 	char temp[6];
 	
-	snprintf(temp, 5, "%d",  shared_ptr->speed_set);
+	snprintf(temp, 6, "%d",  shared_ptr->speed_set);
 	USART_transmit(temp);
 }
 
@@ -54,7 +54,7 @@ void transmit_4(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "#####", 5);
 	
-	snprintf(temp, 5, "%d", shared_ptr->speed_actual);
+	snprintf(temp, 6, "%d", shared_ptr->speed_actual);
 	USART_transmit(temp);
 }
 
@@ -62,15 +62,14 @@ void transmit_5(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "#####", 5);
 
-	snprintf(temp, 5, "%" PRIu16, shared_ptr->clk_elapsed);
+	snprintf(temp, 6, "%hu", shared_ptr->clk_elapsed);
 	USART_transmit(temp);
 }
 
 void transmit_6(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "#####", 5);
-	
-	snprintf(temp, 5, "%" PRIu32, shared_ptr->rpm_avg);
+	snprintf(temp, 6, "%lu", shared_ptr->delta_time);
 	USART_transmit(temp);
 }
 
@@ -84,9 +83,6 @@ void transmit_7(Shared_Data* shared_ptr){
 void transmit_8(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "#####", 5);
-	uint16_t test = 60000;
-	
-	snprintf(temp, 6, "%" PRIu16, test);
 	
 	USART_transmit(temp);
 }
@@ -94,7 +90,7 @@ void transmit_8(Shared_Data* shared_ptr){
 void transmit_9(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "#####", 5);
-	snprintf(temp, 5, "%" PRIu32, shared_ptr->curr_rpm);
+	snprintf(temp, 6, "%lu", shared_ptr->curr_rpm);
 	//strncpy(buf, temp, 5);
 	USART_transmit(temp);
 }

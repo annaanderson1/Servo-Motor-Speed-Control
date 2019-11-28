@@ -11,20 +11,20 @@
 typedef struct {
 	int speed_set;
 	int speed_actual;
-	uint16_t clk_prev;
-	uint16_t clk_elapsed;
-	uint32_t curr_rpm;
-	uint32_t rpm_avg;
-	uint32_t rpm_measurements[MEASUREMENTS_SIZE];
-	uint32_t delta_time;
+	unsigned short clk_prev;
+	unsigned short clk_elapsed;
+	unsigned long curr_rpm;
+	unsigned long rpm_avg;
+	unsigned long rpm_measurements[MEASUREMENTS_SIZE];
+	unsigned long delta_time;
 } Shared_Data;
 
 void init_shared_data(Shared_Data* shared_ptr){
 	shared_ptr->speed_set = 0;
-	shared_ptr->speed_actual = 25;
+	shared_ptr->speed_actual = 0;
 	shared_ptr->clk_prev = 0;
-	shared_ptr->clk_elapsed = 100;
+	shared_ptr->clk_elapsed = 0;
 	shared_ptr->curr_rpm = 0;
-	shared_ptr->rpm_avg = 70;
+	shared_ptr->rpm_avg = 0;
 	shared_ptr->delta_time = 0;
 }
