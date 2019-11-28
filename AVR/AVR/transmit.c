@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <avr/io.h>
 
 extern bool newCommand;
 extern bool newMeasurement;
@@ -24,70 +25,65 @@ void transmit_0(Shared_Data* shared_ptr){
 void transmit_1(Shared_Data* shared_ptr){
 
 }
-/*
+
+/* Sets a new set value for the speed. Range: 0-120. Transmits an empty message. */
 void transmit_2(Shared_Data* shared_ptr){
 	char temp[6];
-	//char sub_str[4];
-
-	//char *endptr;
-	int val;
-	//long l;
-	val = 60;
-	shared_ptr->speed_set = val;
+	char sub_str[4];
+	int res;
+	strncpy(temp, "#####", 5);
+	strncpy(sub_str, recieved_bytes + 1, 3);
+		
+	res = atoi(sub_str);
+	shared_ptr->speed_set = res;
 	
-	//strncpy(sub_str, recieved_bytes + 1, 3);
-	
-	//strncpy(sub_str + 3, ";", 1);
-	//l = strtol(sub_str, &endptr, 10);
-	//speed_set = val;
-	//sprintf(buf, sub_str);
-	//memset(buf,' ', 6*sizeof(char));
-	USART_transmit(temp);
-	//OCR0B = speed_set;
-	//OCR0A = speed_set;
-}
-*/
-void transmit_2(Shared_Data* shared_ptr){
-	char temp[6];
-	
-	shared_ptr->speed_set = 60;
-
 	USART_transmit(temp);
 
 }
 
-
+/* Transmits the set speed. */
 void transmit_3(Shared_Data* shared_ptr){
 	char temp[6];
 	
-	sprintf(temp, "%d",  shared_ptr->speed_set);
+	snprintf(temp, 5, "%d",  shared_ptr->speed_set);
 	USART_transmit(temp);
 }
 
 
 void transmit_4(Shared_Data* shared_ptr){
 	char temp[6];
-	sprintf(temp, "%d", shared_ptr->speed_actual);
+	strncpy(temp, "#####", 5);
+	
+	snprintf(temp, 5, "%d", shared_ptr->speed_actual);
+	USART_transmit(temp);
 }
 
 void transmit_5(Shared_Data* shared_ptr){
 	char temp[6];
-	snprintf(temp, 6, "%" PRIu16, shared_ptr->clk_elapsed);
+	strncpy(temp, "#####", 5);
+
+	snprintf(temp, 5, "%" PRIu16, shared_ptr->clk_elapsed);
 	USART_transmit(temp);
 }
 
 void transmit_6(Shared_Data* shared_ptr){
 	char temp[6];
-	sprintf(temp, "%" PRIu32, shared_ptr->rpm_avg);
+	strncpy(temp, "#####", 5);
+	
+	snprintf(temp, 5, "%" PRIu32, shared_ptr->rpm_avg);
+	USART_transmit(temp);
 }
 
 void transmit_7(Shared_Data* shared_ptr){
-	//char temp[6];
-	//sprintf(temp, "%u", test_var1);
+	char temp[6];
+	strncpy(temp, "#####", 5);
+	
+	USART_transmit(temp);
 }
 
 void transmit_8(Shared_Data* shared_ptr){
 	char temp[6];
+	strncpy(temp, "#####", 5);
 	uint16_t test = 60000;
 	
 	snprintf(temp, 6, "%" PRIu16, test);
@@ -97,8 +93,10 @@ void transmit_8(Shared_Data* shared_ptr){
 
 void transmit_9(Shared_Data* shared_ptr){
 	char temp[6];
-	sprintf(temp, "%" PRIu32, shared_ptr->curr_rpm);
+	strncpy(temp, "#####", 5);
+	snprintf(temp, 5, "%" PRIu32, shared_ptr->curr_rpm);
 	//strncpy(buf, temp, 5);
+	USART_transmit(temp);
 }
 
 

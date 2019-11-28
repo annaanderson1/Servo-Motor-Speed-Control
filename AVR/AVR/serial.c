@@ -27,23 +27,15 @@ extern char recieved_bytes[5];
 */
 void USART_transmit(char *data){
 	int i = 0;
-	int j = 0;
 	char buf[6];
-	int data_len = strlen(data);
+	
+	strcpy(buf,"%%%%%");
+	strncpy(buf, data, 5);
 
-	strncpy(buf, data, data_len);
-
-	// Pads data with trailing " "
-	while( (data_len + i) <= 5){
-		int pos = (data_len + i);
-		strcpy(buf + pos, " ");
-		i++;
-	}
-
-	for(j = 0; j < 5; j++){
+	for(i = 0; i < 5; i++){
 		// Wait for empty transmit buffer
 		while( !(UCSR0A & (1 << UDRE0)) );
-		UDR0 = buf[j];
+		UDR0 = buf[i];
 		_delay_ms(5);
 	}
 }

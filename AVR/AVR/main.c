@@ -30,7 +30,7 @@ char recieved_bytes[5];
 int main(void){
 	Shared_Data shared_data;
 	Shared_Data* shared_ptr = &shared_data;
-	init_shared_data();
+	init_shared_data(shared_ptr);
 	
 	newCommand = false;
 	newMeasurement = false;
@@ -39,7 +39,7 @@ int main(void){
 	setup_registers();
 	sei();
 
-
+//shared_ptr->clk_elapsed = 3;
 	while(1){
 
 		if(newCommand){
