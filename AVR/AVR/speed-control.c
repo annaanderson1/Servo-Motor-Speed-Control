@@ -17,6 +17,21 @@ extern unsigned short clk_curr;
 extern unsigned short clk_prev;
 extern unsigned short clk_elapsed;
 
+static void calc_clk_elapsed(){
+	
+	if(clk_curr < clk_prev){
+		unsigned short temp = 0xFFFF;
+		temp = temp - clk_prev;
+		temp = temp + clk_curr;
+		clk_elapsed = temp;
+	}
+	else{
+		clk_elapsed = clk_curr - clk_prev;
+		
+	}
+	clk_prev = clk_curr;
+}
+
 /*	Converts the difference in clk increments to microseconds */
 static unsigned long calc_delta_time(Shared_Data* shared_ptr){
 	unsigned short delta_clk = clk_elapsed;
@@ -105,19 +120,43 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 	
 }
 
-static void calc_clk_elapsed(){
+
+void control(Shared_Data* shared_ptr){
+	long Kp = 2;
 	
-	if(clk_curr < clk_prev){
-		unsigned short temp = 0xFFFF;
-		temp = temp - clk_prev;
-		temp = temp + clk_curr;
-		clk_elapsed = temp;
+	long e = (long)shared_ptr->speed_set - (long)shared_ptr->rpm_avg;
+	shared_ptr->error = (short)e;	// For debugging
+	
+	e = e << N;
+	Kp = Kp << N;
+	//long Ti = (1 << N);
+	
+	//long long Ki = (long long)Kp << N;
+	//Ki = Ki + (Ti >> 1);
+	//Ki = Ki / Ti;
+	
+	//long long integral = (long long)Kp * Ki;
+	//integral = integral << N;
+
+	
+	long long pwm = (long long)e * Kp;
+	pwm = pwm >> N;
+	
+	
+	
+	pwm = pwm >> N;	// Convert to regular number
+
+	shared_ptr->speed_actual = (int)pwm;
+
+	if(pwm < 0){
+		pwm = 0;		
 	}
-	else{
-		clk_elapsed = clk_curr - clk_prev;
-		
+	else if(pwm > 255){
+		pwm = 255;
 	}
-	clk_prev = clk_curr;
+	OCR0A = pwm;
+	OCR0B = pwm;
+	
 }
 
 ISR(PCINT1_vect){

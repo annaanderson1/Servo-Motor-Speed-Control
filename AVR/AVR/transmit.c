@@ -17,6 +17,7 @@ extern bool newCommand;
 extern bool newMeasurement;
 extern unsigned short clk_curr;
 extern char recieved_bytes[5];
+extern unsigned short clk_elapsed;
 
 void transmit_0(Shared_Data* shared_ptr){
 	char temp[6];
@@ -48,7 +49,7 @@ void transmit_2(Shared_Data* shared_ptr){
 void transmit_3(Shared_Data* shared_ptr){
 	char temp[6];
 	
-	snprintf(temp, 6, "%d",  shared_ptr->speed_set);
+	snprintf(temp, 6, "%hu",  shared_ptr->speed_set);
 	USART_transmit(temp);
 }
 
@@ -65,7 +66,7 @@ void transmit_5(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
 
-	snprintf(temp, 6, "%hu", shared_ptr->clk_elapsed);
+	snprintf(temp, 6, "%hu", clk_elapsed);
 	USART_transmit(temp);
 }
 
@@ -79,6 +80,7 @@ void transmit_6(Shared_Data* shared_ptr){
 void transmit_7(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
+	snprintf(temp, 6, "%hu", shared_ptr->error);
 	USART_transmit(temp);
 }
 
