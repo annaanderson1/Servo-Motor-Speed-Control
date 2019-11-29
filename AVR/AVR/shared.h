@@ -15,7 +15,7 @@
 #define F_CPU 1000000UL
 #define BAUD 2400
 #define N 4
-#define MEASUREMENTS_SIZE 64
+#define MEASUREMENTS_SIZE 32
 
 typedef struct {
 	int speed_set;

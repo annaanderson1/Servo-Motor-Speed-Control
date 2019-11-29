@@ -14,11 +14,12 @@
 
 extern bool newMeasurement;
 extern unsigned short clk_curr;
+extern unsigned short clk_prev;
+extern unsigned short clk_elapsed;
 
 /*	Converts the difference in clk increments to microseconds */
 static unsigned long calc_delta_time(Shared_Data* shared_ptr){
-
-	unsigned short delta_clk = shared_ptr->clk_elapsed;
+	unsigned short delta_clk = clk_elapsed;
 
 	// scales based on prescaling
 	unsigned short prescale = 8;
@@ -36,11 +37,11 @@ static unsigned long calc_delta_time(Shared_Data* shared_ptr){
 static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
     int i;
-    uint32_t temp;
+    unsigned long temp;
 
     temp = rpm >> N;
 
-    if(temp < 0 || temp > 130){
+    if(temp < 0 || temp > 150){
         return;
     }
 
@@ -96,7 +97,7 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 	}
 	
 	// Divide by MEASUREMENTS_SIZE (64)
-	temp = temp >> 6;
+	temp = temp >> 5;
 	
 	// convert back from Qm.n to normal int
 	temp = temp >> N;
@@ -104,26 +105,26 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 	
 }
 
-void calc_time_elapsed(Shared_Data* shared_ptr){
+static void calc_clk_elapsed(){
 	
-	if(clk_curr < shared_ptr->clk_prev){
+	if(clk_curr < clk_prev){
 		unsigned short temp = 0xFFFF;
-		temp = temp - shared_ptr->clk_prev;
+		temp = temp - clk_prev;
 		temp = temp + clk_curr;
-		shared_ptr->clk_elapsed = temp;
+		clk_elapsed = temp;
 	}
 	else{
-		shared_ptr->clk_elapsed = clk_curr - shared_ptr->clk_prev;
+		clk_elapsed = clk_curr - clk_prev;
 		
 	}
-	shared_ptr->clk_prev = clk_curr;
+	clk_prev = clk_curr;
 }
 
-/* ISR for PCINT14-8 */
 ISR(PCINT1_vect){
 	cli();
 	
 	clk_curr = TCNT1;
+	calc_clk_elapsed();
 	newMeasurement = true;
 	
 	sei();

@@ -76,7 +76,7 @@ static void setup_interrupts(){
 }
 
 /*	
- *	Sets up clk/8 prescaling on 16-bit timer OC1
+ *	Sets up clk/64 prescaling on 16-bit timer OC1
  *	See details in datasheet pg. 141-147
 */	
 static void setup_speed_clock(){

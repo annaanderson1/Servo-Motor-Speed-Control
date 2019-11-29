@@ -26,6 +26,8 @@ bool newCommand;
 bool newMeasurement;
 unsigned short clk_curr;
 char recieved_bytes[5];
+unsigned short clk_prev;
+unsigned short clk_elapsed;
 
 int main(void){
 	Shared_Data shared_data;
@@ -35,14 +37,21 @@ int main(void){
 	newCommand = false;
 	newMeasurement = false;
 	clk_curr = 0;
+	clk_prev = 0;
+	clk_elapsed = 0;
+	OCR0A = 150;
+	OCR0B = 150;
 	
-	//newMeasurement = true;
-	//shared_ptr->clk_elapsed = 15000;
 	setup_registers();
 	sei();
-
+	long i = 0;
 	while(1){
-
+		i++;
+		if(i == 10000){
+			transmit_8(shared_ptr);
+			transmit_0(shared_ptr);
+			i = 0;
+		}
 		if(newCommand){
 			switch(*recieved_bytes){
 				case '0':
@@ -82,7 +91,6 @@ int main(void){
 		}
 	
 		if(newMeasurement){
-			calc_time_elapsed(shared_ptr);
 			calc_latest_rpm(shared_ptr);
 			calc_avg_rpm(shared_ptr);
 			newMeasurement = false;

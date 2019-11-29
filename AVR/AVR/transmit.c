@@ -19,7 +19,9 @@ extern unsigned short clk_curr;
 extern char recieved_bytes[5];
 
 void transmit_0(Shared_Data* shared_ptr){
-	
+	char temp[6];
+	strncpy(temp, "\n", 5);
+	USART_transmit(temp);
 }
 
 void transmit_1(Shared_Data* shared_ptr){

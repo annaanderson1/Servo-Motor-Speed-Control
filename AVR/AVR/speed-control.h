@@ -12,6 +12,5 @@
 void calc_latest_rpm(Shared_Data* shared_ptr);
 void calc_filtered_speed(Shared_Data* shared_ptr);
 void calc_avg_rpm(Shared_Data* shared_ptr);
-void calc_time_elapsed(Shared_Data* shared_ptr);
 
 #endif
