@@ -19,5 +19,6 @@ void transmit_6(Shared_Data* shared_ptr);
 void transmit_7(Shared_Data* shared_ptr);
 void transmit_8(Shared_Data* shared_ptr);
 void transmit_9(Shared_Data* shared_ptr);
+void transmit_empty();
 
 #endif /* TRANSMIT_H_ */

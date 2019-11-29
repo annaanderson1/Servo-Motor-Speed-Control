@@ -36,8 +36,8 @@ int main(void){
 	newMeasurement = false;
 	clk_curr = 0;
 	
-	newMeasurement = true;
-	shared_ptr->clk_elapsed = 10000;
+	//newMeasurement = true;
+	//shared_ptr->clk_elapsed = 15000;
 	setup_registers();
 	sei();
 
@@ -75,15 +75,16 @@ int main(void){
 				case '9':
 					transmit_9(shared_ptr);
 					break;
-				
+				default:
+					transmit_empty();
 			}
 			newCommand = false;
 		}
 	
 		if(newMeasurement){
-			//calc_time_elapsed(shared_ptr);
+			calc_time_elapsed(shared_ptr);
 			calc_latest_rpm(shared_ptr);
-			//calc_avg_rpm(shared_ptr);
+			calc_avg_rpm(shared_ptr);
 			newMeasurement = false;
 		}
 		

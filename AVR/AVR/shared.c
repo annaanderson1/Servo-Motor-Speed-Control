@@ -4,6 +4,7 @@
  * Created: 2019-11-27 16:00:18
  *  Author: joakimcedergren
  */ 
+
 #include <stdbool.h>
 #include <inttypes.h>
 #define MEASUREMENTS_SIZE 64

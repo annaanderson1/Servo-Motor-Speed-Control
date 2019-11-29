@@ -36,14 +36,14 @@ static unsigned long calc_delta_time(Shared_Data* shared_ptr){
 static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
     int i;
-    /*uint32_t temp;
+    uint32_t temp;
 
     temp = rpm >> N;
 
     if(temp < 0 || temp > 130){
         return;
     }
-*/
+
     for(i = MEASUREMENTS_SIZE - 1; i >= 0; i--){
         shared_ptr->rpm_measurements[i] = shared_ptr->rpm_measurements[i-1];
     }
@@ -51,7 +51,7 @@ static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
 }
 
-/*	Calculates the speed for a single encoder-interrupt, using fixed point arithmetics.
+/*	Calculates the speed between two encoder-interrupts, using fixed point arithmetics.
  *	Qm.n values defined in shared.h
 */
 void calc_latest_rpm(Shared_Data* shared_ptr){
@@ -64,7 +64,7 @@ void calc_latest_rpm(Shared_Data* shared_ptr){
 	unsigned long long rpm;
 	
 	delta_time = calc_delta_time(shared_ptr);
-	shared_ptr->delta_time = delta_time;
+	
 	delta_time = delta_time << N;
 	delta_rev_inverse = delta_rev_inverse << N;
 	MS_TO_S = MS_TO_S << N;
@@ -73,16 +73,16 @@ void calc_latest_rpm(Shared_Data* shared_ptr){
 	numerator = (unsigned long long)MS_TO_S * S_TO_MIN;
 	numerator = numerator >> N;
 
-	denominator = (unsigned long long)delta_rev_inverse * shared_ptr->delta_time;
+	denominator = (unsigned long long)delta_rev_inverse * delta_time;
 	denominator = denominator >> N;
 
 	rpm = numerator << N;
-	rpm = rpm + (denominator >> 1); // For correct rounding
+	rpm = rpm + (denominator >> 1);
 	rpm = rpm / denominator;
 	
-	shared_ptr->curr_rpm = (unsigned long)rpm >> N;
+	shared_ptr->delta_time = delta_time >> N;		// Used for debugging
+	shared_ptr->curr_rpm = (unsigned long)rpm >> N;	// Used for debugging
 	insert_rpm(shared_ptr, rpm);
-	
 	
 }
 
