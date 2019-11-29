@@ -5,9 +5,9 @@
  *  Author: tmk19jc
  */ 
 
-#define MAIN_FILE
 
 #include <stdbool.h>
+#include <inttypes.h>
 #include "shared.h"
 
 #include <avr/io.h>
@@ -19,56 +19,82 @@
 #include "registers.h"
 #include "serial.h"
 #include "speed-control.h"
+#include "transmit.h"
+
+/* Globals */
+bool newCommand;
+bool newMeasurement;
+unsigned short clk_curr;
+char recieved_bytes[5];
+unsigned short clk_prev;
+unsigned short clk_elapsed;
 
 int main(void){
-	AB = 0;
-	pwm = 50;
-	speed_set = 0;
-	speed_actual = 0;
+	Shared_Data shared_data;
+	Shared_Data* shared_ptr = &shared_data;
+	init_shared_data(shared_ptr);
+	
 	newCommand = false;
-
+	newMeasurement = false;
+	clk_curr = 0;
+	clk_prev = 0;
+	clk_elapsed = 0;
+	OCR0A = 150;
+	OCR0B = 150;
+	
 	setup_registers();
 	sei();
-	
+	long i = 0;
 	while(1){
-		char buf[6];
-		char sub_str[4];
-		char *endptr;
-		int val;
-		
+		i++;
+		if(i == 10000){
+			transmit_8(shared_ptr);
+			transmit_0(shared_ptr);
+			i = 0;
+		}
 		if(newCommand){
-			memset(buf,' ', 6*sizeof(char));
-			memset(sub_str,'%', 4*sizeof(char));
-			val = 0;
-			
 			switch(*recieved_bytes){
 				case '0':
+					transmit_0(shared_ptr);
 					break;
 				case '1':
+					transmit_1(shared_ptr);
 					break;
 				case '2':
-					strncpy(sub_str, recieved_bytes + 1, 3);
-					strncpy(sub_str + 3, ";", 1);	
-					val = strtol(sub_str, &endptr, 10);
-					speed_set = val;
-					sprintf(buf, sub_str);
-					memset(buf,' ', 6*sizeof(char));					
+					transmit_2(shared_ptr);
 					break;
 				case '3':
-					sprintf(buf, "%d", speed_set);
+					transmit_3(shared_ptr);
 					break;
 				case '4':
-					sprintf(buf, "%d", speed_actual);
+					transmit_4(shared_ptr);
 					break;
+				case '5':
+					transmit_5(shared_ptr);
+					break;
+				case '6':
+					transmit_6(shared_ptr);
+					break;
+				case '7':
+					transmit_7(shared_ptr);
+					break;
+				case '8':
+					transmit_8(shared_ptr);
+					break;
+				case '9':
+					transmit_9(shared_ptr);
+					break;
+				default:
+					transmit_empty();
 			}
-			
-			USART_transmit(buf);
-			memset(buf,' ', 6*sizeof(char));
 			newCommand = false;
 		}
-		
-		//calc_speed();
-		
+	
+		if(newMeasurement){
+			calc_latest_rpm(shared_ptr);
+			calc_avg_rpm(shared_ptr);
+			newMeasurement = false;
+		}
 		
 	}
 	return 0;

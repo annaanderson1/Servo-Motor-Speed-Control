@@ -14,22 +14,20 @@
 
 #define F_CPU 1000000UL
 #define BAUD 2400
+#define N 4
+#define MEASUREMENTS_SIZE 32
 
-#ifdef MAIN_FILE
-	unsigned int AB;
-	unsigned int pwm;
+typedef struct {
 	int speed_set;
 	int speed_actual;
-	char recieved_bytes[5];
-	bool newCommand;
+	unsigned short clk_prev;
+	unsigned short clk_elapsed;
+	unsigned long curr_rpm;
+	unsigned long rpm_avg;
+	unsigned long rpm_measurements[MEASUREMENTS_SIZE];
+	unsigned long delta_time;
+} Shared_Data;
 
-#else
-	extern unsigned int AB;
-	extern unsigned int pwm;
-	extern char recieved_bytes[5];
-	extern bool newCommand;
-	extern int speed_set;
-	extern int speed_actual;
+void init_shared_data();
 
-#endif
 #endif

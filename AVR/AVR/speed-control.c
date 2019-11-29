@@ -6,102 +6,126 @@
  */
 
 #include <stdbool.h>
+#include <inttypes.h>
 #include "shared.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+extern bool newMeasurement;
+extern unsigned short clk_curr;
+extern unsigned short clk_prev;
+extern unsigned short clk_elapsed;
 
-/* Turns off output on selected pin on PORTC */
-void turnOff_C(int pin){
-	PORTC &= ~(1 << pin);
+/*	Converts the difference in clk increments to microseconds */
+static unsigned long calc_delta_time(Shared_Data* shared_ptr){
+	unsigned short delta_clk = clk_elapsed;
+
+	// scales based on prescaling
+	unsigned short prescale = 8;
+
+	unsigned long temp;
+
+	temp = (unsigned long)delta_clk * prescale;
+
+	return temp;
+}
+
+/* Inserts calculated rpm to first pos in rpm-array, and shifts the rest to the right.
+ * Filters outliers (0 < rpm < 130)
+*/
+static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
+
+    int i;
+    unsigned long temp;
+
+    temp = rpm >> N;
+
+    if(temp < 0 || temp > 150){
+        return;
+    }
+
+    for(i = MEASUREMENTS_SIZE - 1; i >= 0; i--){
+        shared_ptr->rpm_measurements[i] = shared_ptr->rpm_measurements[i-1];
+    }
+    shared_ptr->rpm_measurements[0] = rpm;
 
 }
-/* Turns on output on selected pin on PORTC */
-void turnOn_C(int pin){
-	PORTC |= (1 << pin);
+
+/*	Calculates the speed between two encoder-interrupts, using fixed point arithmetics.
+ *	Qm.n values defined in shared.h
+*/
+void calc_latest_rpm(Shared_Data* shared_ptr){
+	unsigned long delta_time;
+	unsigned short delta_rev_inverse = 96;
+	unsigned long MS_TO_S = 1000000;
+	unsigned short S_TO_MIN = 60;
+	unsigned long long numerator;
+	unsigned long long denominator;
+	unsigned long long rpm;
+	
+	delta_time = calc_delta_time(shared_ptr);
+	
+	delta_time = delta_time << N;
+	delta_rev_inverse = delta_rev_inverse << N;
+	MS_TO_S = MS_TO_S << N;
+	S_TO_MIN = S_TO_MIN << N;
+
+	numerator = (unsigned long long)MS_TO_S * S_TO_MIN;
+	numerator = numerator >> N;
+
+	denominator = (unsigned long long)delta_rev_inverse * delta_time;
+	denominator = denominator >> N;
+
+	rpm = numerator << N;
+	rpm = rpm + (denominator >> 1);
+	rpm = rpm / denominator;
+	
+	shared_ptr->delta_time = delta_time >> N;		// Used for debugging
+	shared_ptr->curr_rpm = (unsigned long)rpm >> N;	// Used for debugging
+	insert_rpm(shared_ptr, rpm);
+	
 }
 
-/* Routine for clockwise rotation of encoder */
-static void clockwise(){
-	turnOff_C(PC2);
-	turnOn_C(PC0);
-	if(pwm < 245){
-		pwm += 10;
+
+void calc_avg_rpm(Shared_Data* shared_ptr){
+	unsigned long long temp = 0;
+	int i;
+	
+	for(i = 0; i < MEASUREMENTS_SIZE; i++){
+		temp = temp + shared_ptr->rpm_measurements[i];
+	}
+	
+	// Divide by MEASUREMENTS_SIZE (64)
+	temp = temp >> 5;
+	
+	// convert back from Qm.n to normal int
+	temp = temp >> N;
+	shared_ptr->rpm_avg = temp;
+	
+}
+
+static void calc_clk_elapsed(){
+	
+	if(clk_curr < clk_prev){
+		unsigned short temp = 0xFFFF;
+		temp = temp - clk_prev;
+		temp = temp + clk_curr;
+		clk_elapsed = temp;
 	}
 	else{
-		pwm = 255;
+		clk_elapsed = clk_curr - clk_prev;
+		
 	}
+	clk_prev = clk_curr;
 }
 
-/* Routine for counterclockwise rotation of encoder */
-static void counterclockwise(){
-	turnOff_C(PC0);
-	turnOn_C(PC2);
-	if(pwm > 10){
-		pwm -= 10;
-	}
-	else{
-		pwm = 0;
-	}
-}
-
-/* Calculates the speed for a single encoder-interrupt. */
-static int calc_curr_speed(int time_elapsed){
-
-	return 0;
-}
-
-/* Calculates the filtered speed and stores the value i global speed_actual */
-void calc_filtered_speed(){
-
-}
-
-
-/* ISR for PCINT14-8 */
 ISR(PCINT1_vect){
 	cli();
-	unsigned int ABnew = 0x00;
-	unsigned int A = 0x00;
-	unsigned int B = 0x00;
-
-	A = (PINC & (1 << PC5));
-	A = (A >> (PC5 - 1));	// Sets A in pos 1
-
-	B = (PINC & (1 << PC4));
-	B = (B >> PC4);			// Sets B in pos 0
-
-	ABnew = A | B;
-
-	switch(ABnew){
-		case 0:
-		if(AB == 2){
-			clockwise();
-		}
-		else{
-			counterclockwise();
-		}
-		break;
-
-		case 1:
-		if(AB == 0){
-			clockwise();
-		}
-		else{
-			counterclockwise();
-		}
-		break;
-	}
-	AB = ABnew;
-	/* Pseudo code framework for speed measurement-interrupts
-
-	time_elapsed = time_now - time_prev;
-	time_now = time_prev;
-	speed_measured[speed_measured_pos] = calc_curr_speed(time_elapsed);
-	speed_measured_pos++;
-	if(speed_measured_pos == SPEED_AVG_SIZE){
-		speed_measured_pos = 0;
-	}
-	*/
+	
+	clk_curr = TCNT1;
+	calc_clk_elapsed();
+	newMeasurement = true;
+	
 	sei();
 }

@@ -36,10 +36,12 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../shared.c \
 ../speed-control.c \
 ../serial.c \
 ../registers.c \
-../main.c
+../main.c \
+../transmit.c
 
 
 PREPROCESSING_SRCS += 
@@ -49,28 +51,36 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+shared.o \
 speed-control.o \
 serial.o \
 registers.o \
-main.o
+main.o \
+transmit.o
 
 OBJS_AS_ARGS +=  \
+shared.o \
 speed-control.o \
 serial.o \
 registers.o \
-main.o
+main.o \
+transmit.o
 
 C_DEPS +=  \
+shared.d \
 speed-control.d \
 serial.d \
 registers.d \
-main.d
+main.d \
+transmit.d
 
 C_DEPS_AS_ARGS +=  \
+shared.d \
 speed-control.d \
 serial.d \
 registers.d \
-main.d
+main.d \
+transmit.d
 
 OUTPUT_FILE_PATH +=Servo-Motor-Speed-Control.elf
 
@@ -83,6 +93,10 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 LIB_DEP+= 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 
