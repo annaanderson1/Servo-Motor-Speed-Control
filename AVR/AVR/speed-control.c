@@ -32,12 +32,31 @@ static void calc_clk_elapsed(){
 	clk_prev = clk_curr;
 }
 
+static void set_prescale(int ps){
+	if (ps == 1){
+		TCCR1B &= ~ 0xff;
+		TCCR1B = (1 << CS10);
+	}
+	else if(ps == 8){
+		TCCR1B &= ~ 0xff;
+		TCCR1B = (1 << CS11);
+	}
+}
 /*	Converts the difference in clk increments to microseconds */
 static unsigned long calc_delta_time(Shared_Data* shared_ptr){
 	unsigned short delta_clk = clk_elapsed;
 
 	// scales based on prescaling
-	unsigned short prescale = 8;
+	unsigned short prescale;
+	
+	if(shared_ptr->speed_set <= 20){
+		prescale = 8;
+		set_prescale(8);
+	}
+	else{
+		prescale = 1;
+		set_prescale(1);
+	}
 
 	unsigned long temp;
 
@@ -56,7 +75,7 @@ static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
     temp = rpm >> N;
 
-    if(temp < 0 || temp > 150){
+    if(temp < 0 || temp > 200){
         return;
     }
 
@@ -111,7 +130,7 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 		temp = temp + shared_ptr->rpm_measurements[i];
 	}
 	
-	// Divide by MEASUREMENTS_SIZE (64)
+	// Divide by MEASUREMENTS_SIZE (32)
 	temp = temp >> 5;
 	
 	// convert back from Qm.n to normal int
@@ -123,30 +142,36 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 
 void control(Shared_Data* shared_ptr){
 	long Kp = 2;
-	
+	long Ki;
 	long e = (long)shared_ptr->speed_set - (long)shared_ptr->rpm_avg;
 	shared_ptr->error = (short)e;	// For debugging
 	
-	e = e << N;
-	Kp = Kp << N;
-	//long Ti = (1 << N);
+	e = e << N_CTRL;
+	Kp = Kp << N_CTRL;
 	
-	//long long Ki = (long long)Kp << N;
-	//Ki = Ki + (Ti >> 1);
-	//Ki = Ki / Ti;
+	if(shared_ptr->speed_set >= 80){
+		Ki = 170;
+	}
+
+	else if(shared_ptr->speed_set >= 40){
+		Ki = 120;
+	}
+	else{
+		Ki = 60;
+	}
 	
-	//long long integral = (long long)Kp * Ki;
-	//integral = integral << N;
+	long integral = Ki*e;
+	integral = integral >> N_CTRL;
+	shared_ptr->integral = shared_ptr->integral + integral;
+	
+	long long pwm = (long long)e * Kp + shared_ptr->integral;
+	pwm = pwm >> N_CTRL;
+	
+	
+	
+	pwm = pwm >> N_CTRL;	// Convert to regular number
 
 	
-	long long pwm = (long long)e * Kp;
-	pwm = pwm >> N;
-	
-	
-	
-	pwm = pwm >> N;	// Convert to regular number
-
-	shared_ptr->speed_actual = (int)pwm;
 
 	if(pwm < 0){
 		pwm = 0;		
@@ -154,6 +179,7 @@ void control(Shared_Data* shared_ptr){
 	else if(pwm > 255){
 		pwm = 255;
 	}
+	shared_ptr->speed_actual = (int)pwm;
 	OCR0A = pwm;
 	OCR0B = pwm;
 	

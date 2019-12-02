@@ -45,7 +45,7 @@ int main(void){
 	
 	setup_registers();
 	sei();
-	long i = 0;
+	//long i = 0;
 	while(1){
 		/*i++;
 		if(i == 10000){

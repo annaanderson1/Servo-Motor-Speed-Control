@@ -10,14 +10,14 @@
 #define MEASUREMENTS_SIZE 32
 
 typedef struct {
-	unsigned short speed_set;
+	short speed_set;
 	int speed_actual;
 	unsigned long curr_rpm;
 	unsigned long rpm_avg;
 	unsigned long rpm_measurements[MEASUREMENTS_SIZE];
 	unsigned long delta_time;
-	unsigned short integral;
-	unsigned short error;
+	long long integral;
+	short error;
 } Shared_Data;
 
 void init_shared_data(Shared_Data* shared_ptr){

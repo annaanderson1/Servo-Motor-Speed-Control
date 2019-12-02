@@ -19,7 +19,7 @@
 #define N_CTRL 7
 
 typedef struct {
-	unsigned short speed_set;
+	short speed_set;
 	int speed_actual;
 	unsigned short clk_prev;
 	unsigned short clk_elapsed;
@@ -27,8 +27,8 @@ typedef struct {
 	unsigned long rpm_avg;
 	unsigned long rpm_measurements[MEASUREMENTS_SIZE];
 	unsigned long delta_time;
-	unsigned short integral;
-	unsigned short error;
+	long long integral;
+	short error;
 } Shared_Data;
 
 void init_shared_data();
