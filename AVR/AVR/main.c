@@ -39,19 +39,20 @@ int main(void){
 	clk_curr = 0;
 	clk_prev = 0;
 	clk_elapsed = 0;
-	OCR0A = 150;
-	OCR0B = 150;
+	//OCR0A = 150;
+	//OCR0B = 150;
+	shared_ptr->speed_set = 30;
 	
 	setup_registers();
 	sei();
-	long i = 0;
+	//long i = 0;
 	while(1){
-		i++;
+		/*i++;
 		if(i == 10000){
 			transmit_8(shared_ptr);
 			transmit_0(shared_ptr);
 			i = 0;
-		}
+		}*/
 		if(newCommand){
 			switch(*recieved_bytes){
 				case '0':
@@ -89,12 +90,12 @@ int main(void){
 			}
 			newCommand = false;
 		}
-	
 		if(newMeasurement){
 			calc_latest_rpm(shared_ptr);
 			calc_avg_rpm(shared_ptr);
 			newMeasurement = false;
 		}
+		control(shared_ptr);
 		
 	}
 	return 0;

@@ -17,12 +17,46 @@ extern unsigned short clk_curr;
 extern unsigned short clk_prev;
 extern unsigned short clk_elapsed;
 
+static void calc_clk_elapsed(){
+	
+	if(clk_curr < clk_prev){
+		unsigned short temp = 0xFFFF;
+		temp = temp - clk_prev;
+		temp = temp + clk_curr;
+		clk_elapsed = temp;
+	}
+	else{
+		clk_elapsed = clk_curr - clk_prev;
+		
+	}
+	clk_prev = clk_curr;
+}
+
+static void set_prescale(int ps){
+	if (ps == 1){
+		TCCR1B &= ~ 0xff;
+		TCCR1B = (1 << CS10);
+	}
+	else if(ps == 8){
+		TCCR1B &= ~ 0xff;
+		TCCR1B = (1 << CS11);
+	}
+}
 /*	Converts the difference in clk increments to microseconds */
 static unsigned long calc_delta_time(Shared_Data* shared_ptr){
 	unsigned short delta_clk = clk_elapsed;
 
 	// scales based on prescaling
-	unsigned short prescale = 8;
+	unsigned short prescale;
+	
+	if(shared_ptr->speed_set <= 20){
+		prescale = 8;
+		set_prescale(8);
+	}
+	else{
+		prescale = 1;
+		set_prescale(1);
+	}
 
 	unsigned long temp;
 
@@ -41,7 +75,7 @@ static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
     temp = rpm >> N;
 
-    if(temp < 0 || temp > 150){
+    if(temp < 0 || temp > 200){
         return;
     }
 
@@ -96,7 +130,7 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 		temp = temp + shared_ptr->rpm_measurements[i];
 	}
 	
-	// Divide by MEASUREMENTS_SIZE (64)
+	// Divide by MEASUREMENTS_SIZE (32)
 	temp = temp >> 5;
 	
 	// convert back from Qm.n to normal int
@@ -105,19 +139,50 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 	
 }
 
-static void calc_clk_elapsed(){
+
+void control(Shared_Data* shared_ptr){
+	long Kp = 2;
+	long Ki;
+	long e = (long)shared_ptr->speed_set - (long)shared_ptr->rpm_avg;
+	shared_ptr->error = (short)e;	// For debugging
 	
-	if(clk_curr < clk_prev){
-		unsigned short temp = 0xFFFF;
-		temp = temp - clk_prev;
-		temp = temp + clk_curr;
-		clk_elapsed = temp;
+	e = e << N_CTRL;
+	Kp = Kp << N_CTRL;
+	
+	if(shared_ptr->speed_set >= 80){
+		Ki = 170;
+	}
+
+	else if(shared_ptr->speed_set >= 40){
+		Ki = 120;
 	}
 	else{
-		clk_elapsed = clk_curr - clk_prev;
-		
+		Ki = 60;
 	}
-	clk_prev = clk_curr;
+	
+	long integral = Ki*e;
+	integral = integral >> N_CTRL;
+	shared_ptr->integral = shared_ptr->integral + integral;
+	
+	long long pwm = (long long)e * Kp + shared_ptr->integral;
+	pwm = pwm >> N_CTRL;
+	
+	
+	
+	pwm = pwm >> N_CTRL;	// Convert to regular number
+
+	
+
+	if(pwm < 0){
+		pwm = 0;		
+	}
+	else if(pwm > 255){
+		pwm = 255;
+	}
+	shared_ptr->speed_actual = (int)pwm;
+	OCR0A = pwm;
+	OCR0B = pwm;
+	
 }
 
 ISR(PCINT1_vect){
