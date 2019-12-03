@@ -48,6 +48,7 @@ ISR(USART_RX_vect){
 int main(void){
 	
 	setup();
+	sei();
 	
     while(1){
         
