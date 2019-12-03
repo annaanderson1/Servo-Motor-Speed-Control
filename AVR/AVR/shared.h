@@ -29,6 +29,7 @@ typedef struct {
 	unsigned long delta_time;
 	long long integral;
 	short error;
+	short fine_tuning;
 } Shared_Data;
 
 void init_shared_data();

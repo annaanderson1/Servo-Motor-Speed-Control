@@ -83,6 +83,13 @@ static void setup_speed_clock(){
 	TCCR1B |= (1 << CS11);
 }
 
+static void setup_ADC(){
+	ADMUX |= (1 << REFS0) | (1 << MUX1) | (1 << MUX0);  // osäker, kolla upp elektroniken
+	ADCSRA |= (1 << ADEN) | (1 << ADATE);
+	ADCSRB |= (1 << ADTS2) | (1 << ADTS1);
+	DIDR0 |= (1 << ADC3D);
+}
+
 /*
  *	Initiates registers for DDR, PWM, USART & Interrupts.
 */
@@ -93,5 +100,6 @@ void setup_registers(){
 	setup_USART();
 	setup_interrupts();
 	setup_speed_clock();
+	setup_ADC();
 
 }

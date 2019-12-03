@@ -145,6 +145,9 @@ void control(Shared_Data* shared_ptr){
 	long Ki;
 	long e = (long)shared_ptr->speed_set - (long)shared_ptr->rpm_avg;
 	shared_ptr->error = (short)e;	// For debugging
+	shared_ptr->fine_tuning = (ADCH << 8) | ADCL;	// value: 0-1024
+	//fine_tuning = (fine_tuning << 1);   // value: 0 - 2048
+	//fine_tuning = fine_tuning - 1024;   // value: -1028 - 1028
 	
 	e = e << N_CTRL;
 	Kp = Kp << N_CTRL;
