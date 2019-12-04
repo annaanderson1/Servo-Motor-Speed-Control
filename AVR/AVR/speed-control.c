@@ -86,6 +86,18 @@ static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
 }
 
+static void update_fine_tuning(Shared_Data* shared_ptr){
+	short fine_tuning;
+	
+	fine_tuning = ADCL;	// value: 0-1024
+	fine_tuning |= (ADCH << 8);
+	TIFR1 |= (1 << TOV0);	// clear timer1 overflow flag
+	fine_tuning = (fine_tuning << 1);   // value: 0 - 2048
+	fine_tuning = fine_tuning - 1024;   // value: -1028 - 1028
+	fine_tuning = fine_tuning/100;		// value: -10 - 10
+	shared_ptr->fine_tuning = fine_tuning;	// for debuggning
+}
+
 /*	Calculates the speed between two encoder-interrupts, using fixed point arithmetics.
  *	Qm.n values defined in shared.h
 */
@@ -143,12 +155,11 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 void control(Shared_Data* shared_ptr){
 	long Kp = 2;
 	long Ki;
-	long e = (long)shared_ptr->speed_set - (long)shared_ptr->rpm_avg;//+(long)shared_ptr->fine_tuning;
+	update_fine_tuning(shared_ptr);
+	
+	long e = (long)shared_ptr->speed_set - (long)shared_ptr->rpm_avg;
+	e = e + (long)shared_ptr->fine_tuning
 	shared_ptr->error = (short)e;	// For debugging
-	shared_ptr->fine_tuning = (ADCH << 8) | ADCL;	// value: 0-1024
-	//shared_ptr->fine_tuning = (fine_tuning << 1);   // value: 0 - 2048
-	//shared_ptr->fine_tuning = fine_tuning - 1024;   // value: -1028 - 1028
-	//shared_ptr->fine_tuning = fine_tuning/100;		// value: -10 - 10
 	
 	e = e << N_CTRL;
 	Kp = Kp << N_CTRL;

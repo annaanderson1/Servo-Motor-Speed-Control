@@ -85,10 +85,11 @@ static void setup_speed_clock(){
 
 /* pg. 268-272*/
 static void setup_ADC(){
-	ADMUX |= (1 << REFS0) | (1 << MUX1) | (1 << MUX0);  // osäker, kolla upp elektroniken
+	ADMUX |= (1 << REFS0) | (1 << MUX1) | (1 << MUX0);
 	ADCSRA |= (1 << ADEN) | (1 << ADATE);
 	ADCSRB |= (1 << ADTS2) | (1 << ADTS1);
 	DIDR0 |= (1 << ADC3D);
+	
 }
 
 /*
