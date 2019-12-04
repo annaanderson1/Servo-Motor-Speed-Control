@@ -83,6 +83,7 @@ static void setup_speed_clock(){
 	TCCR1B |= (1 << CS11);
 }
 
+/* pg. 268-272*/
 static void setup_ADC(){
 	ADMUX |= (1 << REFS0) | (1 << MUX1) | (1 << MUX0);  // osäker, kolla upp elektroniken
 	ADCSRA |= (1 << ADEN) | (1 << ADATE);

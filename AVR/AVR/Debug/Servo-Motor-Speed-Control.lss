@@ -648,7 +648,7 @@ void control(Shared_Data* shared_ptr){
      362:	fc 01       	movw	r30, r24
 	long Kp = 2;
 	long Ki;
-	long e = (long)shared_ptr->speed_set - (long)shared_ptr->rpm_avg;
+	long e = (long)shared_ptr->speed_set - (long)shared_ptr->rpm_avg;//+(long)shared_ptr->fine_tuning;
      364:	80 81       	ld	r24, Z
      366:	91 81       	ldd	r25, Z+1	; 0x01
      368:	2c 01       	movw	r4, r24
@@ -681,8 +681,9 @@ void control(Shared_Data* shared_ptr){
      39e:	24 2b       	or	r18, r20
      3a0:	2d 93       	st	X+, r18
      3a2:	3c 93       	st	X, r19
-	//fine_tuning = (fine_tuning << 1);   // value: 0 - 2048
-	//fine_tuning = fine_tuning - 1024;   // value: -1028 - 1028
+	//shared_ptr->fine_tuning = (fine_tuning << 1);   // value: 0 - 2048
+	//shared_ptr->fine_tuning = fine_tuning - 1024;   // value: -1028 - 1028
+	//shared_ptr->fine_tuning = fine_tuning/100;		// value: -10 - 10
 	
 	e = e << N_CTRL;
      3a4:	44 0c       	add	r4, r4
@@ -1329,6 +1330,7 @@ static void setup_speed_clock(){
      710:	80 83       	st	Z, r24
 }
 
+/* pg. 268-272*/
 static void setup_ADC(){
 	ADMUX |= (1 << REFS0) | (1 << MUX1) | (1 << MUX0);  // osäker, kolla upp elektroniken
      712:	ec e7       	ldi	r30, 0x7C	; 124
