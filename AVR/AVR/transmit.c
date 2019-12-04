@@ -21,7 +21,8 @@ extern unsigned short clk_elapsed;
 
 void transmit_0(Shared_Data* shared_ptr){
 	char temp[6];
-	strncpy(temp, "\n", 5);
+	strncpy(temp, "     ", 5);
+	snprintf(temp, 6, "%hd", shared_ptr->fine_tuning);
 	USART_transmit(temp);
 }
 
@@ -42,8 +43,6 @@ void transmit_2(Shared_Data* shared_ptr){
 		
 	res = atoi(sub_str);
 	shared_ptr->speed_set = res;
-	//OCR0A = res;
-	//OCR0B = res;
 	USART_transmit(temp);
 
 }

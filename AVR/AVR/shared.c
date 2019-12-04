@@ -18,6 +18,7 @@ typedef struct {
 	unsigned long delta_time;
 	long long integral;
 	short error;
+	short fine_tuning;
 } Shared_Data;
 
 void init_shared_data(Shared_Data* shared_ptr){
@@ -28,4 +29,5 @@ void init_shared_data(Shared_Data* shared_ptr){
 	shared_ptr->delta_time = 0;
 	shared_ptr->integral = 0;
 	shared_ptr->error = 0;
+	shared_ptr->fine_tuning = 0;
 }
