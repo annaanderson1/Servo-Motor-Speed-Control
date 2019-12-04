@@ -41,7 +41,7 @@ int main(void){
 	clk_elapsed = 0;
 	//OCR0A = 150;
 	//OCR0B = 150;
-	shared_ptr->speed_set = 30;
+	shared_ptr->speed_set = 100;
 	
 	setup_registers();
 	sei();

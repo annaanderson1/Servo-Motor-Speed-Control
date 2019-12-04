@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 #include <inttypes.h>
-#define MEASUREMENTS_SIZE 32
+#define MEASUREMENTS_SIZE 128
 
 typedef struct {
 	short speed_set;

@@ -75,9 +75,12 @@ static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
     temp = rpm >> N;
 
-    if(temp < 0 || temp > 200){
+    if(temp < 0 || temp > 200 ){
         return;
     }
+	//else if(temp < (shared_ptr->speed_set - 40) || temp > (shared_ptr->speed_set + 40)){
+	//	return;
+	//}
 
     for(i = MEASUREMENTS_SIZE - 1; i >= 0; i--){
         shared_ptr->rpm_measurements[i] = shared_ptr->rpm_measurements[i-1];
@@ -137,16 +140,27 @@ void calc_latest_rpm(Shared_Data* shared_ptr){
 void calc_avg_rpm(Shared_Data* shared_ptr){
 	unsigned long long temp = 0;
 	int i;
+	int size;
+	int size_shift;
 	
-	for(i = 0; i < MEASUREMENTS_SIZE; i++){
+	if(shared_ptr->speed_set <=80){
+		size = 32;
+		size_shift = 5;
+	}
+	else if(shared_ptr->speed_set > 80){
+		size = 128;
+		size_shift = 7;
+	}
+	
+	for(i = 0; i < size; i++){
 		temp = temp + shared_ptr->rpm_measurements[i];
 	}
 	
 	// Divide by MEASUREMENTS_SIZE (32)
-	temp = temp >> 5;
+	temp = temp >> size_shift;
 	
 	// convert back from Qm.n to normal int
-	temp = temp >> N;
+	//temp = temp >> N;
 	shared_ptr->rpm_avg = temp;
 	
 }
@@ -157,23 +171,27 @@ void control(Shared_Data* shared_ptr){
 	long Ki;
 	update_fine_tuning(shared_ptr);
 	
-	long e = (long)shared_ptr->speed_set - (long)shared_ptr->rpm_avg;
-	e = e + (long)shared_ptr->fine_tuning
+	long e = ((long)shared_ptr->speed_set << N) - (long)shared_ptr->rpm_avg;
+	e = e + ((long)shared_ptr->fine_tuning << N);
 	shared_ptr->error = (short)e;	// For debugging
 	
-	e = e << N_CTRL;
+	e = e << (N_CTRL-N);
 	Kp = Kp << N_CTRL;
 	
-	if(shared_ptr->speed_set >= 80){
-		Ki = 170;
+	if(shared_ptr->speed_set >= 100){
+		Ki = 50;//120;
+	}
+	else if(shared_ptr->speed_set >= 80){
+		Ki = 120;	
 	}
 
 	else if(shared_ptr->speed_set >= 40){
 		Ki = 120;
 	}
 	else{
-		Ki = 60;
+		Ki = 120;
 	}
+	//Ki = 50;
 	
 	long integral = Ki*e;
 	integral = integral >> N_CTRL;
