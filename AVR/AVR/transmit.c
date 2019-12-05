@@ -82,14 +82,14 @@ void transmit_6(Shared_Data* shared_ptr){
 void transmit_7(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
-	snprintf(temp, 6, "%hd", shared_ptr->error);
+	snprintf(temp, 6, "%hd", (shared_ptr->error >> N));
 	USART_transmit(temp);
 }
 
 void transmit_8(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
-	snprintf(temp, 6, "%lu", shared_ptr->rpm_avg);
+	snprintf(temp, 6, "%lu", (shared_ptr->rpm_avg >> N));
 	USART_transmit(temp);
 }
 

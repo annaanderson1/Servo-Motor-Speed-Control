@@ -75,7 +75,7 @@ static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
     temp = rpm >> N;
 
-    if(temp < 0 || temp > 200){
+    if(temp < 0 || temp > 250 ){
         return;
     }
 
@@ -137,42 +137,68 @@ void calc_latest_rpm(Shared_Data* shared_ptr){
 void calc_avg_rpm(Shared_Data* shared_ptr){
 	unsigned long long temp = 0;
 	int i;
+	int size;
+	int size_shift;
 	
-	for(i = 0; i < MEASUREMENTS_SIZE; i++){
+	
+	if(shared_ptr->speed_set <=20){
+		size = 16;
+		size_shift = 4;
+	}
+	else if(shared_ptr->speed_set <=50){
+		size = 64;
+		size_shift = 6;
+	}
+	else if(shared_ptr->speed_set <= 100){
+		size = 64;
+		size_shift = 6;
+	}
+	else if(shared_ptr->speed_set > 100){
+		size = 64;
+		size_shift = 6;
+	}
+	
+	for(i = 0; i < size; i++){
 		temp = temp + shared_ptr->rpm_measurements[i];
 	}
 	
 	// Divide by MEASUREMENTS_SIZE (32)
-	temp = temp >> 5;
+	temp = temp >> size_shift;
 	
 	// convert back from Qm.n to normal int
-	temp = temp >> N;
+	//temp = temp >> N;
 	shared_ptr->rpm_avg = temp;
 	
 }
 
 
 void control(Shared_Data* shared_ptr){
-	long Kp = 2;
+	long Kp;
 	long Ki;
+	
 	update_fine_tuning(shared_ptr);
 	
-	long e = (long)shared_ptr->speed_set - (long)shared_ptr->rpm_avg;
-	e = e + (long)shared_ptr->fine_tuning
+	long e = ((long)shared_ptr->speed_set << N) - (long)shared_ptr->rpm_avg;
+	e = e + ((long)shared_ptr->fine_tuning << N);
 	shared_ptr->error = (short)e;	// For debugging
 	
-	e = e << N_CTRL;
-	Kp = Kp << N_CTRL;
+	e = e << (N_CTRL-N);
 	
-	if(shared_ptr->speed_set >= 80){
-		Ki = 170;
+	if(shared_ptr->speed_set >= 100){
+		Kp = 100;
+		Ki = 500;
 	}
-
-	else if(shared_ptr->speed_set >= 40){
-		Ki = 120;
+	else if(shared_ptr->speed_set >= 80){
+		Kp = 100;
+		Ki = 550;
+	}
+	else if(shared_ptr->speed_set >= 10){
+		Kp = 100;
+		Ki = 1000;
 	}
 	else{
-		Ki = 60;
+		Kp = 100;
+		Ki = 550;
 	}
 	
 	long integral = Ki*e;
@@ -183,11 +209,9 @@ void control(Shared_Data* shared_ptr){
 	pwm = pwm >> N_CTRL;
 	
 	
-	
 	pwm = pwm >> N_CTRL;	// Convert to regular number
 
 	
-
 	if(pwm < 0){
 		pwm = 0;		
 	}
