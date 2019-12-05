@@ -41,7 +41,7 @@ int main(void){
 	clk_elapsed = 0;
 	//OCR0A = 150;
 	//OCR0B = 150;
-	shared_ptr->speed_set = 100;
+	shared_ptr->speed_set = 110;
 	
 	setup_registers();
 	sei();
@@ -94,8 +94,9 @@ int main(void){
 			calc_latest_rpm(shared_ptr);
 			calc_avg_rpm(shared_ptr);
 			newMeasurement = false;
+			control(shared_ptr);
 		}
-		control(shared_ptr);
+		
 		
 	}
 	return 0;
