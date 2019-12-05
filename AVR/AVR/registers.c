@@ -83,7 +83,14 @@ static void setup_speed_clock(){
 	TCCR1B |= (1 << CS11);
 }
 
-/* pg. 268-272*/
+/* 
+ * Sets up ADC conversion on pin PC3.
+ * Auto triggered by timer/counter1 overflow. 
+ *		Must clear timer overflow flag to calculate new value, done by:
+ *		TIFR1 |= (1 << TOV0);
+ * Disabled digital input on pin PC3 for less power usage
+ * See details in datasheet pg. 268-272
+ */
 static void setup_ADC(){
 	ADMUX |= (1 << REFS0) | (1 << MUX1) | (1 << MUX0);
 	ADCSRA |= (1 << ADEN) | (1 << ADATE);
@@ -93,7 +100,7 @@ static void setup_ADC(){
 }
 
 /*
- *	Initiates registers for DDR, PWM, USART & Interrupts.
+ *	Initiates registers for DDR, PWM, USART, interrupts, encoder clock speed, and ADC conversion.
 */
 void setup_registers(){
 

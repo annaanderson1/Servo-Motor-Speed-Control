@@ -13,7 +13,7 @@
 
 /*
  * 	Transmits 5 characters over the USART.
- * 	If number of submitted chars < 5, the empty spots is padded with " "
+ * 	If number of submitted chars < 5, the empty spots is padded with "%"
  * 	*data: pointer to chars to be transmitted
  * 	See details in datasheet pg. 190
 */

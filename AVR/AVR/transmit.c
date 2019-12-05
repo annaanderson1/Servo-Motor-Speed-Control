@@ -4,6 +4,7 @@
  * Created: 2019-11-27 14:07:14
  *  Author: tmk19jc
  */ 
+
 #include <stdbool.h>
 #include <inttypes.h>
 #include "shared.h"
@@ -13,6 +14,7 @@
 #include <stdlib.h>
 #include <avr/io.h>
 
+/* Globals */ 
 extern bool newCommand;
 extern bool newMeasurement;
 extern unsigned short clk_curr;
@@ -60,7 +62,7 @@ void transmit_4(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
 	
-	snprintf(temp, 6, "%d", shared_ptr->speed_actual);
+	snprintf(temp, 6, "%d", shared_ptr->pwm);
 	USART_transmit(temp);
 }
 
@@ -96,7 +98,7 @@ void transmit_8(Shared_Data* shared_ptr){
 void transmit_9(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
-	snprintf(temp, 6, "%lu", shared_ptr->curr_rpm);
+	snprintf(temp, 6, "%lu", shared_ptr->rpm_curr);
 	USART_transmit(temp);
 }
 

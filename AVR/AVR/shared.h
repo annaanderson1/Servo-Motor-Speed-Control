@@ -18,20 +18,25 @@
 #define MEASUREMENTS_SIZE 128
 #define N_CTRL 7
 
+
+/*
+ * Struct containing all shared data, excluding globals that needs to be accessed in ISR
+*/
 typedef struct {
 	short speed_set;
-	int speed_actual;
-	unsigned short clk_prev;
-	unsigned short clk_elapsed;
-	unsigned long curr_rpm;
+	short pwm;
+	short error;
+	short fine_tuning;
+	long long integral;
+	unsigned long rpm_curr;
 	unsigned long rpm_avg;
 	unsigned long rpm_measurements[MEASUREMENTS_SIZE];
 	unsigned long delta_time;
-	long long integral;
-	short error;
-	short fine_tuning;
 } Shared_Data;
 
+/*
+ * Initiates the struct variables.
+*/
 void init_shared_data();
 
 #endif

@@ -12,6 +12,13 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#define SIZE_16 16
+#define SIZE_32 32
+#define SIZE_64 64
+#define DIVISION_16 4
+#define DIVISION_32 5
+#define DIVISION_64 6
+
 extern bool newMeasurement;
 extern unsigned short clk_curr;
 extern unsigned short clk_prev;
@@ -32,6 +39,9 @@ static void calc_clk_elapsed(){
 	clk_prev = clk_curr;
 }
 
+/* 
+ *
+*/
 static void set_prescale(int ps){
 	if (ps == 1){
 		TCCR1B &= ~ 0xff;
@@ -65,8 +75,9 @@ static unsigned long calc_delta_time(Shared_Data* shared_ptr){
 	return temp;
 }
 
-/* Inserts calculated rpm to first pos in rpm-array, and shifts the rest to the right.
- * Filters outliers (0 < rpm < 130)
+/* 
+ * Inserts calculated rpm to first pos in rpm-array, and shifts the rest to the right.
+ * Filters outliers (0 < rpm || rpm > 250)
 */
 static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
@@ -86,20 +97,28 @@ static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
 
 }
 
+/*
+ * Updates the fine tuning value to first calculation since last function call.
+ * Stores the value in shared_ptr->fine_tuning
+*/
 static void update_fine_tuning(Shared_Data* shared_ptr){
 	short fine_tuning;
 	
-	fine_tuning = ADCL;	// value: 0-1024
-	fine_tuning |= (ADCH << 8);
+	fine_tuning = ADCL;	
+	fine_tuning |= (ADCH << 8);	// value: 0-1024
 	TIFR1 |= (1 << TOV0);	// clear timer1 overflow flag
+	
 	fine_tuning = (fine_tuning << 1);   // value: 0 - 2048
 	fine_tuning = fine_tuning - 1024;   // value: -1028 - 1028
 	fine_tuning = fine_tuning/100;		// value: -10 - 10
-	shared_ptr->fine_tuning = fine_tuning;	// for debuggning
+	
+	shared_ptr->fine_tuning = fine_tuning;
 }
 
-/*	Calculates the speed between two encoder-interrupts, using fixed point arithmetics.
- *	Qm.n values defined in shared.h
+/*	
+ * Calculates the speed between two encoder-interrupts, using fixed point arithmetics.
+ * Inserts the speed to the rpm-array in shared_ptr->rpm_measurements
+ * Qm.n values defined in shared.h
 */
 void calc_latest_rpm(Shared_Data* shared_ptr){
 	unsigned long delta_time;
@@ -128,50 +147,52 @@ void calc_latest_rpm(Shared_Data* shared_ptr){
 	rpm = rpm / denominator;
 	
 	shared_ptr->delta_time = delta_time >> N;		// Used for debugging
-	shared_ptr->curr_rpm = (unsigned long)rpm >> N;	// Used for debugging
+	shared_ptr->rpm_curr = (unsigned long)rpm >> N;	// Used for debugging
 	insert_rpm(shared_ptr, rpm);
 	
 }
 
-
+/*
+ * Calculates the filtered running average rpm. Stores result in shared_ptr->rpm_avg
+ * Number of elements counted depends on speed_set
+*/
 void calc_avg_rpm(Shared_Data* shared_ptr){
 	unsigned long long temp = 0;
 	int i;
 	int size;
 	int size_shift;
 	
-	
 	if(shared_ptr->speed_set <=20){
-		size = 16;
-		size_shift = 4;
+		size = SIZE_16;
+		size_shift = DIVISION_16;
 	}
 	else if(shared_ptr->speed_set <=50){
-		size = 64;
-		size_shift = 6;
+		size = SIZE_64;
+		size_shift = DIVISION_64;
 	}
 	else if(shared_ptr->speed_set <= 100){
-		size = 64;
-		size_shift = 6;
+		size = SIZE_64;
+		size_shift = DIVISION_64;
 	}
 	else if(shared_ptr->speed_set > 100){
-		size = 64;
-		size_shift = 6;
+		size = SIZE_64;
+		size_shift = DIVISION_64;
 	}
 	
 	for(i = 0; i < size; i++){
 		temp = temp + shared_ptr->rpm_measurements[i];
 	}
 	
-	// Divide by MEASUREMENTS_SIZE (32)
+	// Divide by size
 	temp = temp >> size_shift;
 	
-	// convert back from Qm.n to normal int
-	//temp = temp >> N;
 	shared_ptr->rpm_avg = temp;
-	
 }
 
-
+/*
+ * PI controller for the electrical motor, implemented using fixed point arithmetics.
+ * Kp and Ki values is used to tune the controller, depending on different rpm.
+*/
 void control(Shared_Data* shared_ptr){
 	long Kp;
 	long Ki;
@@ -208,9 +229,7 @@ void control(Shared_Data* shared_ptr){
 	long long pwm = (long long)e * Kp + shared_ptr->integral;
 	pwm = pwm >> N_CTRL;
 	
-	
 	pwm = pwm >> N_CTRL;	// Convert to regular number
-
 	
 	if(pwm < 0){
 		pwm = 0;		
@@ -218,12 +237,17 @@ void control(Shared_Data* shared_ptr){
 	else if(pwm > 255){
 		pwm = 255;
 	}
-	shared_ptr->speed_actual = (int)pwm;
+	
+	shared_ptr->pwm = (short)pwm;
 	OCR0A = pwm;
 	OCR0B = pwm;
 	
 }
-
+/*
+ * Interrupt Service Routine for the encoder mounted on the motor.
+ * Calculates the difference in clk-value between current and previous interrupt.
+ * Global bool newMeasurement flags that a new measurement have been recieved.
+*/
 ISR(PCINT1_vect){
 	cli();
 	

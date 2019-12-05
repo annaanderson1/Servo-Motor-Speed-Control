@@ -2,9 +2,9 @@
  * registers.h
  *
  * Created: 2019-10-15 12:40:57
- *  Author: tmk19jc
+ *  Author: Joakim Cedergren
  *
- * Used for setting up the correct registers on the ATMega88
+ * Used for setting up registers on the ATMega88 for speed controller.
  *
  */
 
@@ -13,7 +13,7 @@
 #define REGISTERS_H_
 
 /*
- *  Initiates registers for DDR, PWM, USART & Interrupts.
+ *  Initiates registers for DDR, PWM, USART, interrupts, encoder clock speed, and ADC conversion.
 */
 void setup_registers();
 
