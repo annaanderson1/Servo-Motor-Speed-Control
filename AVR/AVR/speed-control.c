@@ -11,6 +11,8 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <string.h>
+#include <stdlib.h>
 
 #define SIZE_16 16
 #define SIZE_32 32
@@ -23,6 +25,7 @@ extern bool newMeasurement;
 extern unsigned short clk_curr;
 extern unsigned short clk_prev;
 extern unsigned short clk_elapsed;
+extern char recieved_bytes[5];
 
 static void calc_clk_elapsed(){
 	
@@ -52,6 +55,7 @@ static void set_prescale(int ps){
 		TCCR1B = (1 << CS11);
 	}
 }
+
 /*	Converts the difference in clk increments to microseconds */
 static unsigned long calc_delta_time(Shared_Data* shared_ptr){
 	unsigned short delta_clk = clk_elapsed;
@@ -187,6 +191,16 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 	temp = temp >> size_shift;
 	
 	shared_ptr->rpm_avg = temp;
+}
+
+/* Sets a new set value for the speed. Range: 0-120. */
+void set_speed(Shared_Data* shared_ptr){
+	char sub_str[4];
+	int res;
+	strncpy(sub_str, recieved_bytes + 1, 3);
+	
+	res = atoi(sub_str);
+	shared_ptr->speed_set = res;
 }
 
 /*
