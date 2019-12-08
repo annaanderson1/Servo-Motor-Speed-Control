@@ -77,6 +77,9 @@ ISR(PCINT1_vect){
 
 }
 
+/* In order to test interrupt pins individually, disable one pin in
+ * setup function, register PCMSK1
+ */ 
 int main(void){
     
 	setup();

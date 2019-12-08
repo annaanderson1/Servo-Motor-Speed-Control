@@ -383,9 +383,9 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x135 interrupts.o
 
-.debug_line     0x00000000      0x140
+.debug_line     0x00000000      0x141
  *(.debug_line)
- .debug_line    0x00000000      0x140 interrupts.o
+ .debug_line    0x00000000      0x141 interrupts.o
 
 .debug_frame    0x00000000       0xc4
  *(.debug_frame)

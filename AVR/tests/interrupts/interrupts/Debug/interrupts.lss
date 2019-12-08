@@ -21,7 +21,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   8 .debug_abbrev 00000135  00000000  00000000  00000bcd  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   00000140  00000000  00000000  00000d02  2**0
+  9 .debug_line   00000141  00000000  00000000  00000d02  2**0
                   CONTENTS, READONLY, DEBUGGING
  10 .debug_frame  000000c4  00000000  00000000  00000e44  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -301,8 +301,8 @@ static void setup(){
 	PCMSK1 = (1 << PCINT13) | (1 << PCINT12);
  154:	80 e3       	ldi	r24, 0x30	; 48
  156:	80 93 6c 00 	sts	0x006C, r24
-}
-
+ * setup function, register PCMSK1
+ */ 
 int main(void){
     
 	setup();
