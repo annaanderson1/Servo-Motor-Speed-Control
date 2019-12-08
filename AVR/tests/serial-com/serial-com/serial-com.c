@@ -10,6 +10,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <string.h>
 
 #define F_CPU 1000000UL
 #define BAUD 2400
@@ -28,6 +29,12 @@ static void setup(){
 
 	// Set frame format: 8 data, 2 stop, 0 parity
 	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+}
+
+static void USART_transmit(char *data){
+	while( !(UCSR0A & (1 << UDRE0)) );
+	UDR0 = *data;	
+	
 }
 
 ISR(USART_RX_vect){
@@ -49,8 +56,10 @@ int main(void){
 	
 	setup();
 	sei();
+	char s[2];
+	strncpy(s, "t", 1);
 	
     while(1){
-        
+        USART_transmit(s);
     }
 }
