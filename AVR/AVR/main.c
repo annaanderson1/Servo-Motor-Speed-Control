@@ -49,34 +49,32 @@ int main(void){
 		if(newCommand){
 			switch(*recieved_bytes){
 				case '0':
-					transmit_0(shared_ptr);
+					set_speed(shared_ptr);
+					transmit_empty();
 					break;
 				case '1':
-					transmit_1(shared_ptr);
+					transmit_rpm_avg(shared_ptr);
 					break;
 				case '2':
-					transmit_2(shared_ptr);
+					transmit_fine_tuning(shared_ptr);
 					break;
 				case '3':
-					transmit_3(shared_ptr);
+					transmit_error(shared_ptr);
 					break;
 				case '4':
-					transmit_4(shared_ptr);
+					transmit_pwm(shared_ptr);
 					break;
 				case '5':
-					transmit_5(shared_ptr);
+					transmit_speed_set(shared_ptr);
 					break;
 				case '6':
-					transmit_6(shared_ptr);
+					transmit_rpm_curr(shared_ptr);
 					break;
 				case '7':
-					transmit_7(shared_ptr);
+					transmit_clk_elapsed(shared_ptr);
 					break;
 				case '8':
-					transmit_8(shared_ptr);
-					break;
-				case '9':
-					transmit_9(shared_ptr);
+					transmit_delta_time(shared_ptr);
 					break;
 				default:
 					transmit_empty();

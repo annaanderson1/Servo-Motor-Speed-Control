@@ -1,8 +1,11 @@
 /*
- * transmit.c
+ *	transmit.c
  *
- * Created: 2019-11-27 14:07:14
- *  Author: tmk19jc
+ *	Created: 2019-11-27 14:07:14
+ *  Author: Joakim Cedergren
+ *	
+ *	Functions for transmitting messages over the USART.
+ *
  */ 
 
 #include <stdbool.h>
@@ -21,44 +24,24 @@ extern unsigned short clk_curr;
 extern char recieved_bytes[5];
 extern unsigned short clk_elapsed;
 
-void transmit_0(Shared_Data* shared_ptr){
+/* Transmits the fine tuning over the USART. */
+void transmit_fine_tuning(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
 	snprintf(temp, 6, "%hd", shared_ptr->fine_tuning);
 	USART_transmit(temp);
 }
 
-void transmit_1(Shared_Data* shared_ptr){
-	char temp[6];
-	strncpy(temp, "     ", 5);
-	snprintf(temp, 6, "%lld", shared_ptr->integral);
-	USART_transmit(temp);
-}
-
-/* Sets a new set value for the speed. Range: 0-120. Transmits an empty message. */
-void transmit_2(Shared_Data* shared_ptr){
-	char temp[6];
-	char sub_str[4];
-	int res;
-	strncpy(temp, "     ", 5);
-	strncpy(sub_str, recieved_bytes + 1, 3);
-		
-	res = atoi(sub_str);
-	shared_ptr->speed_set = res;
-	USART_transmit(temp);
-
-}
-
-/* Transmits the set speed. */
-void transmit_3(Shared_Data* shared_ptr){
+/* Transmits the set speed over the USART. */
+void transmit_speed_set(Shared_Data* shared_ptr){
 	char temp[6];
 	
 	snprintf(temp, 6, "%hd",  shared_ptr->speed_set);
 	USART_transmit(temp);
 }
 
-
-void transmit_4(Shared_Data* shared_ptr){
+/* Transmits the pwm output over the USART. */
+void transmit_pwm(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
 	
@@ -66,7 +49,8 @@ void transmit_4(Shared_Data* shared_ptr){
 	USART_transmit(temp);
 }
 
-void transmit_5(Shared_Data* shared_ptr){
+/* Transmits the clk_elapsed over the USART. */
+void transmit_clk_elapsed(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
 
@@ -74,38 +58,42 @@ void transmit_5(Shared_Data* shared_ptr){
 	USART_transmit(temp);
 }
 
-void transmit_6(Shared_Data* shared_ptr){
+/* Transmits the delta_time over the USART. */
+void transmit_delta_time(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
 	snprintf(temp, 6, "%lu", shared_ptr->delta_time);
 	USART_transmit(temp);
 }
 
-void transmit_7(Shared_Data* shared_ptr){
+/* Transmits the control error over the USART. */
+void transmit_error(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
 	snprintf(temp, 6, "%hd", (shared_ptr->error >> N));
 	USART_transmit(temp);
 }
 
-void transmit_8(Shared_Data* shared_ptr){
+/* Transmits the average rpm over the USART. */
+void transmit_rpm_avg(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
 	snprintf(temp, 6, "%lu", (shared_ptr->rpm_avg >> N));
 	USART_transmit(temp);
 }
 
-void transmit_9(Shared_Data* shared_ptr){
+/* Transmits the latest measured rpm over the USART. */
+void transmit_rpm_curr(Shared_Data* shared_ptr){
 	char temp[6];
 	strncpy(temp, "     ", 5);
 	snprintf(temp, 6, "%lu", shared_ptr->rpm_curr);
 	USART_transmit(temp);
 }
 
+/* Transmits five " " over the USART. */
 void transmit_empty(){
 	char temp[6];
 	strncpy(temp, "     ", 5);
 	USART_transmit(temp);
 }
-
 
