@@ -17,7 +17,7 @@ int main(){
     char command_str[SIZE_COMMAND];
     int fd;
 
-    //fd = serial_init("/dev/ttyS0", 0);
+    fd = serial_init("/dev/ttyS0", 0);
 
     strncpy(command_str, "\nCommands:\n0 - set rpm\n1 - get measured rpm avg\n2 - get fine tuning value\n3 - get control error\n4 - get pwm\n5 - get rpm set\n6 - get latest measured rpm\n7 - get clk_elapsed\n8 - get delta_time\n9 - reserved\n", SIZE_COMMAND);
 
