@@ -1,0 +1,249 @@
+
+adc.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00800100  00000120  00000194  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00000120  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .stab         000006cc  00000000  00000000  00000194  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      00000097  00000000  00000000  00000860  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .comment      0000002f  00000000  00000000  000008f7  2**0
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000030  00000000  00000000  00000926  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000001e2  00000000  00000000  00000956  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000000da  00000000  00000000  00000b38  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000108  00000000  00000000  00000c12  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000044  00000000  00000000  00000d1c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    000000d5  00000000  00000000  00000d60  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    0000007a  00000000  00000000  00000e35  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000020  00000000  00000000  00000eaf  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	19 c0       	rjmp	.+50     	; 0x34 <__ctors_end>
+   2:	20 c0       	rjmp	.+64     	; 0x44 <__bad_interrupt>
+   4:	1f c0       	rjmp	.+62     	; 0x44 <__bad_interrupt>
+   6:	1e c0       	rjmp	.+60     	; 0x44 <__bad_interrupt>
+   8:	1d c0       	rjmp	.+58     	; 0x44 <__bad_interrupt>
+   a:	1c c0       	rjmp	.+56     	; 0x44 <__bad_interrupt>
+   c:	1b c0       	rjmp	.+54     	; 0x44 <__bad_interrupt>
+   e:	1a c0       	rjmp	.+52     	; 0x44 <__bad_interrupt>
+  10:	19 c0       	rjmp	.+50     	; 0x44 <__bad_interrupt>
+  12:	18 c0       	rjmp	.+48     	; 0x44 <__bad_interrupt>
+  14:	17 c0       	rjmp	.+46     	; 0x44 <__bad_interrupt>
+  16:	16 c0       	rjmp	.+44     	; 0x44 <__bad_interrupt>
+  18:	15 c0       	rjmp	.+42     	; 0x44 <__bad_interrupt>
+  1a:	14 c0       	rjmp	.+40     	; 0x44 <__bad_interrupt>
+  1c:	13 c0       	rjmp	.+38     	; 0x44 <__bad_interrupt>
+  1e:	12 c0       	rjmp	.+36     	; 0x44 <__bad_interrupt>
+  20:	11 c0       	rjmp	.+34     	; 0x44 <__bad_interrupt>
+  22:	10 c0       	rjmp	.+32     	; 0x44 <__bad_interrupt>
+  24:	0f c0       	rjmp	.+30     	; 0x44 <__bad_interrupt>
+  26:	0e c0       	rjmp	.+28     	; 0x44 <__bad_interrupt>
+  28:	0d c0       	rjmp	.+26     	; 0x44 <__bad_interrupt>
+  2a:	0c c0       	rjmp	.+24     	; 0x44 <__bad_interrupt>
+  2c:	0b c0       	rjmp	.+22     	; 0x44 <__bad_interrupt>
+  2e:	0a c0       	rjmp	.+20     	; 0x44 <__bad_interrupt>
+  30:	09 c0       	rjmp	.+18     	; 0x44 <__bad_interrupt>
+  32:	08 c0       	rjmp	.+16     	; 0x44 <__bad_interrupt>
+
+00000034 <__ctors_end>:
+  34:	11 24       	eor	r1, r1
+  36:	1f be       	out	0x3f, r1	; 63
+  38:	cf ef       	ldi	r28, 0xFF	; 255
+  3a:	d4 e0       	ldi	r29, 0x04	; 4
+  3c:	de bf       	out	0x3e, r29	; 62
+  3e:	cd bf       	out	0x3d, r28	; 61
+  40:	1b d0       	rcall	.+54     	; 0x78 <main>
+  42:	6c c0       	rjmp	.+216    	; 0x11c <_exit>
+
+00000044 <__bad_interrupt>:
+  44:	dd cf       	rjmp	.-70     	; 0x0 <__vectors>
+
+00000046 <turnOff_C>:
+	
+	TCCR1B |= (1 << CS11);
+}
+
+static void turnOff_C(int pin){
+	PORTC &= ~(1 << pin);
+  46:	98 b1       	in	r25, 0x08	; 8
+  48:	21 e0       	ldi	r18, 0x01	; 1
+  4a:	30 e0       	ldi	r19, 0x00	; 0
+  4c:	02 c0       	rjmp	.+4      	; 0x52 <turnOff_C+0xc>
+  4e:	22 0f       	add	r18, r18
+  50:	33 1f       	adc	r19, r19
+  52:	8a 95       	dec	r24
+  54:	e2 f7       	brpl	.-8      	; 0x4e <turnOff_C+0x8>
+  56:	20 95       	com	r18
+  58:	92 23       	and	r25, r18
+  5a:	98 b9       	out	0x08, r25	; 8
+  5c:	08 95       	ret
+
+0000005e <turnOn_C>:
+
+}
+
+static void turnOn_C(int pin){
+	PORTC |= (1 << pin);
+  5e:	48 b1       	in	r20, 0x08	; 8
+  60:	21 e0       	ldi	r18, 0x01	; 1
+  62:	30 e0       	ldi	r19, 0x00	; 0
+  64:	b9 01       	movw	r22, r18
+  66:	02 c0       	rjmp	.+4      	; 0x6c <turnOn_C+0xe>
+  68:	66 0f       	add	r22, r22
+  6a:	77 1f       	adc	r23, r23
+  6c:	8a 95       	dec	r24
+  6e:	e2 f7       	brpl	.-8      	; 0x68 <turnOn_C+0xa>
+  70:	cb 01       	movw	r24, r22
+  72:	84 2b       	or	r24, r20
+  74:	88 b9       	out	0x08, r24	; 8
+  76:	08 95       	ret
+
+00000078 <main>:
+
+#include <avr/io.h>
+
+
+static void setup(){
+	DDRC = (1 << PC2) | (1 << PC1) | (1 << PC0);
+  78:	87 e0       	ldi	r24, 0x07	; 7
+  7a:	87 b9       	out	0x07, r24	; 7
+	
+	ADMUX |= (1 << REFS0) | (1 << MUX1) | (1 << MUX0);
+  7c:	ec e7       	ldi	r30, 0x7C	; 124
+  7e:	f0 e0       	ldi	r31, 0x00	; 0
+  80:	80 81       	ld	r24, Z
+  82:	83 64       	ori	r24, 0x43	; 67
+  84:	80 83       	st	Z, r24
+	ADCSRA |= (1 << ADEN) | (1 << ADATE);
+  86:	ea e7       	ldi	r30, 0x7A	; 122
+  88:	f0 e0       	ldi	r31, 0x00	; 0
+  8a:	80 81       	ld	r24, Z
+  8c:	80 6a       	ori	r24, 0xA0	; 160
+  8e:	80 83       	st	Z, r24
+	ADCSRB |= (1 << ADTS2) | (1 << ADTS1);
+  90:	eb e7       	ldi	r30, 0x7B	; 123
+  92:	f0 e0       	ldi	r31, 0x00	; 0
+  94:	80 81       	ld	r24, Z
+  96:	86 60       	ori	r24, 0x06	; 6
+  98:	80 83       	st	Z, r24
+	DIDR0 |= (1 << ADC3D);
+  9a:	ee e7       	ldi	r30, 0x7E	; 126
+  9c:	f0 e0       	ldi	r31, 0x00	; 0
+  9e:	80 81       	ld	r24, Z
+  a0:	88 60       	ori	r24, 0x08	; 8
+  a2:	80 83       	st	Z, r24
+	
+	TCCR1B |= (1 << CS11);
+  a4:	e1 e8       	ldi	r30, 0x81	; 129
+  a6:	f0 e0       	ldi	r31, 0x00	; 0
+  a8:	80 81       	ld	r24, Z
+  aa:	82 60       	ori	r24, 0x02	; 2
+  ac:	80 83       	st	Z, r24
+	fine_tuning = 0;
+	
+	setup();
+	
+    while(1){
+		fine_tuning = ADCL;
+  ae:	0f 2e       	mov	r0, r31
+  b0:	f8 e7       	ldi	r31, 0x78	; 120
+  b2:	ef 2e       	mov	r14, r31
+  b4:	f1 2c       	mov	r15, r1
+  b6:	f0 2d       	mov	r31, r0
+		fine_tuning |= (ADCH << 8);
+  b8:	09 e7       	ldi	r16, 0x79	; 121
+  ba:	10 e0       	ldi	r17, 0x00	; 0
+	fine_tuning = 0;
+	
+	setup();
+	
+    while(1){
+		fine_tuning = ADCL;
+  bc:	f7 01       	movw	r30, r14
+  be:	80 81       	ld	r24, Z
+		fine_tuning |= (ADCH << 8);
+  c0:	f8 01       	movw	r30, r16
+  c2:	90 81       	ld	r25, Z
+  c4:	d9 2f       	mov	r29, r25
+  c6:	f0 e0       	ldi	r31, 0x00	; 0
+  c8:	cf 2f       	mov	r28, r31
+  ca:	9e 01       	movw	r18, r28
+  cc:	28 2b       	or	r18, r24
+  ce:	c9 01       	movw	r24, r18
+		TIFR1 |= (1 << TOV0);
+  d0:	b0 9a       	sbi	0x16, 0	; 22
+		
+		// Vin < ~1,8V
+		if(fine_tuning <= 300){
+  d2:	8d 32       	cpi	r24, 0x2D	; 45
+  d4:	31 e0       	ldi	r19, 0x01	; 1
+  d6:	93 07       	cpc	r25, r19
+  d8:	54 f4       	brge	.+20     	; 0xee <main+0x76>
+			turnOff_C(PC0);
+  da:	80 e0       	ldi	r24, 0x00	; 0
+  dc:	90 e0       	ldi	r25, 0x00	; 0
+  de:	b3 df       	rcall	.-154    	; 0x46 <turnOff_C>
+			turnOff_C(PC1);
+  e0:	81 e0       	ldi	r24, 0x01	; 1
+  e2:	90 e0       	ldi	r25, 0x00	; 0
+  e4:	b0 df       	rcall	.-160    	; 0x46 <turnOff_C>
+			turnOn_C(PC2);
+  e6:	82 e0       	ldi	r24, 0x02	; 2
+  e8:	90 e0       	ldi	r25, 0x00	; 0
+  ea:	b9 df       	rcall	.-142    	; 0x5e <turnOn_C>
+  ec:	e7 cf       	rjmp	.-50     	; 0xbc <main+0x44>
+		}
+		// Vin < ~3,8V
+		else if(fine_tuning <= 700){
+  ee:	8d 3b       	cpi	r24, 0xBD	; 189
+  f0:	92 40       	sbci	r25, 0x02	; 2
+  f2:	54 f4       	brge	.+20     	; 0x108 <main+0x90>
+			turnOff_C(PC0);
+  f4:	80 e0       	ldi	r24, 0x00	; 0
+  f6:	90 e0       	ldi	r25, 0x00	; 0
+  f8:	a6 df       	rcall	.-180    	; 0x46 <turnOff_C>
+			turnOn_C(PC1);
+  fa:	81 e0       	ldi	r24, 0x01	; 1
+  fc:	90 e0       	ldi	r25, 0x00	; 0
+  fe:	af df       	rcall	.-162    	; 0x5e <turnOn_C>
+			turnOff_C(PC2);
+ 100:	82 e0       	ldi	r24, 0x02	; 2
+ 102:	90 e0       	ldi	r25, 0x00	; 0
+ 104:	a0 df       	rcall	.-192    	; 0x46 <turnOff_C>
+ 106:	da cf       	rjmp	.-76     	; 0xbc <main+0x44>
+		}
+		else{
+			turnOn_C(PC0);
+ 108:	80 e0       	ldi	r24, 0x00	; 0
+ 10a:	90 e0       	ldi	r25, 0x00	; 0
+ 10c:	a8 df       	rcall	.-176    	; 0x5e <turnOn_C>
+			turnOff_C(PC1);
+ 10e:	81 e0       	ldi	r24, 0x01	; 1
+ 110:	90 e0       	ldi	r25, 0x00	; 0
+ 112:	99 df       	rcall	.-206    	; 0x46 <turnOff_C>
+			turnOff_C(PC2);
+ 114:	82 e0       	ldi	r24, 0x02	; 2
+ 116:	90 e0       	ldi	r25, 0x00	; 0
+ 118:	96 df       	rcall	.-212    	; 0x46 <turnOff_C>
+ 11a:	d0 cf       	rjmp	.-96     	; 0xbc <main+0x44>
+
+0000011c <_exit>:
+ 11c:	f8 94       	cli
+
+0000011e <__stop_program>:
+ 11e:	ff cf       	rjmp	.-2      	; 0x11e <__stop_program>
