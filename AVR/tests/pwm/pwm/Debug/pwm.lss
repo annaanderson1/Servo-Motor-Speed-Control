@@ -19,13 +19,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   7 .debug_abbrev 0000006f  00000000  00000000  00000925  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000000d6  00000000  00000000  00000994  2**0
+  8 .debug_line   000000d5  00000000  00000000  00000994  2**0
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  00000024  00000000  00000000  00000a6c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000000c9  00000000  00000000  00000a90  2**0
+ 10 .debug_str    000000ac  00000000  00000000  00000a90  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000010  00000000  00000000  00000b59  2**0
+ 11 .debug_ranges 00000010  00000000  00000000  00000b3c  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -72,8 +72,8 @@ Disassembly of section .text:
   44:	dd cf       	rjmp	.-70     	; 0x0 <__vectors>
 
 00000046 <main>:
-
-#define PWM 100
+// 250 ~ 0,6V
+#define PWM 250
 
 static void setup(){
 	
@@ -93,7 +93,7 @@ int main(void){
 	setup();
 	
 	OCR0A = PWM;
-  54:	84 e6       	ldi	r24, 0x64	; 100
+  54:	8a ef       	ldi	r24, 0xFA	; 250
   56:	87 bd       	out	0x27, r24	; 39
 	OCR0B = PWM;
   58:	88 bd       	out	0x28, r24	; 40

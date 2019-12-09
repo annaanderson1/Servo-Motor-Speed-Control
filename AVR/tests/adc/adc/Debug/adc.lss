@@ -3,31 +3,31 @@ adc.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00000116  0000018a  2**0
+  0 .data         00000000  00800100  00000120  00000194  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000116  00000000  00000000  00000074  2**1
+  1 .text         00000120  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .stab         000006cc  00000000  00000000  0000018c  2**2
+  2 .stab         000006cc  00000000  00000000  00000194  2**2
                   CONTENTS, READONLY, DEBUGGING
-  3 .stabstr      00000097  00000000  00000000  00000858  2**0
+  3 .stabstr      00000097  00000000  00000000  00000860  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .comment      0000002f  00000000  00000000  000008ef  2**0
+  4 .comment      0000002f  00000000  00000000  000008f7  2**0
                   CONTENTS, READONLY
-  5 .debug_aranges 00000030  00000000  00000000  0000091e  2**0
+  5 .debug_aranges 00000030  00000000  00000000  00000926  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000001e2  00000000  00000000  0000094e  2**0
+  6 .debug_info   000001e2  00000000  00000000  00000956  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000000da  00000000  00000000  00000b30  2**0
+  7 .debug_abbrev 000000da  00000000  00000000  00000b38  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000108  00000000  00000000  00000c0a  2**0
+  8 .debug_line   00000108  00000000  00000000  00000c12  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000044  00000000  00000000  00000d14  2**2
+  9 .debug_frame  00000044  00000000  00000000  00000d1c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000000f2  00000000  00000000  00000d58  2**0
+ 10 .debug_str    000000d5  00000000  00000000  00000d60  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000007a  00000000  00000000  00000e4a  2**0
+ 11 .debug_loc    0000007a  00000000  00000000  00000e35  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000020  00000000  00000000  00000ec4  2**0
+ 12 .debug_ranges 00000020  00000000  00000000  00000eaf  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -68,14 +68,14 @@ Disassembly of section .text:
   3c:	de bf       	out	0x3e, r29	; 62
   3e:	cd bf       	out	0x3d, r28	; 61
   40:	1b d0       	rcall	.+54     	; 0x78 <main>
-  42:	67 c0       	rjmp	.+206    	; 0x112 <_exit>
+  42:	6c c0       	rjmp	.+216    	; 0x11c <_exit>
 
 00000044 <__bad_interrupt>:
   44:	dd cf       	rjmp	.-70     	; 0x0 <__vectors>
 
 00000046 <turnOff_C>:
-	ADCSRB |= (1 << ADTS2) | (1 << ADTS1);
-	DIDR0 |= (1 << ADC3D);
+	
+	TCCR1B |= (1 << CS11);
 }
 
 static void turnOff_C(int pin){
@@ -147,94 +147,103 @@ static void setup(){
   9e:	80 81       	ld	r24, Z
   a0:	88 60       	ori	r24, 0x08	; 8
   a2:	80 83       	st	Z, r24
+	
+	TCCR1B |= (1 << CS11);
+  a4:	e1 e8       	ldi	r30, 0x81	; 129
+  a6:	f0 e0       	ldi	r31, 0x00	; 0
+  a8:	80 81       	ld	r24, Z
+  aa:	82 60       	ori	r24, 0x02	; 2
+  ac:	80 83       	st	Z, r24
 	fine_tuning = 0;
 	
 	setup();
 	
     while(1){
 		fine_tuning = ADCL;
-  a4:	0f 2e       	mov	r0, r31
-  a6:	f8 e7       	ldi	r31, 0x78	; 120
-  a8:	ef 2e       	mov	r14, r31
-  aa:	f1 2c       	mov	r15, r1
-  ac:	f0 2d       	mov	r31, r0
+  ae:	0f 2e       	mov	r0, r31
+  b0:	f8 e7       	ldi	r31, 0x78	; 120
+  b2:	ef 2e       	mov	r14, r31
+  b4:	f1 2c       	mov	r15, r1
+  b6:	f0 2d       	mov	r31, r0
 		fine_tuning |= (ADCH << 8);
-  ae:	09 e7       	ldi	r16, 0x79	; 121
-  b0:	10 e0       	ldi	r17, 0x00	; 0
+  b8:	09 e7       	ldi	r16, 0x79	; 121
+  ba:	10 e0       	ldi	r17, 0x00	; 0
 	fine_tuning = 0;
 	
 	setup();
 	
     while(1){
 		fine_tuning = ADCL;
-  b2:	f7 01       	movw	r30, r14
-  b4:	80 81       	ld	r24, Z
+  bc:	f7 01       	movw	r30, r14
+  be:	80 81       	ld	r24, Z
 		fine_tuning |= (ADCH << 8);
-  b6:	f8 01       	movw	r30, r16
-  b8:	90 81       	ld	r25, Z
-  ba:	d9 2f       	mov	r29, r25
-  bc:	f0 e0       	ldi	r31, 0x00	; 0
-  be:	cf 2f       	mov	r28, r31
-  c0:	9e 01       	movw	r18, r28
-  c2:	28 2b       	or	r18, r24
-  c4:	c9 01       	movw	r24, r18
+  c0:	f8 01       	movw	r30, r16
+  c2:	90 81       	ld	r25, Z
+  c4:	d9 2f       	mov	r29, r25
+  c6:	f0 e0       	ldi	r31, 0x00	; 0
+  c8:	cf 2f       	mov	r28, r31
+  ca:	9e 01       	movw	r18, r28
+  cc:	28 2b       	or	r18, r24
+  ce:	c9 01       	movw	r24, r18
 		TIFR1 |= (1 << TOV0);
-  c6:	b0 9a       	sbi	0x16, 0	; 22
+  d0:	b0 9a       	sbi	0x16, 0	; 22
 		
+		// Vin < ~1,8V
 		if(fine_tuning <= 300){
-  c8:	8d 32       	cpi	r24, 0x2D	; 45
-  ca:	31 e0       	ldi	r19, 0x01	; 1
-  cc:	93 07       	cpc	r25, r19
-  ce:	54 f4       	brge	.+20     	; 0xe4 <main+0x6c>
-			turnOn_C(PC0);
-  d0:	80 e0       	ldi	r24, 0x00	; 0
-  d2:	90 e0       	ldi	r25, 0x00	; 0
-  d4:	c4 df       	rcall	.-120    	; 0x5e <turnOn_C>
-			turnOff_C(PC1);
-  d6:	81 e0       	ldi	r24, 0x01	; 1
-  d8:	90 e0       	ldi	r25, 0x00	; 0
-  da:	b5 df       	rcall	.-150    	; 0x46 <turnOff_C>
-			turnOff_C(PC2);
-  dc:	82 e0       	ldi	r24, 0x02	; 2
-  de:	90 e0       	ldi	r25, 0x00	; 0
-  e0:	b2 df       	rcall	.-156    	; 0x46 <turnOff_C>
-  e2:	e7 cf       	rjmp	.-50     	; 0xb2 <main+0x3a>
-		}
-		else if(fine_tuning <= 600){
-  e4:	89 35       	cpi	r24, 0x59	; 89
-  e6:	92 40       	sbci	r25, 0x02	; 2
-  e8:	54 f4       	brge	.+20     	; 0xfe <main+0x86>
+  d2:	8d 32       	cpi	r24, 0x2D	; 45
+  d4:	31 e0       	ldi	r19, 0x01	; 1
+  d6:	93 07       	cpc	r25, r19
+  d8:	54 f4       	brge	.+20     	; 0xee <main+0x76>
 			turnOff_C(PC0);
-  ea:	80 e0       	ldi	r24, 0x00	; 0
-  ec:	90 e0       	ldi	r25, 0x00	; 0
-  ee:	ab df       	rcall	.-170    	; 0x46 <turnOff_C>
+  da:	80 e0       	ldi	r24, 0x00	; 0
+  dc:	90 e0       	ldi	r25, 0x00	; 0
+  de:	b3 df       	rcall	.-154    	; 0x46 <turnOff_C>
+			turnOff_C(PC1);
+  e0:	81 e0       	ldi	r24, 0x01	; 1
+  e2:	90 e0       	ldi	r25, 0x00	; 0
+  e4:	b0 df       	rcall	.-160    	; 0x46 <turnOff_C>
+			turnOn_C(PC2);
+  e6:	82 e0       	ldi	r24, 0x02	; 2
+  e8:	90 e0       	ldi	r25, 0x00	; 0
+  ea:	b9 df       	rcall	.-142    	; 0x5e <turnOn_C>
+  ec:	e7 cf       	rjmp	.-50     	; 0xbc <main+0x44>
+		}
+		// Vin < ~3,8V
+		else if(fine_tuning <= 700){
+  ee:	8d 3b       	cpi	r24, 0xBD	; 189
+  f0:	92 40       	sbci	r25, 0x02	; 2
+  f2:	54 f4       	brge	.+20     	; 0x108 <main+0x90>
+			turnOff_C(PC0);
+  f4:	80 e0       	ldi	r24, 0x00	; 0
+  f6:	90 e0       	ldi	r25, 0x00	; 0
+  f8:	a6 df       	rcall	.-180    	; 0x46 <turnOff_C>
 			turnOn_C(PC1);
-  f0:	81 e0       	ldi	r24, 0x01	; 1
-  f2:	90 e0       	ldi	r25, 0x00	; 0
-  f4:	b4 df       	rcall	.-152    	; 0x5e <turnOn_C>
+  fa:	81 e0       	ldi	r24, 0x01	; 1
+  fc:	90 e0       	ldi	r25, 0x00	; 0
+  fe:	af df       	rcall	.-162    	; 0x5e <turnOn_C>
 			turnOff_C(PC2);
-  f6:	82 e0       	ldi	r24, 0x02	; 2
-  f8:	90 e0       	ldi	r25, 0x00	; 0
-  fa:	a5 df       	rcall	.-182    	; 0x46 <turnOff_C>
-  fc:	da cf       	rjmp	.-76     	; 0xb2 <main+0x3a>
+ 100:	82 e0       	ldi	r24, 0x02	; 2
+ 102:	90 e0       	ldi	r25, 0x00	; 0
+ 104:	a0 df       	rcall	.-192    	; 0x46 <turnOff_C>
+ 106:	da cf       	rjmp	.-76     	; 0xbc <main+0x44>
 		}
 		else{
-			turnOff_C(PC0);
-  fe:	80 e0       	ldi	r24, 0x00	; 0
- 100:	90 e0       	ldi	r25, 0x00	; 0
- 102:	a1 df       	rcall	.-190    	; 0x46 <turnOff_C>
-			turnOn_C(PC1);
- 104:	81 e0       	ldi	r24, 0x01	; 1
- 106:	90 e0       	ldi	r25, 0x00	; 0
- 108:	aa df       	rcall	.-172    	; 0x5e <turnOn_C>
+			turnOn_C(PC0);
+ 108:	80 e0       	ldi	r24, 0x00	; 0
+ 10a:	90 e0       	ldi	r25, 0x00	; 0
+ 10c:	a8 df       	rcall	.-176    	; 0x5e <turnOn_C>
+			turnOff_C(PC1);
+ 10e:	81 e0       	ldi	r24, 0x01	; 1
+ 110:	90 e0       	ldi	r25, 0x00	; 0
+ 112:	99 df       	rcall	.-206    	; 0x46 <turnOff_C>
 			turnOff_C(PC2);
- 10a:	82 e0       	ldi	r24, 0x02	; 2
- 10c:	90 e0       	ldi	r25, 0x00	; 0
- 10e:	9b df       	rcall	.-202    	; 0x46 <turnOff_C>
- 110:	d0 cf       	rjmp	.-96     	; 0xb2 <main+0x3a>
+ 114:	82 e0       	ldi	r24, 0x02	; 2
+ 116:	90 e0       	ldi	r25, 0x00	; 0
+ 118:	96 df       	rcall	.-212    	; 0x46 <turnOff_C>
+ 11a:	d0 cf       	rjmp	.-96     	; 0xbc <main+0x44>
 
-00000112 <_exit>:
- 112:	f8 94       	cli
+0000011c <_exit>:
+ 11c:	f8 94       	cli
 
-00000114 <__stop_program>:
- 114:	ff cf       	rjmp	.-2      	; 0x114 <__stop_program>
+0000011e <__stop_program>:
+ 11e:	ff cf       	rjmp	.-2      	; 0x11e <__stop_program>

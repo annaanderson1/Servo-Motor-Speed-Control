@@ -11,7 +11,11 @@
 
 #include <avr/io.h>
 
-#define PWM 100
+// 0 ~ 4,9V
+// 100 ~ 3,0V
+// 200 ~ 1,0V
+// 250 ~ 0,1V
+#define PWM 250
 
 static void setup(){
 	

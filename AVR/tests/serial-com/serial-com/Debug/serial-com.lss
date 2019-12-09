@@ -3,31 +3,31 @@ serial-com.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  000000ac  00000120  2**0
+  0 .data         00000000  00800100  000000cc  00000140  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000ac  00000000  00000000  00000074  2**1
+  1 .text         000000cc  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .stab         000006cc  00000000  00000000  00000120  2**2
+  2 .stab         000006cc  00000000  00000000  00000140  2**2
                   CONTENTS, READONLY, DEBUGGING
-  3 .stabstr      00000097  00000000  00000000  000007ec  2**0
+  3 .stabstr      00000097  00000000  00000000  0000080c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .comment      0000002f  00000000  00000000  00000883  2**0
+  4 .comment      0000002f  00000000  00000000  000008a3  2**0
                   CONTENTS, READONLY
-  5 .debug_aranges 00000028  00000000  00000000  000008b2  2**0
+  5 .debug_aranges 00000028  00000000  00000000  000008d2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000154  00000000  00000000  000008da  2**0
+  6 .debug_info   00000235  00000000  00000000  000008fa  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 0000011b  00000000  00000000  00000a2e  2**0
+  7 .debug_abbrev 0000015e  00000000  00000000  00000b2f  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000000fe  00000000  00000000  00000b49  2**0
+  8 .debug_line   000001b3  00000000  00000000  00000c8d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000050  00000000  00000000  00000c48  2**2
+  9 .debug_frame  00000054  00000000  00000000  00000e40  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000011a  00000000  00000000  00000c98  2**0
+ 10 .debug_str    00000159  00000000  00000000  00000e94  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000075  00000000  00000000  00000db2  2**0
+ 11 .debug_loc    0000008e  00000000  00000000  00000fed  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000018  00000000  00000000  00000e27  2**0
+ 12 .debug_ranges 00000018  00000000  00000000  0000107b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -67,15 +67,15 @@ Disassembly of section .text:
   3a:	d4 e0       	ldi	r29, 0x04	; 4
   3c:	de bf       	out	0x3e, r29	; 62
   3e:	cd bf       	out	0x3d, r28	; 61
-  40:	1c d0       	rcall	.+56     	; 0x7a <main>
-  42:	32 c0       	rjmp	.+100    	; 0xa8 <_exit>
+  40:	24 d0       	rcall	.+72     	; 0x8a <main>
+  42:	42 c0       	rjmp	.+132    	; 0xc8 <_exit>
 
 00000044 <__bad_interrupt>:
   44:	dd cf       	rjmp	.-70     	; 0x0 <__vectors>
 
 00000046 <__vector_18>:
-	while( !(UCSR0A & (1 << UDRE0)) );
-	UDR0 = *data;	
+	//while( !(UCSR0A & (1 << UDRE0)) );
+	UDR0 = data[0];	
 	
 }
 
@@ -86,99 +86,115 @@ ISR(USART_RX_vect){
   4c:	0f 92       	push	r0
   4e:	11 24       	eor	r1, r1
   50:	8f 93       	push	r24
-  52:	ef 93       	push	r30
-  54:	ff 93       	push	r31
+  52:	9f 93       	push	r25
+  54:	ef 93       	push	r30
+  56:	ff 93       	push	r31
 	cli();
-  56:	f8 94       	cli
+  58:	f8 94       	cli
 	PORTC &= ~(1 << PC2);
-  58:	42 98       	cbi	0x08, 2	; 8
+  5a:	42 98       	cbi	0x08, 2	; 8
 	PORTC |= (1 << PC1);
-  5a:	41 9a       	sbi	0x08, 1	; 8
+  5c:	41 9a       	sbi	0x08, 1	; 8
 	
 	unsigned char recieved_byte;
 	recieved_byte = UDR0;
-  5c:	e6 ec       	ldi	r30, 0xC6	; 198
-  5e:	f0 e0       	ldi	r31, 0x00	; 0
-  60:	80 81       	ld	r24, Z
+  5e:	e6 ec       	ldi	r30, 0xC6	; 198
+  60:	f0 e0       	ldi	r31, 0x00	; 0
+  62:	80 81       	ld	r24, Z
 	UDR0 = recieved_byte;
-  62:	80 83       	st	Z, r24
-	
+  64:	80 83       	st	Z, r24
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  66:	83 ed       	ldi	r24, 0xD3	; 211
+  68:	90 e3       	ldi	r25, 0x30	; 48
+  6a:	01 97       	sbiw	r24, 0x01	; 1
+  6c:	f1 f7       	brne	.-4      	; 0x6a <__vector_18+0x24>
+  6e:	00 c0       	rjmp	.+0      	; 0x70 <__vector_18+0x2a>
+  70:	00 00       	nop
+	_delay_ms(50);
 	PORTC &= ~(1 << PC1);
-  64:	41 98       	cbi	0x08, 1	; 8
+  72:	41 98       	cbi	0x08, 1	; 8
 	PORTC |= (1 << PC2);
-  66:	42 9a       	sbi	0x08, 2	; 8
+  74:	42 9a       	sbi	0x08, 2	; 8
 	sei();
-  68:	78 94       	sei
+  76:	78 94       	sei
 }
-  6a:	ff 91       	pop	r31
-  6c:	ef 91       	pop	r30
-  6e:	8f 91       	pop	r24
-  70:	0f 90       	pop	r0
-  72:	0f be       	out	0x3f, r0	; 63
-  74:	0f 90       	pop	r0
-  76:	1f 90       	pop	r1
-  78:	18 95       	reti
+  78:	ff 91       	pop	r31
+  7a:	ef 91       	pop	r30
+  7c:	9f 91       	pop	r25
+  7e:	8f 91       	pop	r24
+  80:	0f 90       	pop	r0
+  82:	0f be       	out	0x3f, r0	; 63
+  84:	0f 90       	pop	r0
+  86:	1f 90       	pop	r1
+  88:	18 95       	reti
 
-0000007a <main>:
-#define F_CPU 1000000UL
-#define BAUD 2400
-
+0000008a <main>:
+#include <avr/interrupt.h>
+#include <string.h>
+#include <util/delay.h>
 
 static void setup(){
 	DDRD |= (1 << PD1);
-  7a:	51 9a       	sbi	0x0a, 1	; 10
+  8a:	51 9a       	sbi	0x0a, 1	; 10
+	DDRC |= (1 << PC2) | (1 << PC1 | (1 << PC0));
+  8c:	87 b1       	in	r24, 0x07	; 7
+  8e:	87 60       	ori	r24, 0x07	; 7
+  90:	87 b9       	out	0x07, r24	; 7
 	unsigned int ubrr = (((F_CPU / (BAUD * 16UL))) - 1 );
 
 	// Set baud rate
 	UBRR0H = (unsigned char)(ubrr >> 8);
-  7c:	10 92 c5 00 	sts	0x00C5, r1
+  92:	10 92 c5 00 	sts	0x00C5, r1
 	UBRR0L = (unsigned char)ubrr;
-  80:	89 e1       	ldi	r24, 0x19	; 25
-  82:	80 93 c4 00 	sts	0x00C4, r24
+  96:	89 e1       	ldi	r24, 0x19	; 25
+  98:	80 93 c4 00 	sts	0x00C4, r24
 
 	// Enable reciever for interrupt and transmitter
 	UCSR0B = (1 << RXEN0) | (1 << RXCIE0) | (1 << TXEN0);
-  86:	88 e9       	ldi	r24, 0x98	; 152
-  88:	80 93 c1 00 	sts	0x00C1, r24
+  9c:	88 e9       	ldi	r24, 0x98	; 152
+  9e:	80 93 c1 00 	sts	0x00C1, r24
 
 	// Set frame format: 8 data, 2 stop, 0 parity
 	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
-  8c:	86 e0       	ldi	r24, 0x06	; 6
-  8e:	80 93 c2 00 	sts	0x00C2, r24
+  a2:	86 e0       	ldi	r24, 0x06	; 6
+  a4:	80 93 c2 00 	sts	0x00C2, r24
 
 
 int main(void){
 	
 	setup();
+	PORTC |= (1 << PC0);
+  a8:	40 9a       	sbi	0x08, 0	; 8
 	sei();
-  92:	78 94       	sei
-	// Set frame format: 8 data, 2 stop, 0 parity
+  aa:	78 94       	sei
 	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
 }
 
 static void USART_transmit(char *data){
-	while( !(UCSR0A & (1 << UDRE0)) );
-  94:	e0 ec       	ldi	r30, 0xC0	; 192
-  96:	f0 e0       	ldi	r31, 0x00	; 0
-	UDR0 = *data;	
-  98:	a6 ec       	ldi	r26, 0xC6	; 198
-  9a:	b0 e0       	ldi	r27, 0x00	; 0
-  9c:	94 e7       	ldi	r25, 0x74	; 116
-	// Set frame format: 8 data, 2 stop, 0 parity
-	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
-}
+	//while( !(UCSR0A & (1 << UDRE0)) );
+	UDR0 = data[0];	
+  ac:	e6 ec       	ldi	r30, 0xC6	; 198
+  ae:	f0 e0       	ldi	r31, 0x00	; 0
+  b0:	84 e7       	ldi	r24, 0x74	; 116
+  b2:	80 83       	st	Z, r24
+  b4:	2f e9       	ldi	r18, 0x9F	; 159
+  b6:	36 e8       	ldi	r19, 0x86	; 134
+  b8:	91 e0       	ldi	r25, 0x01	; 1
+  ba:	21 50       	subi	r18, 0x01	; 1
+  bc:	30 40       	sbci	r19, 0x00	; 0
+  be:	90 40       	sbci	r25, 0x00	; 0
+  c0:	e1 f7       	brne	.-8      	; 0xba <main+0x30>
+  c2:	00 c0       	rjmp	.+0      	; 0xc4 <main+0x3a>
+  c4:	00 00       	nop
+  c6:	f5 cf       	rjmp	.-22     	; 0xb2 <main+0x28>
 
-static void USART_transmit(char *data){
-	while( !(UCSR0A & (1 << UDRE0)) );
-  9e:	80 81       	ld	r24, Z
-  a0:	85 ff       	sbrs	r24, 5
-  a2:	fd cf       	rjmp	.-6      	; 0x9e <main+0x24>
-	UDR0 = *data;	
-  a4:	9c 93       	st	X, r25
-  a6:	fb cf       	rjmp	.-10     	; 0x9e <main+0x24>
+000000c8 <_exit>:
+  c8:	f8 94       	cli
 
-000000a8 <_exit>:
-  a8:	f8 94       	cli
-
-000000aa <__stop_program>:
-  aa:	ff cf       	rjmp	.-2      	; 0xaa <__stop_program>
+000000ca <__stop_program>:
+  ca:	ff cf       	rjmp	.-2      	; 0xca <__stop_program>

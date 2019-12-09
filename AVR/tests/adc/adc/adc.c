@@ -16,6 +16,8 @@ static void setup(){
 	ADCSRA |= (1 << ADEN) | (1 << ADATE);
 	ADCSRB |= (1 << ADTS2) | (1 << ADTS1);
 	DIDR0 |= (1 << ADC3D);
+	
+	TCCR1B |= (1 << CS11);
 }
 
 static void turnOff_C(int pin){
@@ -40,19 +42,21 @@ int main(void){
 		fine_tuning |= (ADCH << 8);
 		TIFR1 |= (1 << TOV0);
 		
+		// Vin < ~1,5V
 		if(fine_tuning <= 300){
-			turnOn_C(PC0);
+			turnOff_C(PC0);
 			turnOff_C(PC1);
-			turnOff_C(PC2);
+			turnOn_C(PC2);
 		}
-		else if(fine_tuning <= 600){
+		// Vin < ~3,4V
+		else if(fine_tuning <= 700){
 			turnOff_C(PC0);
 			turnOn_C(PC1);
 			turnOff_C(PC2);
 		}
 		else{
-			turnOff_C(PC0);
-			turnOn_C(PC1);
+			turnOn_C(PC0);
+			turnOff_C(PC1);
 			turnOff_C(PC2);
 		}
     }
