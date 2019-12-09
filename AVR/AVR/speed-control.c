@@ -174,13 +174,13 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 		size = SIZE_64;
 		size_shift = DIVISION_64;
 	}
-	else if(shared_ptr->speed_set <= 100){
+	else if(shared_ptr->speed_set < 100){
 		size = SIZE_64;
 		size_shift = DIVISION_64;
 	}
-	else if(shared_ptr->speed_set > 100){
-		size = SIZE_64;
-		size_shift = DIVISION_64;
+	else if(shared_ptr->speed_set >= 100){
+		size = SIZE_32;
+		size_shift = DIVISION_32;
 	}
 	
 	for(i = 0; i < size; i++){
@@ -220,16 +220,18 @@ void control(Shared_Data* shared_ptr){
 	e = e << (N_CTRL-N);
 	
 	if(shared_ptr->speed_set >= 100){
+		//Kp = 400;
+		//Ki = 1000;
 		Kp = 100;
-		Ki = 500;
+		Ki = 1000;
 	}
 	else if(shared_ptr->speed_set >= 80){
 		Kp = 100;
 		Ki = 550;
 	}
-	else if(shared_ptr->speed_set >= 10){
+	else if(shared_ptr->speed_set >= 20){
 		Kp = 100;
-		Ki = 1000;
+		Ki = 550;
 	}
 	else{
 		Kp = 100;
