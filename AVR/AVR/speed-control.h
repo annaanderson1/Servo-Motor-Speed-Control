@@ -9,6 +9,7 @@
 #ifndef SPEED_CONTROL_H_
 #define SPEED_CONTROL_H_
 
+void update_fine_tuning(Shared_Data* shared_ptr);
 void calc_latest_rpm(Shared_Data* shared_ptr);
 void calc_filtered_speed(Shared_Data* shared_ptr);
 void calc_avg_rpm(Shared_Data* shared_ptr);

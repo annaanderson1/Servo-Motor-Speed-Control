@@ -17,15 +17,18 @@
 #define SIZE_16 16
 #define SIZE_32 32
 #define SIZE_64 64
+#define SIZE_128 128
 #define DIVISION_16 4
 #define DIVISION_32 5
 #define DIVISION_64 6
+#define DIVISION_128 7
 
 extern bool newMeasurement;
 extern unsigned short clk_curr;
 extern unsigned short clk_prev;
 extern unsigned short clk_elapsed;
 extern char recieved_bytes[5];
+extern Shared_Data* shared_ptr;
 
 static void calc_clk_elapsed(){
 	
@@ -105,7 +108,7 @@ static void insert_rpm(Shared_Data* shared_ptr, unsigned long rpm){
  * Updates the fine tuning value to first calculation since last function call.
  * Stores the value in shared_ptr->fine_tuning
 */
-static void update_fine_tuning(Shared_Data* shared_ptr){
+void update_fine_tuning(Shared_Data* shared_ptr){
 	short fine_tuning;
 	
 	fine_tuning = ADCL;	
@@ -171,17 +174,26 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 		size_shift = DIVISION_16;
 	}
 	else if(shared_ptr->speed_set <=50){
-		size = SIZE_64;
-		size_shift = DIVISION_64;
-	}
-	else if(shared_ptr->speed_set < 100){
-		size = SIZE_64;
-		size_shift = DIVISION_64;
-	}
-	else if(shared_ptr->speed_set >= 100){
 		size = SIZE_32;
 		size_shift = DIVISION_32;
 	}
+	else if(shared_ptr->speed_set < 100){
+		size = SIZE_32;
+		size_shift = DIVISION_32;
+	}
+	else if(shared_ptr->speed_set >= 100){
+		size = SIZE_64;
+		size_shift = DIVISION_64;
+	}/*
+	else if(shared_ptr->speed_set >= 100){
+		size = SIZE_32;
+		size_shift = DIVISION_32;
+	}*/
+	else{
+		size = SIZE_32;
+		size_shift = DIVISION_32;
+	}
+	
 	
 	for(i = 0; i < size; i++){
 		temp = temp + shared_ptr->rpm_measurements[i];
@@ -204,62 +216,6 @@ void set_speed(Shared_Data* shared_ptr){
 }
 
 /*
- * PI controller for the electrical motor, implemented using fixed point arithmetics.
- * Kp and Ki values is used to tune the controller, depending on different rpm.
-*/
-void control(Shared_Data* shared_ptr){
-	long Kp;
-	long Ki;
-	
-	update_fine_tuning(shared_ptr);
-	
-	long e = ((long)shared_ptr->speed_set << N) - (long)shared_ptr->rpm_avg;
-	e = e + ((long)shared_ptr->fine_tuning << N);
-	shared_ptr->error = (short)e;	// For debugging
-	
-	e = e << (N_CTRL-N);
-	
-	if(shared_ptr->speed_set >= 100){
-		//Kp = 400;
-		//Ki = 1000;
-		Kp = 100;
-		Ki = 1000;
-	}
-	else if(shared_ptr->speed_set >= 80){
-		Kp = 100;
-		Ki = 550;
-	}
-	else if(shared_ptr->speed_set >= 20){
-		Kp = 100;
-		Ki = 550;
-	}
-	else{
-		Kp = 100;
-		Ki = 550;
-	}
-	
-	long integral = Ki*e;
-	integral = integral >> N_CTRL;
-	shared_ptr->integral = shared_ptr->integral + integral;
-	
-	long long pwm = (long long)e * Kp + shared_ptr->integral;
-	pwm = pwm >> N_CTRL;
-	
-	pwm = pwm >> N_CTRL;	// Convert to regular number
-	
-	if(pwm < 0){
-		pwm = 0;		
-	}
-	else if(pwm > 255){
-		pwm = 255;
-	}
-	
-	shared_ptr->pwm = (short)pwm;
-	OCR0A = pwm;
-	OCR0B = pwm;
-	
-}
-/*
  * Interrupt Service Routine for the encoder mounted on the motor.
  * Calculates the difference in clk-value between current and previous interrupt.
  * Global bool newMeasurement flags that a new measurement have been recieved.
@@ -271,5 +227,69 @@ ISR(PCINT1_vect){
 	calc_clk_elapsed();
 	newMeasurement = true;
 	
+	sei();
+}
+
+/*
+ * PI controller for the electrical motor, implemented using fixed point arithmetics.
+ * Kp and Ki values is used to tune the controller, depending on different rpm.
+*/
+ISR(TIMER2_OVF_vect){
+	
+	cli();
+	long Kp;
+	long Ki;
+		
+	long e = ((long)shared_ptr->speed_set << N) - (long)shared_ptr->rpm_avg;
+	e = e + ((long)shared_ptr->fine_tuning << N);
+	shared_ptr->error = (short)e;	// For debugging
+	
+	e = e << (N_CTRL-N);
+	
+	if(shared_ptr->speed_set <= 20){
+		Kp = 35;
+		Ki = 75;
+	}
+	else if(shared_ptr->speed_set <= 50){
+		Kp = 35;
+		Ki = 75;
+	}
+	else if(shared_ptr->speed_set <= 60){
+		Kp = 35;
+		Ki = 75;
+	}
+	else if(shared_ptr->speed_set <= 90){
+		Kp = 40;
+		Ki = 100;
+	}
+	else if(shared_ptr->speed_set < 100){
+		Kp = 35;
+		Ki = 70;
+	}
+	else if(shared_ptr->speed_set >= 100){
+		Kp = 50;	//80 165
+		Ki = 125;	//145 325
+	}
+
+	
+	long integral = Ki*e;
+	integral = integral >> N_CTRL;
+	shared_ptr->integral = shared_ptr->integral + integral;
+	
+	long long pwm = (long long)e * Kp + shared_ptr->integral;
+	pwm = pwm >> N_CTRL;
+	
+	pwm = pwm >> N_CTRL;	// Convert to regular number
+	
+	if(pwm < 0){
+		pwm = 0;
+	}
+	else if(pwm > 255){
+		pwm = 255;
+	}
+	
+	shared_ptr->pwm = (short)pwm;
+	OCR0A = pwm;
+	OCR0B = pwm;
 	sei();
 }

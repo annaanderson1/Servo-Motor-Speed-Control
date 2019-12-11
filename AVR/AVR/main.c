@@ -28,10 +28,12 @@ char recieved_bytes[5];
 unsigned short clk_curr;
 unsigned short clk_prev;
 unsigned short clk_elapsed;
+Shared_Data* shared_ptr;
 
 int main(void){
 	Shared_Data shared_data;
-	Shared_Data* shared_ptr = &shared_data;
+	//Shared_Data* shared_ptr = &shared_data;
+	shared_ptr = &shared_data;
 	init_shared_data(shared_ptr);
 	
 	newCommand = false;
@@ -39,7 +41,7 @@ int main(void){
 	clk_curr = 0;
 	clk_prev = 0;
 	clk_elapsed = 0;
-	shared_ptr->speed_set = 110;
+	shared_ptr->speed_set = 50;
 	
 	setup_registers();
 	sei();
@@ -84,9 +86,12 @@ int main(void){
 		if(newMeasurement){
 			calc_latest_rpm(shared_ptr);
 			calc_avg_rpm(shared_ptr);
-			control(shared_ptr);
+			update_fine_tuning(shared_ptr);
+			//control(shared_ptr);
 			newMeasurement = false;
 		}
+		
 	}
+	
 	return 0;
 }

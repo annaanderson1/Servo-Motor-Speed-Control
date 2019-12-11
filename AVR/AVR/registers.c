@@ -99,6 +99,11 @@ static void setup_ADC(){
 	
 }
 
+static void setup_control(){
+	TCCR2B |= (0 << CS22) | (1 << CS21) | (0 << CS20);
+	TIMSK2 |= (1 << TOIE2);
+}
+
 /*
  *	Initiates registers for DDR, PWM, USART, interrupts, encoder clock speed, and ADC conversion.
 */
@@ -110,5 +115,6 @@ void setup_registers(){
 	setup_interrupts();
 	setup_speed_clock();
 	setup_ADC();
+	setup_control();
 
 }
