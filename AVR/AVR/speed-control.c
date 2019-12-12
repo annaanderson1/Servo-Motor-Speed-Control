@@ -170,8 +170,8 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 	int size_shift;
 	
 	if(shared_ptr->speed_set <=20){
-		size = SIZE_32;
-		size_shift = DIVISION_32;
+		size = SIZE_16;
+		size_shift = DIVISION_16;
 	}
 	else if(shared_ptr->speed_set <=50){
 		size = SIZE_32;
@@ -182,13 +182,9 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
 		size_shift = DIVISION_32;
 	}
 	else if(shared_ptr->speed_set >= 100){
-		size = SIZE_32;
-		size_shift = DIVISION_32;
-	}/*
-	else if(shared_ptr->speed_set >= 100){
-		size = SIZE_32;
-		size_shift = DIVISION_32;
-	}*/
+		size = SIZE_64;
+		size_shift = DIVISION_64;
+	}
 	else{
 		size = SIZE_32;
 		size_shift = DIVISION_32;
@@ -245,11 +241,11 @@ ISR(TIMER2_OVF_vect){
 	shared_ptr->error = (short)e;	// For debugging
 	
 	e = e << (N_CTRL-N);
-	/*
-	if(shared_ptr->speed_set <= 20){
-		Kp = 130;
-		Ki = 117;
-	}
+	
+	if(shared_ptr->speed_set <= 99){
+		Kp = 150;
+		Ki = 135;
+	}/*
 	else if(shared_ptr->speed_set <= 50){
 		Kp = 35;
 		Ki = 75;
@@ -265,14 +261,14 @@ ISR(TIMER2_OVF_vect){
 	else if(shared_ptr->speed_set < 100){
 		Kp = 35;
 		Ki = 70;
+	}*/
+	else if(shared_ptr->speed_set > 99){
+		Kp = 150;	
+		Ki = 90;	
 	}
-	else if(shared_ptr->speed_set > 20){
-		Kp = 130;	//80 165
-		Ki = 117;	//145 325
-	}
-*/
-	Kp = 130;	//175
-	Ki = 117;	// 300
+	
+	//Kp = 150;	//175
+	//Ki = 135;	// 300
 	
 	long integral = Ki*e;
 	integral = integral >> N_CTRL;
