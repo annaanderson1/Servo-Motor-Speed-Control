@@ -860,42 +860,42 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1ba4
+.debug_info     0x00000000     0x1ba2
  *(.debug_info)
  .debug_info    0x00000000      0x147 shared.o
- .debug_info    0x00000147      0x5ae speed-control.o
- .debug_info    0x000006f5      0x259 serial.o
- .debug_info    0x0000094e      0x157 registers.o
- .debug_info    0x00000aa5      0x3a4 main.o
- .debug_info    0x00000e49      0x482 transmit.o
- .debug_info    0x000012cb      0x21c c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(snprintf.o)
- .debug_info    0x000014e7      0x549 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(vfprintf_std.o)
- .debug_info    0x00001a30      0x174 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(fputc.o)
+ .debug_info    0x00000147      0x5ac speed-control.o
+ .debug_info    0x000006f3      0x259 serial.o
+ .debug_info    0x0000094c      0x157 registers.o
+ .debug_info    0x00000aa3      0x3a4 main.o
+ .debug_info    0x00000e47      0x482 transmit.o
+ .debug_info    0x000012c9      0x21c c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(snprintf.o)
+ .debug_info    0x000014e5      0x549 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(vfprintf_std.o)
+ .debug_info    0x00001a2e      0x174 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(fputc.o)
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0xbb3
+.debug_abbrev   0x00000000      0xb95
  *(.debug_abbrev)
  .debug_abbrev  0x00000000       0xa8 shared.o
- .debug_abbrev  0x000000a8      0x2aa speed-control.o
- .debug_abbrev  0x00000352      0x15c serial.o
- .debug_abbrev  0x000004ae       0xaa registers.o
- .debug_abbrev  0x00000558      0x120 main.o
- .debug_abbrev  0x00000678      0x13b transmit.o
- .debug_abbrev  0x000007b3      0x139 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(snprintf.o)
- .debug_abbrev  0x000008ec      0x1d6 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(vfprintf_std.o)
- .debug_abbrev  0x00000ac2       0xf1 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(fputc.o)
+ .debug_abbrev  0x000000a8      0x28c speed-control.o
+ .debug_abbrev  0x00000334      0x15c serial.o
+ .debug_abbrev  0x00000490       0xaa registers.o
+ .debug_abbrev  0x0000053a      0x120 main.o
+ .debug_abbrev  0x0000065a      0x13b transmit.o
+ .debug_abbrev  0x00000795      0x139 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(snprintf.o)
+ .debug_abbrev  0x000008ce      0x1d6 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(vfprintf_std.o)
+ .debug_abbrev  0x00000aa4       0xf1 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(fputc.o)
 
-.debug_line     0x00000000      0xccc
+.debug_line     0x00000000      0xcca
  *(.debug_line)
  .debug_line    0x00000000       0x42 shared.o
- .debug_line    0x00000042      0x201 speed-control.o
- .debug_line    0x00000243      0x1c8 serial.o
- .debug_line    0x0000040b       0x83 registers.o
- .debug_line    0x0000048e       0x9b main.o
- .debug_line    0x00000529      0x1a2 transmit.o
- .debug_line    0x000006cb      0x1a4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(snprintf.o)
- .debug_line    0x0000086f      0x359 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(vfprintf_std.o)
- .debug_line    0x00000bc8      0x104 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(fputc.o)
+ .debug_line    0x00000042      0x1ff speed-control.o
+ .debug_line    0x00000241      0x1c8 serial.o
+ .debug_line    0x00000409       0x83 registers.o
+ .debug_line    0x0000048c       0x9b main.o
+ .debug_line    0x00000527      0x1a2 transmit.o
+ .debug_line    0x000006c9      0x1a4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(snprintf.o)
+ .debug_line    0x0000086d      0x359 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(vfprintf_std.o)
+ .debug_line    0x00000bc6      0x104 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.939/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr4\libc.a(fputc.o)
 
 .debug_frame    0x00000000      0x56c
  *(.debug_frame)

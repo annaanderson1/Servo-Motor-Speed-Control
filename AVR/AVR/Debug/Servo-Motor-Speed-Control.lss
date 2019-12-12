@@ -17,19 +17,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   6 .debug_aranges 00000198  00000000  00000000  0000292d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_info   00001ba4  00000000  00000000  00002ac5  2**0
+  7 .debug_info   00001ba2  00000000  00000000  00002ac5  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 00000bb3  00000000  00000000  00004669  2**0
+  8 .debug_abbrev 00000b95  00000000  00000000  00004667  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   00000ccc  00000000  00000000  0000521c  2**0
+  9 .debug_line   00000cca  00000000  00000000  000051fc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_frame  0000056c  00000000  00000000  00005ee8  2**2
+ 10 .debug_frame  0000056c  00000000  00000000  00005ec8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    00000606  00000000  00000000  00006454  2**0
+ 11 .debug_str    00000606  00000000  00000000  00006434  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00001851  00000000  00000000  00006a5a  2**0
+ 12 .debug_loc    00001851  00000000  00000000  00006a3a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 00000168  00000000  00000000  000082ab  2**0
+ 13 .debug_ranges 00000168  00000000  00000000  0000828b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -577,10 +577,8 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
      2d6:	85 31       	cpi	r24, 0x15	; 21
      2d8:	91 05       	cpc	r25, r1
      2da:	54 f1       	brlt	.+84     	; 0x330 <calc_avg_rpm+0x92>
-	}
-	else if(shared_ptr->speed_set <=50){
-		size = SIZE_32;
-		size_shift = DIVISION_32;
+		size = SIZE_16;
+		size_shift = DIVISION_16;
 	}
 	else if(shared_ptr->speed_set < 100){
      2dc:	84 36       	cpi	r24, 0x64	; 100
@@ -592,9 +590,9 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
      2e4:	f0 e0       	ldi	r31, 0x00	; 0
      2e6:	fc 83       	std	Y+4, r31	; 0x04
      2e8:	eb 83       	std	Y+3, r30	; 0x03
-	else if(shared_ptr->speed_set <=50){
-		size = SIZE_32;
-		size_shift = DIVISION_32;
+	if(shared_ptr->speed_set <=20){
+		size = SIZE_16;
+		size_shift = DIVISION_16;
 	}
 	else if(shared_ptr->speed_set < 100){
 		size = SIZE_32;
@@ -603,9 +601,9 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
      2ee:	fe 83       	std	Y+6, r31	; 0x06
      2f0:	ed 83       	std	Y+5, r30	; 0x05
      2f2:	2f c0       	rjmp	.+94     	; 0x352 <calc_avg_rpm+0xb4>
-		size_shift = DIVISION_32;
+		size = SIZE_64;
+		size_shift = DIVISION_64;
 	}
-	
 	
 	for(i = 0; i < size; i++){
 		temp = temp + shared_ptr->rpm_measurements[i];
@@ -624,10 +622,10 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
      30c:	00 e0       	ldi	r16, 0x00	; 0
      30e:	10 e0       	ldi	r17, 0x00	; 0
      310:	1b d6       	rcall	.+3126   	; 0xf48 <__adddi3>
-		size = SIZE_32;
-		size_shift = DIVISION_32;
+	else if(shared_ptr->speed_set >= 100){
+		size = SIZE_64;
+		size_shift = DIVISION_64;
 	}
-	
 	
 	for(i = 0; i < size; i++){
      312:	31 96       	adiw	r30, 0x01	; 1
@@ -702,10 +700,10 @@ void calc_avg_rpm(Shared_Data* shared_ptr){
      352:	a9 81       	ldd	r26, Y+1	; 0x01
      354:	ba 81       	ldd	r27, Y+2	; 0x02
      356:	58 96       	adiw	r26, 0x18	; 24
-		size = SIZE_32;
-		size_shift = DIVISION_32;
+	else if(shared_ptr->speed_set >= 100){
+		size = SIZE_64;
+		size_shift = DIVISION_64;
 	}
-	
 	
 	for(i = 0; i < size; i++){
      358:	e0 e0       	ldi	r30, 0x00	; 0
@@ -1017,7 +1015,7 @@ ISR(TIMER2_OVF_vect){
      53e:	66 1c       	adc	r6, r6
      540:	77 1c       	adc	r7, r7
 	
-	if(shared_ptr->speed_set <= 99){
+	if(shared_ptr->speed_set < 100){
      542:	84 36       	cpi	r24, 0x64	; 100
      544:	91 05       	cpc	r25, r1
      546:	2c f4       	brge	.+10     	; 0x552 <__stack+0x53>
@@ -1028,20 +1026,15 @@ ISR(TIMER2_OVF_vect){
      54c:	40 e0       	ldi	r20, 0x00	; 0
      54e:	50 e0       	ldi	r21, 0x00	; 0
      550:	04 c0       	rjmp	.+8      	; 0x55a <__stack+0x5b>
-		Kp = 35;
-		Ki = 70;
-	}*/
-	else if(shared_ptr->speed_set > 99){
+	}
+	else if(shared_ptr->speed_set >= 100){
 		Kp = 150;	
-		Ki = 90;	
-     552:	2a e5       	ldi	r18, 0x5A	; 90
+		Ki = 80;
+     552:	20 e5       	ldi	r18, 0x50	; 80
      554:	30 e0       	ldi	r19, 0x00	; 0
      556:	40 e0       	ldi	r20, 0x00	; 0
      558:	50 e0       	ldi	r21, 0x00	; 0
 	}
-	
-	//Kp = 150;	//175
-	//Ki = 135;	// 300
 	
 	long integral = Ki*e;
      55a:	c3 01       	movw	r24, r6
@@ -1761,6 +1754,7 @@ int main(void){
 			newCommand = false;
      95c:	10 92 23 01 	sts	0x0123, r1
 		}
+		
 		if(newMeasurement){
      960:	80 91 26 01 	lds	r24, 0x0126
      964:	88 23       	and	r24, r24
@@ -1778,7 +1772,6 @@ int main(void){
      97e:	80 91 29 01 	lds	r24, 0x0129
      982:	90 91 2a 01 	lds	r25, 0x012A
      986:	ae db       	rcall	.-2212   	; 0xe4 <update_fine_tuning>
-			//control(shared_ptr);
 			newMeasurement = false;
      988:	10 92 26 01 	sts	0x0126, r1
      98c:	9f cf       	rjmp	.-194    	; 0x8cc <main+0x5c>

@@ -83,15 +83,13 @@ int main(void){
 			}
 			newCommand = false;
 		}
+		
 		if(newMeasurement){
 			calc_latest_rpm(shared_ptr);
 			calc_avg_rpm(shared_ptr);
 			update_fine_tuning(shared_ptr);
-			//control(shared_ptr);
 			newMeasurement = false;
 		}
-		
 	}
-	
 	return 0;
 }
